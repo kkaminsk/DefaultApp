@@ -193,27 +193,6 @@
                             Style="{StaticResource CardHeaderStyle}"
                             AutomationProperties.HeadingLevel="Level2" />
 
-                        <!-- Processor Architecture -->
-                        <TextBlock x:Uid="ProcessorArchLabel" Text="Processor Architecture" Style="{StaticResource PropertyLabelStyle}" />
-                        <TextBlock
-                            Text="{x:Bind ViewModel.ProcessorArchitecture, Mode=OneWay}"
-                            Style="{StaticResource PropertyValueStyle}"
-                            AutomationProperties.Name="Processor Architecture value" />
-
-                        <!-- OS Architecture -->
-                        <TextBlock x:Uid="OsArchLabel" Text="OS Architecture" Style="{StaticResource PropertyLabelStyle}" />
-                        <TextBlock
-                            Text="{x:Bind ViewModel.OsArchitecture, Mode=OneWay}"
-                            Style="{StaticResource PropertyValueStyle}"
-                            AutomationProperties.Name="OS Architecture value" />
-
-                        <!-- Running Under Emulation -->
-                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
-                        <TextBlock
-                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
-                            Style="{StaticResource PropertyValueStyle}"
-                            AutomationProperties.Name="Running under emulation value" />
-
                         <!-- CPU Model -->
                         <TextBlock x:Uid="CpuModelLabel" Text="CPU Model" Style="{StaticResource PropertyLabelStyle}" />
                         <TextBlock
@@ -234,6 +213,27 @@
                             Text="{x:Bind ViewModel.TotalRam, Mode=OneWay}"
                             Style="{StaticResource PropertyValueStyle}"
                             AutomationProperties.Name="Total RAM value" />
+
+                        <!-- Processor Architecture -->
+                        <TextBlock x:Uid="ProcessorArchLabel" Text="Processor Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProcessorArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Processor Architecture value" />
+
+                        <!-- OS Architecture -->
+                        <TextBlock x:Uid="OsArchLabel" Text="OS Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="OS Architecture value" />
+
+                        <!-- Running Under Emulation -->
+                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Running under emulation value" />
 
                         <!-- 64-bit Process -->
                         <TextBlock x:Uid="Is64BitProcessLabel" Text="64-bit Process" Style="{StaticResource PropertyLabelStyle}" />
