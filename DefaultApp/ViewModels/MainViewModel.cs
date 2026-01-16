@@ -39,9 +39,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _osBuildNumber = "Loading...";
 
     [ObservableProperty]
-    private string _osEdition = "Loading...";
-
-    [ObservableProperty]
     private string _osIs64Bit = "Loading...";
 
     [ObservableProperty]
@@ -130,7 +127,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
             OsName = osInfo.Name;
             OsVersion = osInfo.Version;
             OsBuildNumber = osInfo.BuildNumber;
-            OsEdition = osInfo.Edition;
             OsIs64Bit = osInfo.Is64BitOs ? "Yes" : "No";
             SystemLocale = osInfo.SystemLocale;
             ActivationStatus = "Checking...";
@@ -208,7 +204,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "Version" => OsVersion,
             "OsName" => OsName,
             "Build" => OsBuildNumber,
-            "Edition" => OsEdition,
             "SystemLocale" => SystemLocale,
             "CpuModel" => CpuModel,
             "DeviceModel" => DeviceModel,

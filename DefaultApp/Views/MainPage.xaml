@@ -199,33 +199,6 @@
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
 
-                        <!-- Edition -->
-                        <TextBlock x:Uid="OsEditionLabel" Text="Edition" Style="{StaticResource PropertyLabelStyle}" />
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                Text="{x:Bind ViewModel.OsEdition, Mode=OneWay}"
-                                FontSize="14"
-                                TextWrapping="Wrap"
-                                VerticalAlignment="Center"
-                                AutomationProperties.Name="Windows Edition value" />
-                            <Button
-                                Grid.Column="1"
-                                x:Uid="CopyEditionButton"
-                                Style="{StaticResource CopyButtonStyle}"
-                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
-                                CommandParameter="Edition"
-                                ToolTipService.ToolTip="Copy to clipboard"
-                                AutomationProperties.Name="Copy Edition to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
-                            </Button>
-                        </Grid>
-                        <Border Style="{StaticResource PropertySeparatorStyle}" />
-
                         <!-- 64-bit OS -->
                         <TextBlock x:Uid="OsIs64BitLabel" Text="64-bit OS" Style="{StaticResource PropertyLabelStyle}" />
                         <TextBlock
