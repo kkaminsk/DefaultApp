@@ -214,8 +214,65 @@
     <value>Device Model</value>
     <comment>Label for device model field</comment>
   </data>
+  <data name="SerialNumberLabel.Text" xml:space="preserve">
+    <value>Serial Number</value>
+    <comment>Label for serial number field</comment>
+  </data>
+  <data name="CopySerialNumberButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Serial Number to clipboard</value>
+    <comment>Accessibility name for copy serial number button</comment>
+  </data>
   <data name="CopyToClipboardTooltip" xml:space="preserve">
     <value>Copy to clipboard</value>
     <comment>Tooltip text for copy buttons</comment>
+  </data>
+  <!-- BIOS & Security Card -->
+  <data name="BiosSecurityCardHeader.Text" xml:space="preserve">
+    <value>BIOS &amp; Security</value>
+    <comment>Header for BIOS and Security information card</comment>
+  </data>
+  <data name="BiosManufacturerLabel.Text" xml:space="preserve">
+    <value>BIOS Manufacturer</value>
+    <comment>Label for BIOS manufacturer field</comment>
+  </data>
+  <data name="CopyBiosManufacturerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Manufacturer to clipboard</value>
+    <comment>Accessibility name for copy BIOS manufacturer button</comment>
+  </data>
+  <data name="BiosNameLabel.Text" xml:space="preserve">
+    <value>BIOS Name</value>
+    <comment>Label for BIOS name field</comment>
+  </data>
+  <data name="CopyBiosNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Name to clipboard</value>
+    <comment>Accessibility name for copy BIOS name button</comment>
+  </data>
+  <data name="BiosVersionLabel.Text" xml:space="preserve">
+    <value>BIOS Version</value>
+    <comment>Label for BIOS version field</comment>
+  </data>
+  <data name="CopyBiosVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Version to clipboard</value>
+    <comment>Accessibility name for copy BIOS version button</comment>
+  </data>
+  <data name="BiosReleaseDateLabel.Text" xml:space="preserve">
+    <value>BIOS Release Date</value>
+    <comment>Label for BIOS release date field</comment>
+  </data>
+  <data name="CopyBiosReleaseDateButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Release Date to clipboard</value>
+    <comment>Accessibility name for copy BIOS release date button</comment>
+  </data>
+  <data name="SmbiosVersionLabel.Text" xml:space="preserve">
+    <value>SMBIOS Version</value>
+    <comment>Label for SMBIOS version field</comment>
+  </data>
+  <data name="CopySmbiosVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy SMBIOS Version to clipboard</value>
+    <comment>Accessibility name for copy SMBIOS version button</comment>
+  </data>
+  <data name="SecureBootStatusLabel.Text" xml:space="preserve">
+    <value>Secure Boot Status</value>
+    <comment>Label for Secure Boot status field</comment>
   </data>
 </root>

@@ -11,11 +11,7 @@ namespace DefaultApp.Services;
 public enum AppTheme
 {
     SystemDefault,
-    Light,
-    Dark,
-    Cyberpunk,
-    HighContrastDark,
-    HighContrastLight
+    Light
 }
 
 /// <summary>
@@ -65,17 +61,23 @@ public sealed class ThemeService
     /// <param name="theme">The theme to apply.</param>
     public void SetTheme(AppTheme theme)
     {
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Called with theme: {theme}, current: {_currentTheme}");
+
         if (_currentTheme == theme)
         {
+            System.Diagnostics.Debug.WriteLine("[ThemeService.SetTheme] Theme unchanged, skipping");
             return;
         }
 
         _logger?.LogInformation("Changing theme from {OldTheme} to {NewTheme}", _currentTheme, theme);
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Changing from {_currentTheme} to {theme}");
 
         _currentTheme = theme;
         SaveTheme(theme);
         ApplyTheme(theme);
         ThemeChanged?.Invoke(this, theme);
+
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Theme change complete");
     }
 
     /// <summary>
@@ -86,7 +88,7 @@ public sealed class ThemeService
     {
         if (_currentTheme == AppTheme.SystemDefault)
         {
-            return IsSystemInDarkMode() ? AppTheme.Dark : AppTheme.Light;
+            return AppTheme.Light;
         }
         return _currentTheme;
     }
@@ -112,61 +114,42 @@ public sealed class ThemeService
 
     private void ApplyTheme(AppTheme theme)
     {
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Called with theme: {theme}, rootElement null: {_rootElement is null}");
+
         if (_rootElement is null)
         {
             _logger?.LogWarning("Cannot apply theme: root element not initialized");
+            System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] ERROR: Root element is null!");
             return;
         }
 
-        var effectiveTheme = theme;
-        if (theme == AppTheme.SystemDefault)
-        {
-            effectiveTheme = IsSystemInDarkMode() ? AppTheme.Dark : AppTheme.Light;
-        }
-
         // Check for Windows high contrast override
-        if (IsHighContrastEnabled() && theme != AppTheme.HighContrastDark && theme != AppTheme.HighContrastLight)
+        if (IsHighContrastEnabled())
         {
-            _logger?.LogInformation("Windows high contrast mode detected, overriding theme");
-            // Let WinUI handle high contrast automatically
+            _logger?.LogInformation("Windows high contrast mode detected, using system default");
+            System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] High contrast override - using Default");
             _rootElement.RequestedTheme = ElementTheme.Default;
             return;
         }
 
-        _logger?.LogDebug("Applying effective theme: {Theme}", effectiveTheme);
+        _logger?.LogDebug("Applying theme: {Theme}", theme);
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Setting RequestedTheme for theme: {theme}");
 
-        switch (effectiveTheme)
+        switch (theme)
         {
             case AppTheme.Light:
+                System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] Applying Light theme");
                 _rootElement.RequestedTheme = ElementTheme.Light;
-                RemoveCustomTheme();
                 break;
 
-            case AppTheme.Dark:
-                _rootElement.RequestedTheme = ElementTheme.Dark;
-                RemoveCustomTheme();
-                break;
-
-            case AppTheme.Cyberpunk:
-                _rootElement.RequestedTheme = ElementTheme.Dark; // Base on dark theme
-                ApplyCustomTheme("Cyberpunk");
-                break;
-
-            case AppTheme.HighContrastDark:
-                _rootElement.RequestedTheme = ElementTheme.Dark;
-                ApplyCustomTheme("HighContrastDark");
-                break;
-
-            case AppTheme.HighContrastLight:
-                _rootElement.RequestedTheme = ElementTheme.Light;
-                ApplyCustomTheme("HighContrastLight");
-                break;
-
+            case AppTheme.SystemDefault:
             default:
+                System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] Applying Default theme");
                 _rootElement.RequestedTheme = ElementTheme.Default;
-                RemoveCustomTheme();
                 break;
         }
+
+        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Complete. RequestedTheme is now: {_rootElement.RequestedTheme}");
     }
 
     private void ApplyCustomTheme(string themeName)
@@ -279,10 +262,6 @@ public sealed class ThemeService
         {
             0 => AppTheme.SystemDefault,
             1 => AppTheme.Light,
-            2 => AppTheme.Dark,
-            3 => AppTheme.Cyberpunk,
-            4 => AppTheme.HighContrastDark,
-            5 => AppTheme.HighContrastLight,
             _ => AppTheme.SystemDefault
         };
     }
@@ -296,10 +275,6 @@ public sealed class ThemeService
         {
             AppTheme.SystemDefault => 0,
             AppTheme.Light => 1,
-            AppTheme.Dark => 2,
-            AppTheme.Cyberpunk => 3,
-            AppTheme.HighContrastDark => 4,
-            AppTheme.HighContrastLight => 5,
             _ => 0
         };
     }

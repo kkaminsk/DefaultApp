@@ -38,6 +38,7 @@ public sealed class HardwareInfoService
             CpuModels = GetCpuModels(),
             TotalRam = GetTotalRam(),
             DeviceModel = GetDeviceModel(),
+            SerialNumber = GetSerialNumber(),
             Is64BitProcess = GetIs64BitProcess(),
             IsRunningUnderEmulation = GetIsRunningUnderEmulation(processArch, osArch)
         };
@@ -208,6 +209,44 @@ public sealed class HardwareInfoService
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve device model from Registry");
+            return "Unavailable";
+        }
+    }
+
+    /// <summary>
+    /// Gets the device serial number from the Registry.
+    /// Tries SystemSerialNumber first, then falls back to BaseBoardSerialNumber.
+    /// </summary>
+    public string GetSerialNumber()
+    {
+        try
+        {
+            using var biosKey = Registry.LocalMachine.OpenSubKey(BiosRegistryKey);
+            if (biosKey is null)
+            {
+                _logger?.LogWarning("Failed to open Registry key for serial number");
+                return "Unavailable";
+            }
+
+            // Try SystemSerialNumber first
+            var serialNumber = biosKey.GetValue("SystemSerialNumber") as string;
+            if (!string.IsNullOrWhiteSpace(serialNumber))
+            {
+                return serialNumber.Trim();
+            }
+
+            // Fall back to BaseBoardSerialNumber
+            serialNumber = biosKey.GetValue("BaseBoardSerialNumber") as string;
+            if (!string.IsNullOrWhiteSpace(serialNumber))
+            {
+                return serialNumber.Trim();
+            }
+
+            return "Unavailable";
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to retrieve serial number from Registry");
             return "Unavailable";
         }
     }

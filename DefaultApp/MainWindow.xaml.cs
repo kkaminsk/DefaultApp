@@ -137,7 +137,10 @@ public sealed partial class MainWindow : Window
     {
         // Extend content into the title bar area
         ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
+
+        // IMPORTANT: Set only the DragRegion as the title bar, NOT the entire AppTitleBar
+        // This allows interactive controls (ComboBox, Buttons) to receive mouse input
+        SetTitleBar(DragRegion);
 
         if (_appWindow is not null)
         {
@@ -157,28 +160,6 @@ public sealed partial class MainWindow : Window
         // Interactive elements (ComboBox, Button) are automatically excluded
     }
 
-    private async void RefreshButton_Click(object sender, RoutedEventArgs e)
-    {
-        // Show spinner, hide icon
-        RefreshIcon.Visibility = Visibility.Collapsed;
-        RefreshSpinner.Visibility = Visibility.Visible;
-        RefreshSpinner.IsActive = true;
-        RefreshButton.IsEnabled = false;
-
-        try
-        {
-            await MainPageContent.RefreshAsync();
-        }
-        finally
-        {
-            // Hide spinner, show icon
-            RefreshSpinner.IsActive = false;
-            RefreshSpinner.Visibility = Visibility.Collapsed;
-            RefreshIcon.Visibility = Visibility.Visible;
-            RefreshButton.IsEnabled = true;
-        }
-    }
-
     private void InitializeThemeService()
     {
         _themeService = new ThemeService();
@@ -191,19 +172,29 @@ public sealed partial class MainWindow : Window
         ThemeSelector.SelectedIndex = ThemeService.ToComboBoxIndex(_themeService.CurrentTheme);
         _isInitializingTheme = false;
 
+        // Wire up SelectionChanged event AFTER initialization to avoid timing issues
+        ThemeSelector.SelectionChanged += ThemeSelector_SelectionChanged;
+
         // Subscribe to theme changes from the service (e.g., system theme changes)
         _themeService.ThemeChanged += OnThemeServiceThemeChanged;
+
+        System.Diagnostics.Debug.WriteLine($"[ThemeService] Initialized with theme: {_themeService.CurrentTheme}");
     }
 
     private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] SelectionChanged fired. SelectedIndex: {ThemeSelector.SelectedIndex}, IsInitializing: {_isInitializingTheme}, ThemeService null: {_themeService is null}");
+
         // Avoid handling during initialization
         if (_isInitializingTheme || _themeService is null)
         {
+            System.Diagnostics.Debug.WriteLine("[ThemeSelector] Skipping - initialization in progress or service not ready");
             return;
         }
 
         var selectedTheme = ThemeService.FromComboBoxIndex(ThemeSelector.SelectedIndex);
+        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] Applying theme: {selectedTheme}");
+
         _themeService.SetTheme(selectedTheme);
 
         // Update title bar button colors based on theme
@@ -229,31 +220,17 @@ public sealed partial class MainWindow : Window
         }
 
         var titleBar = _appWindow.TitleBar;
-        var effectiveTheme = _themeService?.GetEffectiveTheme() ?? theme;
 
         // Set button colors based on theme
-        switch (effectiveTheme)
+        switch (theme)
         {
             case AppTheme.Light:
-            case AppTheme.HighContrastLight:
                 titleBar.ButtonForegroundColor = Colors.Black;
                 titleBar.ButtonHoverForegroundColor = Colors.Black;
                 titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 0, 0, 0);
                 break;
 
-            case AppTheme.Dark:
-            case AppTheme.HighContrastDark:
-                titleBar.ButtonForegroundColor = Colors.White;
-                titleBar.ButtonHoverForegroundColor = Colors.White;
-                titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 255, 255, 255);
-                break;
-
-            case AppTheme.Cyberpunk:
-                titleBar.ButtonForegroundColor = Windows.UI.Color.FromArgb(255, 0, 255, 255); // Cyan
-                titleBar.ButtonHoverForegroundColor = Windows.UI.Color.FromArgb(255, 255, 0, 255); // Pink
-                titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(40, 0, 255, 255);
-                break;
-
+            case AppTheme.SystemDefault:
             default:
                 titleBar.ButtonForegroundColor = null; // System default
                 titleBar.ButtonHoverForegroundColor = null;

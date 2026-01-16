@@ -14,6 +14,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly SystemInfoService _systemInfoService;
     private readonly HardwareInfoService _hardwareInfoService;
     private readonly ActivationService _activationService;
+    private readonly BiosInfoService _biosInfoService;
     private readonly ILogger<MainViewModel>? _logger;
     private bool _isDisposed;
 
@@ -22,6 +23,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _systemInfoService = new SystemInfoService();
         _hardwareInfoService = new HardwareInfoService();
         _activationService = new ActivationService();
+        _biosInfoService = new BiosInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
     }
 
@@ -77,7 +79,32 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _deviceModel = "Loading...";
 
     [ObservableProperty]
+    private string _serialNumber = "Loading...";
+
+    [ObservableProperty]
     private string _is64BitProcess = "Loading...";
+
+    #endregion
+
+    #region BIOS Information Properties
+
+    [ObservableProperty]
+    private string _biosManufacturer = "Loading...";
+
+    [ObservableProperty]
+    private string _biosName = "Loading...";
+
+    [ObservableProperty]
+    private string _biosVersion = "Loading...";
+
+    [ObservableProperty]
+    private string _biosReleaseDate = "Loading...";
+
+    [ObservableProperty]
+    private string _smbiosVersion = "Loading...";
+
+    [ObservableProperty]
+    private string _secureBootStatus = "Loading...";
 
     #endregion
 
@@ -117,8 +144,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
             CpuModel = FormatCpuModels(archInfo.CpuModels);
             ProcessorCount = archInfo.ProcessorCount.ToString();
             DeviceModel = archInfo.DeviceModel;
+            SerialNumber = archInfo.SerialNumber;
             TotalRam = archInfo.TotalRam;
             Is64BitProcess = archInfo.Is64BitProcess ? "Yes" : "No";
+
+            // Load BIOS information
+            var biosInfo = _biosInfoService.GetBiosInfo();
+            BiosManufacturer = biosInfo.Manufacturer;
+            BiosName = biosInfo.Name;
+            BiosVersion = biosInfo.Version;
+            BiosReleaseDate = biosInfo.ReleaseDate;
+            SmbiosVersion = biosInfo.SmbiosVersion;
+            SecureBootStatus = biosInfo.IsSecureBootEnabled ? "Enabled" : "Disabled";
 
             // Load activation status asynchronously
             var status = await _activationService.GetActivationStatusAsync();
@@ -175,6 +212,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "SystemLocale" => SystemLocale,
             "CpuModel" => CpuModel,
             "DeviceModel" => DeviceModel,
+            "SerialNumber" => SerialNumber,
+            "BiosManufacturer" => BiosManufacturer,
+            "BiosName" => BiosName,
+            "BiosVersion" => BiosVersion,
+            "BiosReleaseDate" => BiosReleaseDate,
+            "SmbiosVersion" => SmbiosVersion,
             _ => null
         };
 
