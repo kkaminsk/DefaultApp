@@ -348,10 +348,56 @@
 
                         <!-- Total RAM -->
                         <TextBlock x:Uid="TotalRamLabel" Text="Total RAM" Style="{StaticResource PropertyLabelStyle}" />
-                        <TextBlock
-                            Text="{x:Bind ViewModel.TotalRam, Mode=OneWay}"
-                            Style="{StaticResource PropertyValueStyle}"
-                            AutomationProperties.Name="Total RAM value" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TotalRam, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Total RAM value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTotalRamButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TotalRam"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Total RAM to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- VRAM -->
+                        <TextBlock x:Uid="VramLabel" Text="VRAM" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.Vram, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="VRAM value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyVramButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="Vram"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy VRAM to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
 
                         <!-- Processor Architecture -->
@@ -543,6 +589,74 @@
                             Style="{StaticResource PropertyValueStyle}"
                             Margin="0"
                             AutomationProperties.Name="Secure Boot Status value" />
+                    </StackPanel>
+                </Border>
+
+                <!-- TPM Information Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="TpmInfoCard"
+                    AutomationProperties.Name="TPM Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="TpmInfoCardHeader"
+                            Text="TPM Information"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- TPM Manufacturer ID -->
+                        <TextBlock x:Uid="TpmManufacturerIdLabel" Text="Manufacturer" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmManufacturerId, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Manufacturer value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmManufacturerIdButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmManufacturerId"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Manufacturer to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- TPM Firmware Version -->
+                        <TextBlock x:Uid="TpmManufacturerVersionLabel" Text="Firmware Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmManufacturerVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Firmware Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmManufacturerVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmManufacturerVersion"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Firmware Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
                     </StackPanel>
                 </Border>
             </ItemsControl>

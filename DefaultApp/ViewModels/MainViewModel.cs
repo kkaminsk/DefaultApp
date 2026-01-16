@@ -15,6 +15,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly HardwareInfoService _hardwareInfoService;
     private readonly ActivationService _activationService;
     private readonly BiosInfoService _biosInfoService;
+    private readonly TpmInfoService _tpmInfoService;
     private readonly ILogger<MainViewModel>? _logger;
     private bool _isDisposed;
 
@@ -24,6 +25,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _hardwareInfoService = new HardwareInfoService();
         _activationService = new ActivationService();
         _biosInfoService = new BiosInfoService();
+        _tpmInfoService = new TpmInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
     }
 
@@ -73,6 +75,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _totalRam = "Loading...";
 
     [ObservableProperty]
+    private string _vram = "Loading...";
+
+    [ObservableProperty]
     private string _deviceModel = "Loading...";
 
     [ObservableProperty]
@@ -102,6 +107,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string _secureBootStatus = "Loading...";
+
+    #endregion
+
+    #region TPM Information Properties
+
+    [ObservableProperty]
+    private string _tpmManufacturerId = "Loading...";
+
+    [ObservableProperty]
+    private string _tpmManufacturerVersion = "Loading...";
 
     #endregion
 
@@ -142,6 +157,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             DeviceModel = archInfo.DeviceModel;
             SerialNumber = archInfo.SerialNumber;
             TotalRam = archInfo.TotalRam;
+            Vram = archInfo.Vram;
             Is64BitProcess = archInfo.Is64BitProcess ? "Yes" : "No";
 
             // Load BIOS information
@@ -152,6 +168,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
             BiosReleaseDate = biosInfo.ReleaseDate;
             SmbiosVersion = biosInfo.SmbiosVersion;
             SecureBootStatus = biosInfo.IsSecureBootEnabled ? "Enabled" : "Disabled";
+
+            // Load TPM information
+            var tpmInfo = _tpmInfoService.GetTpmInfo();
+            TpmManufacturerId = tpmInfo.ManufacturerId;
+            TpmManufacturerVersion = tpmInfo.ManufacturerVersion;
 
             // Load activation status asynchronously
             var status = await _activationService.GetActivationStatusAsync();
@@ -208,11 +229,15 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "CpuModel" => CpuModel,
             "DeviceModel" => DeviceModel,
             "SerialNumber" => SerialNumber,
+            "TotalRam" => TotalRam,
+            "Vram" => Vram,
             "BiosManufacturer" => BiosManufacturer,
             "BiosName" => BiosName,
             "BiosVersion" => BiosVersion,
             "BiosReleaseDate" => BiosReleaseDate,
             "SmbiosVersion" => SmbiosVersion,
+            "TpmManufacturerId" => TpmManufacturerId,
+            "TpmManufacturerVersion" => TpmManufacturerVersion,
             _ => null
         };
 
