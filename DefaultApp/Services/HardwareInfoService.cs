@@ -214,11 +214,20 @@ public sealed class HardwareInfoService
     }
 
     /// <summary>
-    /// Gets the device serial number from the Registry.
-    /// Tries SystemSerialNumber first, then falls back to BaseBoardSerialNumber.
+    /// Gets the device serial number.
+    /// Tries SMBIOS firmware table first, then falls back to Registry.
     /// </summary>
     public string GetSerialNumber()
     {
+        // Try SMBIOS first (most reliable across different hardware)
+        var smbiosSerial = GetSerialNumberFromSmbios();
+        if (!string.IsNullOrWhiteSpace(smbiosSerial))
+        {
+            _logger?.LogDebug("Retrieved serial number from SMBIOS: {SerialNumber}", smbiosSerial);
+            return smbiosSerial;
+        }
+
+        // Fall back to Registry
         try
         {
             using var biosKey = Registry.LocalMachine.OpenSubKey(BiosRegistryKey);
@@ -317,5 +326,166 @@ public sealed class HardwareInfoService
         const double bytesPerGb = 1024.0 * 1024.0 * 1024.0;
         var gb = bytes / bytesPerGb;
         return $"{gb:F1} GB";
+    }
+
+    /// <summary>
+    /// Gets the serial number from SMBIOS firmware table.
+    /// </summary>
+    private string? GetSerialNumberFromSmbios()
+    {
+        try
+        {
+            // First call to get required buffer size
+            var size = NativeMethods.GetSystemFirmwareTable(NativeMethods.RSMB, 0, IntPtr.Zero, 0);
+            if (size == 0)
+            {
+                _logger?.LogDebug("GetSystemFirmwareTable returned 0 size");
+                return null;
+            }
+
+            // Allocate buffer and get the data
+            var buffer = Marshal.AllocHGlobal((int)size);
+            try
+            {
+                var bytesWritten = NativeMethods.GetSystemFirmwareTable(NativeMethods.RSMB, 0, buffer, size);
+                if (bytesWritten == 0)
+                {
+                    _logger?.LogDebug("GetSystemFirmwareTable failed to write data");
+                    return null;
+                }
+
+                // Copy to managed array for easier parsing
+                var data = new byte[bytesWritten];
+                Marshal.Copy(buffer, data, 0, (int)bytesWritten);
+
+                return ParseSmbiosForSerialNumber(data);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to read SMBIOS data");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Parses SMBIOS data to extract the system serial number from Type 1 (System Information) table.
+    /// </summary>
+    private string? ParseSmbiosForSerialNumber(byte[] data)
+    {
+        // SMBIOS raw data header is 8 bytes:
+        // Byte 0: Used20CallingMethod
+        // Byte 1: SMBIOSMajorVersion
+        // Byte 2: SMBIOSMinorVersion
+        // Byte 3: DmiRevision
+        // Bytes 4-7: Length (DWORD)
+        const int headerSize = 8;
+
+        if (data.Length <= headerSize)
+        {
+            return null;
+        }
+
+        var offset = headerSize;
+
+        while (offset < data.Length - 4)
+        {
+            var type = data[offset];
+            var length = data[offset + 1];
+
+            if (length < 4 || offset + length > data.Length)
+            {
+                break;
+            }
+
+            // Type 1 = System Information
+            if (type == 1 && length >= 8)
+            {
+                // Serial number is at offset 7 within the structure (string index)
+                var serialNumberIndex = data[offset + 7];
+
+                if (serialNumberIndex == 0)
+                {
+                    // No serial number string
+                    return null;
+                }
+
+                // Find the strings section (after the formatted portion)
+                var stringsOffset = offset + length;
+                return GetSmbiosString(data, stringsOffset, serialNumberIndex);
+            }
+
+            // Move to strings section (after the formatted portion)
+            var stringStart = offset + length;
+
+            // Skip past strings (each null-terminated, double-null at end)
+            while (stringStart < data.Length - 1)
+            {
+                if (data[stringStart] == 0 && data[stringStart + 1] == 0)
+                {
+                    // Double null - end of this structure
+                    offset = stringStart + 2;
+                    break;
+                }
+                stringStart++;
+            }
+
+            if (stringStart >= data.Length - 1)
+            {
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Gets a string from the SMBIOS strings section by index (1-based).
+    /// </summary>
+    private static string? GetSmbiosString(byte[] data, int stringsOffset, int stringIndex)
+    {
+        if (stringIndex <= 0 || stringsOffset >= data.Length)
+        {
+            return null;
+        }
+
+        var currentIndex = 1;
+        var currentOffset = stringsOffset;
+
+        while (currentOffset < data.Length)
+        {
+            // Find end of current string
+            var stringEnd = currentOffset;
+            while (stringEnd < data.Length && data[stringEnd] != 0)
+            {
+                stringEnd++;
+            }
+
+            if (currentIndex == stringIndex)
+            {
+                var length = stringEnd - currentOffset;
+                if (length > 0)
+                {
+                    return System.Text.Encoding.ASCII.GetString(data, currentOffset, length).Trim();
+                }
+                return null;
+            }
+
+            // Move to next string
+            currentOffset = stringEnd + 1;
+            currentIndex++;
+
+            // Check for double null (end of strings)
+            if (currentOffset < data.Length && data[currentOffset] == 0)
+            {
+                break;
+            }
+        }
+
+        return null;
     }
 }

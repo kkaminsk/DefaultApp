@@ -70,4 +70,24 @@ internal static partial class NativeMethods
     [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
+
+    /// <summary>
+    /// Firmware table provider signature for SMBIOS ('RSMB').
+    /// </summary>
+    public const uint RSMB = 0x52534D42; // 'RSMB' in little-endian
+
+    /// <summary>
+    /// Retrieves the specified firmware table from the firmware table provider.
+    /// </summary>
+    /// <param name="FirmwareTableProviderSignature">The firmware table provider signature.</param>
+    /// <param name="FirmwareTableID">The firmware table identifier.</param>
+    /// <param name="pFirmwareTableBuffer">A pointer to a buffer to receive the firmware table data.</param>
+    /// <param name="BufferSize">The size of the buffer.</param>
+    /// <returns>The number of bytes written to the buffer, or the required buffer size if the buffer is too small.</returns>
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial uint GetSystemFirmwareTable(
+        uint FirmwareTableProviderSignature,
+        uint FirmwareTableID,
+        IntPtr pFirmwareTableBuffer,
+        uint BufferSize);
 }
