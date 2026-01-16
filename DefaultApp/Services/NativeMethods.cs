@@ -63,6 +63,17 @@ internal static partial class NativeMethods
         IntPtr pUIOptions);
 
     /// <summary>
+    /// Retrieves a DWORD value for the specified Windows licensing property.
+    /// </summary>
+    /// <param name="pwszValueName">The name of the property to retrieve.</param>
+    /// <param name="pdwValue">A pointer to receive the DWORD value.</param>
+    /// <returns>HRESULT indicating success or failure.</returns>
+    [LibraryImport("slc.dll", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial int SLGetWindowsInformationDWORD(
+        string pwszValueName,
+        out uint pdwValue);
+
+    /// <summary>
     /// Retrieves information about the system's current usage of both physical and virtual memory.
     /// </summary>
     /// <param name="lpBuffer">A pointer to a MEMORYSTATUSEX structure.</param>

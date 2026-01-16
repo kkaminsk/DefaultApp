@@ -11,7 +11,7 @@ namespace DefaultApp.Services;
 public enum AppTheme
 {
     SystemDefault,
-    Light
+    Inverted
 }
 
 /// <summary>
@@ -88,7 +88,7 @@ public sealed class ThemeService
     {
         if (_currentTheme == AppTheme.SystemDefault)
         {
-            return AppTheme.Light;
+            return AppTheme.SystemDefault;
         }
         return _currentTheme;
     }
@@ -137,9 +137,11 @@ public sealed class ThemeService
 
         switch (theme)
         {
-            case AppTheme.Light:
-                System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] Applying Light theme");
-                _rootElement.RequestedTheme = ElementTheme.Light;
+            case AppTheme.Inverted:
+                // Apply the opposite of the system theme
+                var invertedTheme = IsSystemInDarkMode() ? ElementTheme.Light : ElementTheme.Dark;
+                System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Applying Inverted theme (system is {(IsSystemInDarkMode() ? "dark" : "light")}, using {invertedTheme})");
+                _rootElement.RequestedTheme = invertedTheme;
                 break;
 
             case AppTheme.SystemDefault:
@@ -261,7 +263,7 @@ public sealed class ThemeService
         return index switch
         {
             0 => AppTheme.SystemDefault,
-            1 => AppTheme.Light,
+            1 => AppTheme.Inverted,
             _ => AppTheme.SystemDefault
         };
     }
@@ -274,7 +276,7 @@ public sealed class ThemeService
         return theme switch
         {
             AppTheme.SystemDefault => 0,
-            AppTheme.Light => 1,
+            AppTheme.Inverted => 1,
             _ => 0
         };
     }

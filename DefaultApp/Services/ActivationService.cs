@@ -67,15 +67,48 @@ public sealed class ActivationService
 
     private static ActivationStatus CheckActivationStatus()
     {
-        // Try Registry-based detection first (more reliable in MSIX context)
-        var registryStatus = CheckActivationStatusFromRegistry();
-        if (registryStatus != ActivationStatus.Unavailable)
+        // Try SLGetWindowsInformationDWORD first (most reliable)
+        var slInfoStatus = CheckActivationStatusFromSlInfo();
+        if (slInfoStatus != ActivationStatus.Unavailable)
         {
-            return registryStatus;
+            return slInfoStatus;
         }
 
-        // Fall back to P/Invoke if Registry read fails
-        return CheckActivationStatusFromPInvoke();
+        // Try SLIsGenuineLocal next
+        var genuineStatus = CheckActivationStatusFromPInvoke();
+        if (genuineStatus != ActivationStatus.Unavailable)
+        {
+            return genuineStatus;
+        }
+
+        // Fall back to Registry-based detection
+        return CheckActivationStatusFromRegistry();
+    }
+
+    /// <summary>
+    /// Checks activation status using SLGetWindowsInformationDWORD.
+    /// </summary>
+    private static ActivationStatus CheckActivationStatusFromSlInfo()
+    {
+        try
+        {
+            var result = NativeMethods.SLGetWindowsInformationDWORD(
+                "Security-SPP-GenuineLocalStatus",
+                out var genuineStatus);
+
+            // S_OK = 0
+            if (result == 0)
+            {
+                // 0 = Genuine/Activated, 1 = Not Genuine
+                return genuineStatus == 0 ? ActivationStatus.Activated : ActivationStatus.NotActivated;
+            }
+
+            return ActivationStatus.Unavailable;
+        }
+        catch
+        {
+            return ActivationStatus.Unavailable;
+        }
     }
 
     /// <summary>

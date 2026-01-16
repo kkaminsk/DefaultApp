@@ -79,9 +79,9 @@
     <value>System Default</value>
     <comment>Follow system theme option</comment>
   </data>
-  <data name="ThemeLight.Content" xml:space="preserve">
-    <value>Light</value>
-    <comment>Light theme option</comment>
+  <data name="ThemeInverted.Content" xml:space="preserve">
+    <value>Inverted</value>
+    <comment>Inverted theme option (opposite of system theme)</comment>
   </data>
   <data name="ThemeDark.Content" xml:space="preserve">
     <value>Dark</value>

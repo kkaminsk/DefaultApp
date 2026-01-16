@@ -1,7 +1,4 @@
 using DefaultApp.Services;
-#if DEBUG
-using DefaultApp.Views;
-#endif
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -9,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Runtime.InteropServices;
+using Windows.UI.ViewManagement;
 using WinRT.Interop;
 
 namespace DefaultApp;
@@ -74,11 +72,6 @@ public sealed partial class MainWindow : Window
 
         // Initialize theme service
         InitializeThemeService();
-
-#if DEBUG
-        // Show debug button in DEBUG builds
-        DebugButton.Visibility = Visibility.Visible;
-#endif
     }
 
     private void SetMinimumWindowSize()
@@ -224,10 +217,24 @@ public sealed partial class MainWindow : Window
         // Set button colors based on theme
         switch (theme)
         {
-            case AppTheme.Light:
-                titleBar.ButtonForegroundColor = Colors.Black;
-                titleBar.ButtonHoverForegroundColor = Colors.Black;
-                titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 0, 0, 0);
+            case AppTheme.Inverted:
+                // For inverted theme, we need to check what the effective theme will be
+                var uiSettings = new UISettings();
+                var foreground = uiSettings.GetColorValue(UIColorType.Foreground);
+                var isSystemDark = foreground.R > 128 && foreground.G > 128 && foreground.B > 128;
+                // Inverted means opposite of system, so if system is dark, we show light (black text)
+                if (isSystemDark)
+                {
+                    titleBar.ButtonForegroundColor = Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Colors.Black;
+                    titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 0, 0, 0);
+                }
+                else
+                {
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Colors.White;
+                    titleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(20, 255, 255, 255);
+                }
                 break;
 
             case AppTheme.SystemDefault:
@@ -238,30 +245,4 @@ public sealed partial class MainWindow : Window
                 break;
         }
     }
-
-#if DEBUG
-    private ContentDialog? _debugDialog;
-
-    private async void DebugButton_Click(object sender, RoutedEventArgs e)
-    {
-        var debugPage = new DebugPage();
-        debugPage.CloseRequested += (s, args) => _debugDialog?.Hide();
-
-        _debugDialog = new ContentDialog
-        {
-            Title = "Debug Tools",
-            Content = debugPage,
-            CloseButtonText = "Close",
-            XamlRoot = Content.XamlRoot,
-            DefaultButton = ContentDialogButton.Close
-        };
-
-        await _debugDialog.ShowAsync();
-    }
-#else
-    private void DebugButton_Click(object sender, RoutedEventArgs e)
-    {
-        // No-op in Release builds
-    }
-#endif
 }
