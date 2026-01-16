@@ -31,10 +31,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DefaultApp.BackgroundTasks\DefaultApp.BackgroundTasks.csproj" />
-    <ProjectReference Include="..\DefaultApp.AppService\DefaultApp.AppService.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Package.appxmanifest">

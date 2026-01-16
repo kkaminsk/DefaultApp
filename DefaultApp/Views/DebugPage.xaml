@@ -70,33 +70,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Service Testing Card -->
-            <Border
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="16">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Service Testing" FontWeight="SemiBold" FontSize="16" />
-
-                    <Button
-                        x:Name="TriggerBackgroundTaskButton"
-                        Content="Trigger Background Task Event"
-                        Click="TriggerBackgroundTaskButton_Click" />
-
-                    <Button
-                        x:Name="SimulateServiceErrorButton"
-                        Content="Simulate Service Error"
-                        Click="SimulateServiceErrorButton_Click" />
-
-                    <Button
-                        x:Name="ClearLogsButton"
-                        Content="Open Log Folder"
-                        Click="OpenLogFolderButton_Click" />
-                </StackPanel>
-            </Border>
-
             <!-- Logging Card -->
             <Border
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -123,6 +96,11 @@
                         x:Name="WriteTestLogButton"
                         Content="Write Test Log Entry"
                         Click="WriteTestLogButton_Click" />
+
+                    <Button
+                        x:Name="OpenLogFolderButton"
+                        Content="Open Log Folder"
+                        Click="OpenLogFolderButton_Click" />
 
                     <TextBlock
                         x:Name="LogPathText"

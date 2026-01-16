@@ -41,12 +41,6 @@
             <Setter Property="Margin" Value="0,0,0,12" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
-
-        <!-- Status Indicator Colors -->
-        <SolidColorBrush x:Key="StatusRunningBrush" Color="#107C10" />
-        <SolidColorBrush x:Key="StatusStoppedBrush" Color="#767676" />
-        <SolidColorBrush x:Key="StatusStartingBrush" Color="#CA5010" />
-        <SolidColorBrush x:Key="StatusErrorBrush" Color="#C42B1C" />
     </Page.Resources>
 
     <ScrollViewer
@@ -200,122 +194,6 @@
                             Style="{StaticResource PropertyValueStyle}"
                             Margin="0"
                             AutomationProperties.Name="64-bit Process value" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Packaged Service Card -->
-                <Border
-                    Style="{StaticResource InfoCardStyle}"
-                    AutomationProperties.AutomationId="ServiceInfoCard"
-                    AutomationProperties.Name="Packaged Service Information">
-
-                    <StackPanel>
-                        <TextBlock
-                            x:Uid="ServiceCardHeader"
-                            Text="Packaged Service"
-                            Style="{StaticResource CardHeaderStyle}"
-                            AutomationProperties.HeadingLevel="Level2" />
-
-                        <!-- Service Type Selector -->
-                        <TextBlock x:Uid="ServiceTypeLabel" Text="Service Type" Style="{StaticResource PropertyLabelStyle}" />
-                        <ComboBox
-                            x:Name="ServiceTypeComboBox"
-                            x:Uid="ServiceTypeComboBox"
-                            SelectedIndex="{x:Bind ViewModel.SelectedServiceIndex, Mode=TwoWay}"
-                            Margin="0,0,0,16"
-                            MinWidth="250"
-                            TabIndex="0"
-                            AutomationProperties.Name="Service type selector">
-                            <ComboBoxItem x:Uid="BackgroundTaskOption" Content="Background Task" />
-                            <ComboBoxItem x:Uid="AppServiceOption" Content="App Service" />
-                            <ComboBoxItem x:Uid="FullTrustProcessOption" Content="Full Trust Process" />
-                        </ComboBox>
-
-                        <!-- Status Row -->
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <!-- Status Label -->
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                x:Uid="StatusLabel"
-                                Text="Status"
-                                Style="{StaticResource PropertyLabelStyle}" />
-
-                            <!-- Status Indicator -->
-                            <StackPanel
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Orientation="Horizontal"
-                                Spacing="8"
-                                VerticalAlignment="Center">
-                                <Ellipse
-                                    x:Name="StatusIndicator"
-                                    Width="12"
-                                    Height="12"
-                                    Fill="{StaticResource StatusStoppedBrush}"
-                                    AutomationProperties.Name="Service status indicator" />
-                                <TextBlock
-                                    Text="{x:Bind ViewModel.ServiceStatus, Mode=OneWay}"
-                                    Style="{StaticResource PropertyValueStyle}"
-                                    Margin="0"
-                                    VerticalAlignment="Center"
-                                    AutomationProperties.Name="Service status value" />
-                            </StackPanel>
-
-                            <!-- Uptime Label -->
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                x:Uid="UptimeLabel"
-                                Text="Uptime"
-                                Style="{StaticResource PropertyLabelStyle}"
-                                Margin="24,0,0,4" />
-
-                            <!-- Uptime Value -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Text="{x:Bind ViewModel.ServiceUptime, Mode=OneWay}"
-                                Style="{StaticResource PropertyValueStyle}"
-                                Margin="24,0,0,0"
-                                AutomationProperties.Name="Service uptime value" />
-                        </Grid>
-
-                        <!-- Start/Stop Button -->
-                        <Button
-                            x:Name="StartStopButton"
-                            x:Uid="StartStopButton"
-                            Content="{x:Bind ViewModel.StartStopButtonText, Mode=OneWay}"
-                            Command="{x:Bind ViewModel.ToggleServiceCommand}"
-                            MinWidth="120"
-                            Margin="0,0,0,16"
-                            TabIndex="1"
-                            AutomationProperties.Name="Start or stop service button" />
-
-                        <!-- Service Content Area -->
-                        <Border
-                            x:Name="ServiceContentArea"
-                            Background="{ThemeResource LayerFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="12"
-                            MinHeight="100"
-                            Visibility="{x:Bind ViewModel.IsServiceRunning, Mode=OneWay}">
-                            <TextBlock
-                                Text="{x:Bind ViewModel.ServiceContent, Mode=OneWay}"
-                                TextWrapping="Wrap"
-                                AutomationProperties.Name="Service output content" />
-                        </Border>
                     </StackPanel>
                 </Border>
             </ItemsControl>

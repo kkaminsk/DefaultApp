@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Default App is a diagnostic utility that displays comprehensive system information including operating system details, device architecture, and hardware information. It demonstrates three types of MSIX packaged services: Background Task, App Service, and Full Trust Process.
+Default App is a diagnostic utility that displays comprehensive system information including operating system details, device architecture, and hardware information.
 
-**Target Users:** Developers and IT professionals who need to view system information and understand MSIX service capabilities.
+**Target Users:** Developers and IT professionals who need to view system information.
 
 ## Tech Stack
 
@@ -37,9 +37,6 @@ DefaultApp/                        # Main WinUI 3 Application
 ├── Themes/                        # Custom theme resources
 └── Strings/                       # Localization resources
 
-DefaultApp.BackgroundTasks/        # In-process Background Task
-DefaultApp.AppService/             # App Service for Event Log
-DefaultApp.FullTrustProcess/       # Win32 Named Pipe service
 DefaultApp.Tests/                  # Unit tests
 ```
 
@@ -47,7 +44,6 @@ DefaultApp.Tests/                  # Unit tests
 - `SystemInfoService` - OS information retrieval
 - `HardwareInfoService` - Hardware/architecture detection
 - `ActivationService` - Windows activation status
-- `ServiceController` - Packaged service lifecycle management
 
 ### Testing Strategy
 
@@ -66,25 +62,6 @@ DefaultApp.Tests/                  # Unit tests
 - **CI/CD:** GitHub Actions with automated MSIX signing and Store submission
 
 ## Domain Context
-
-### Packaged Services
-
-The app demonstrates three MSIX service types:
-
-1. **Background Task (Timer Service)**
-   - In-process using `ApplicationTrigger`
-   - Updates UI with current time every second via `DispatcherTimer`
-   - Default service on app startup
-
-2. **App Service (Event Log Reader)**
-   - Reads Application Event Log (Warning/Error only, last 24 hours)
-   - Returns 10 most recent events
-   - Bidirectional communication with UI
-
-3. **Full Trust Process (Continuous Logger)**
-   - Win32 process via `windows.fullTrustProcess`
-   - Named Pipes IPC: `\\.\pipe\DefaultApp_{ProcessId}`
-   - JSON protocol with auto-reconnect (5 retries, 5s interval)
 
 ### System Information Sources
 
@@ -111,22 +88,10 @@ The app demonstrates three MSIX service types:
 
 1. **No WMI** - All WMI queries have been removed
 2. **No Dependency Injection** - Keep simple for demo purposes
-3. **Services stop when app closes** - No persistent background services
-4. **Auto-stop on service switch** - Changing service type stops current first
-5. **Single refresh button** - No per-card refresh, refreshes everything
-6. **RAM format** - Always GB with 1 decimal (e.g., "31.7 GB")
-7. **Windows 11 only** - Minimum Build 22000
-8. **runFullTrust capability** - Required for WinUI 3 and Full Trust Process
-
-### Status Indicator Colors (Fixed)
-
-| State | Color |
-|-------|-------|
-| Starting | Yellow/Orange |
-| Running | Green |
-| Stopping | Yellow/Orange |
-| Stopped | Gray |
-| Error | Red |
+3. **Single refresh button** - No per-card refresh, refreshes everything
+4. **RAM format** - Always GB with 1 decimal (e.g., "31.7 GB")
+5. **Windows 11 only** - Minimum Build 22000
+6. **runFullTrust capability** - Required for WinUI 3
 
 ## External Dependencies
 

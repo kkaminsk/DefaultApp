@@ -30,9 +30,4 @@
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DefaultApp.BackgroundTasks\DefaultApp.BackgroundTasks.csproj" />
-    <ProjectReference Include="..\DefaultApp.AppService\DefaultApp.AppService.csproj" />
-    <ProjectReference Include="..\DefaultApp.FullTrustProcess\DefaultApp.FullTrustProcess.csproj" />
-  </ItemGroup>
 </Project>

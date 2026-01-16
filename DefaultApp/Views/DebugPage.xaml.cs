@@ -78,18 +78,6 @@ public sealed partial class DebugPage : Page
             $"Mock data toggled: {ViewModel.UseMockData}");
     }
 
-    private void TriggerBackgroundTaskButton_Click(object sender, RoutedEventArgs e)
-    {
-        App.Logger?.WriteLog(LogLevel.Debug, "DebugPage",
-            "Manual background task trigger requested");
-    }
-
-    private void SimulateServiceErrorButton_Click(object sender, RoutedEventArgs e)
-    {
-        App.Logger?.WriteLog(LogLevel.Warning, "DebugPage",
-            "Simulated service error triggered");
-    }
-
     private void OpenLogFolderButton_Click(object sender, RoutedEventArgs e)
     {
         var logPath = Path.Combine(

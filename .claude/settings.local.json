@@ -17,7 +17,13 @@
       "Bash(del \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.AppService\\\\EventLogService.cs\")",
       "Bash(cmd /c \"del C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.AppService\\\\EventLogService.cs\")",
       "Bash(cmd /c \"cd /d C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Debug\\\\net8.0-windows10.0.22000.0\\\\win-x64 && start DefaultApp.exe\")",
-      "Skill(openspec:apply)"
+      "Skill(openspec:apply)",
+      "Bash(ls -la \"C:\\\\Temp\\\\tsscat\\\\PrivateGPT\\\\.github\"\" 2>/dev/null || echo \"Directory not found or empty \")",
+      "Bash(ls:*)",
+      "Bash(pwsh:*)",
+      "Bash(Remove-Item -Path \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\TimerBackgroundTaskTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\EventLoggerServiceTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\EventLogAppServiceTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\NamedPipeProtocolTests.cs\" -Force)",
+      "Bash(dotnet publish:*)",
+      "Bash(git reset:*)"
     ]
   }
 }

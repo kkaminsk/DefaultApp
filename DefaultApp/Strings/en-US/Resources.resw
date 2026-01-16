@@ -63,7 +63,7 @@
     <comment>Application display name shown in title bar and Start menu</comment>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>System Information and MSIX Services Demo</value>
+    <value>System Information Viewer</value>
     <comment>Application description</comment>
   </data>
   <!-- Title Bar -->
@@ -176,75 +176,5 @@
   <data name="Is64BitProcessLabel.Text" xml:space="preserve">
     <value>64-bit Process</value>
     <comment>Label for 64-bit process field</comment>
-  </data>
-  <!-- Packaged Service Card -->
-  <data name="ServiceCardHeader.Text" xml:space="preserve">
-    <value>Packaged Service</value>
-    <comment>Header for the packaged service card</comment>
-  </data>
-  <data name="ServiceTypeLabel.Text" xml:space="preserve">
-    <value>Service Type</value>
-    <comment>Label for service type selector</comment>
-  </data>
-  <data name="ServiceTypeComboBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Service type selector</value>
-    <comment>Accessibility name for service type dropdown</comment>
-  </data>
-  <data name="BackgroundTaskOption.Content" xml:space="preserve">
-    <value>Background Task</value>
-    <comment>Background task service option</comment>
-  </data>
-  <data name="AppServiceOption.Content" xml:space="preserve">
-    <value>App Service</value>
-    <comment>App service option</comment>
-  </data>
-  <data name="FullTrustProcessOption.Content" xml:space="preserve">
-    <value>Full Trust Process</value>
-    <comment>Full trust process service option</comment>
-  </data>
-  <data name="StatusLabel.Text" xml:space="preserve">
-    <value>Status</value>
-    <comment>Label for service status</comment>
-  </data>
-  <data name="UptimeLabel.Text" xml:space="preserve">
-    <value>Uptime</value>
-    <comment>Label for service uptime</comment>
-  </data>
-  <data name="StartStopButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Start or stop service button</value>
-    <comment>Accessibility name for start/stop button</comment>
-  </data>
-  <!-- Service Status Values -->
-  <data name="StatusStopped" xml:space="preserve">
-    <value>Stopped</value>
-    <comment>Service stopped status text</comment>
-  </data>
-  <data name="StatusStarting" xml:space="preserve">
-    <value>Starting</value>
-    <comment>Service starting status text</comment>
-  </data>
-  <data name="StatusRunning" xml:space="preserve">
-    <value>Running</value>
-    <comment>Service running status text</comment>
-  </data>
-  <data name="StatusStopping" xml:space="preserve">
-    <value>Stopping</value>
-    <comment>Service stopping status text</comment>
-  </data>
-  <data name="StatusError" xml:space="preserve">
-    <value>Error</value>
-    <comment>Service error status text</comment>
-  </data>
-  <data name="UptimeNotAvailable" xml:space="preserve">
-    <value>N/A</value>
-    <comment>Uptime value when service is not running</comment>
-  </data>
-  <data name="StartServiceButton" xml:space="preserve">
-    <value>Start Service</value>
-    <comment>Start service button text</comment>
-  </data>
-  <data name="StopServiceButton" xml:space="preserve">
-    <value>Stop Service</value>
-    <comment>Stop service button text</comment>
   </data>
 </root>
