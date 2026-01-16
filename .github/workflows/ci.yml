@@ -1,0 +1,255 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main, 'release/**']
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  SOLUTION_FILE: 'DefaultApp.sln'
+  APP_PROJECT: 'DefaultApp/DefaultApp.csproj'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: [x64, ARM64]
+        configuration: [Debug, Release]
+        exclude:
+          # Only run Debug on x64 to save CI time
+          - platform: ARM64
+            configuration: Debug
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Windows App SDK workload
+        run: |
+          dotnet workload install maui-windows
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }} -p:Platform=${{ matrix.platform }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --no-restore -p:Platform=${{ matrix.platform }}
+
+      - name: Test
+        if: matrix.platform == 'x64'
+        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --no-build --verbosity normal -p:Platform=${{ matrix.platform }} --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: Upload test results
+        if: matrix.platform == 'x64' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.configuration }}
+          path: ./TestResults
+          retention-days: 7
+
+      - name: Upload coverage reports
+        if: matrix.platform == 'x64' && matrix.configuration == 'Release'
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./TestResults
+          fail_ci_if_error: false
+
+  package:
+    name: Create MSIX Packages
+    needs: build
+    runs-on: windows-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    strategy:
+      matrix:
+        platform: [x64, ARM64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Windows App SDK workload
+        run: |
+          dotnet workload install maui-windows
+
+      - name: Get version from tag or generate
+        id: version
+        shell: pwsh
+        run: |
+          if ('${{ github.ref }}' -match 'refs/tags/v(.+)') {
+            $version = $Matches[1]
+          } else {
+            $version = "1.0.${{ github.run_number }}.0"
+          }
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Version: $version"
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }} -p:Platform=${{ matrix.platform }}
+
+      - name: Publish
+        run: |
+          dotnet publish ${{ env.APP_PROJECT }} `
+            --configuration Release `
+            --runtime win-${{ matrix.platform == 'x64' && 'x64' || 'arm64' }} `
+            --self-contained true `
+            -p:Platform=${{ matrix.platform }} `
+            -p:Version=${{ steps.version.outputs.VERSION }} `
+            -p:AppxPackageDir=..\publish\${{ matrix.platform }}\ `
+            -p:GenerateAppxPackageOnBuild=true `
+            -p:AppxBundle=Never `
+            -p:UapAppxPackageBuildMode=SideloadOnly
+
+      - name: Upload MSIX package
+        uses: actions/upload-artifact@v4
+        with:
+          name: msix-${{ matrix.platform }}
+          path: publish/${{ matrix.platform }}/*.msix
+          retention-days: 30
+
+  sign:
+    name: Sign MSIX Packages
+    needs: package
+    runs-on: windows-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Download x64 MSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: msix-x64
+          path: ./packages/x64
+
+      - name: Download ARM64 MSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: msix-ARM64
+          path: ./packages/ARM64
+
+      - name: Install AzureSignTool
+        run: dotnet tool install --global AzureSignTool
+
+      - name: Sign packages with Azure Code Signing
+        env:
+          AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
+        run: |
+          Get-ChildItem -Path ./packages -Filter *.msix -Recurse | ForEach-Object {
+            Write-Host "Signing $($_.FullName)"
+            AzureSignTool sign `
+              --azure-key-vault-url "$env:AZURE_KEY_VAULT_URI" `
+              --azure-key-vault-client-id "$env:AZURE_CLIENT_ID" `
+              --azure-key-vault-client-secret "$env:AZURE_CLIENT_SECRET" `
+              --azure-key-vault-tenant-id "$env:AZURE_TENANT_ID" `
+              --azure-key-vault-certificate "$env:AZURE_CERT_NAME" `
+              --timestamp-rfc3161 http://timestamp.digicert.com `
+              --file-digest sha256 `
+              "$($_.FullName)"
+          }
+        shell: pwsh
+
+      - name: Verify signatures
+        run: |
+          Get-ChildItem -Path ./packages -Filter *.msix -Recurse | ForEach-Object {
+            Write-Host "Verifying $($_.FullName)"
+            $sig = Get-AuthenticodeSignature $_.FullName
+            if ($sig.Status -ne 'Valid') {
+              throw "Signature verification failed for $($_.FullName): $($sig.Status)"
+            }
+            Write-Host "Signature valid: $($sig.SignerCertificate.Subject)"
+          }
+        shell: pwsh
+
+      - name: Create MSIX Bundle
+        run: |
+          # Find Windows SDK MakeAppx
+          $sdkPath = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory |
+            Where-Object { $_.Name -match '^\d+\.\d+\.\d+\.\d+$' } |
+            Sort-Object { [version]$_.Name } -Descending |
+            Select-Object -First 1
+
+          $makeAppx = Join-Path $sdkPath.FullName "x64\makeappx.exe"
+
+          # Create bundle
+          New-Item -ItemType Directory -Path ./bundle -Force
+          & $makeAppx bundle /d ./packages /p ./bundle/DefaultApp.msixbundle
+        shell: pwsh
+
+      - name: Upload signed bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: msix-bundle-signed
+          path: ./bundle/*.msixbundle
+          retention-days: 90
+
+  store-submission:
+    name: Submit to Microsoft Store
+    needs: sign
+    runs-on: windows-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    environment: production
+
+    steps:
+      - name: Download signed bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: msix-bundle-signed
+          path: ./bundle
+
+      - name: Install Store Broker
+        run: |
+          Install-Module -Name StoreBroker -Force -Scope CurrentUser
+        shell: pwsh
+
+      - name: Submit to Store
+        env:
+          STORE_CLIENT_ID: ${{ secrets.STORE_CLIENT_ID }}
+          STORE_CLIENT_SECRET: ${{ secrets.STORE_CLIENT_SECRET }}
+          STORE_TENANT_ID: ${{ secrets.STORE_TENANT_ID }}
+          STORE_APP_ID: ${{ secrets.STORE_APP_ID }}
+        run: |
+          # Configure StoreBroker
+          $secureSecret = ConvertTo-SecureString $env:STORE_CLIENT_SECRET -AsPlainText -Force
+          $cred = New-Object System.Management.Automation.PSCredential($env:STORE_CLIENT_ID, $secureSecret)
+
+          Set-StoreBrokerAuthentication -TenantId $env:STORE_TENANT_ID -Credential $cred
+
+          # Get the bundle file
+          $bundle = Get-ChildItem ./bundle -Filter *.msixbundle | Select-Object -First 1
+
+          # Create submission
+          Write-Host "Creating new submission for app $env:STORE_APP_ID"
+          $submission = New-ApplicationSubmission -AppId $env:STORE_APP_ID -Force
+
+          # Upload package
+          Write-Host "Uploading package: $($bundle.FullName)"
+          Set-ApplicationSubmissionPackage -AppId $env:STORE_APP_ID -SubmissionId $submission.id -PackagePath $bundle.FullName
+
+          # Note: runFullTrust capability justification should be pre-configured in Partner Center
+          Write-Host "Package uploaded. Manual review may be required for runFullTrust capability."
+
+          # Complete submission
+          Complete-ApplicationSubmission -AppId $env:STORE_APP_ID -SubmissionId $submission.id
+
+          Write-Host "Submission completed. Check Partner Center for status."
+        shell: pwsh

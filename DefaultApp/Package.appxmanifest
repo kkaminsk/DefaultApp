@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap uap3 uap5 rescap desktop">
+
+  <Identity
+    Name="com.contoso.defaultapp"
+    Publisher="CN=Contoso"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="8F9D3A1A-1B5C-4E6D-8F7A-9B0C1D2E3F4A" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>Default App</DisplayName>
+    <PublisherDisplayName>Contoso</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22000.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Default App"
+        Description="System Information and MSIX Services Demo"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- Background Task Extension (placeholder) -->
+        <Extension Category="windows.backgroundTasks" EntryPoint="DefaultApp.BackgroundTasks.TimerBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
+
+        <!-- App Service Extension for Event Log Service -->
+        <uap:Extension Category="windows.appService" EntryPoint="DefaultApp.AppService.EventLogAppService">
+          <uap:AppService Name="com.contoso.defaultapp.eventlogservice" />
+        </uap:Extension>
+
+        <!-- Full Trust Process Extension for Event Logger -->
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="DefaultApp.FullTrustProcess.exe">
+          <desktop:FullTrustProcess>
+            <desktop:ParameterGroup GroupId="ContinuousLogger" Parameters="" />
+          </desktop:FullTrustProcess>
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

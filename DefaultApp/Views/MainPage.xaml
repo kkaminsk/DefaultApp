@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DefaultApp.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DefaultApp.Views"
+    xmlns:viewmodels="using:DefaultApp.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled">
+
+    <Page.Resources>
+        <!-- InfoCard Style Template -->
+        <Style x:Key="InfoCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="MinWidth" Value="300" />
+        </Style>
+
+        <!-- Card Header Style -->
+        <Style x:Key="CardHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+
+        <!-- Property Label Style -->
+        <Style x:Key="PropertyLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <!-- Property Value Style -->
+        <Style x:Key="PropertyValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- Status Indicator Colors -->
+        <SolidColorBrush x:Key="StatusRunningBrush" Color="#107C10" />
+        <SolidColorBrush x:Key="StatusStoppedBrush" Color="#767676" />
+        <SolidColorBrush x:Key="StatusStartingBrush" Color="#CA5010" />
+        <SolidColorBrush x:Key="StatusErrorBrush" Color="#C42B1C" />
+    </Page.Resources>
+
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto"
+        HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Padding="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Cards Container with VariableSizedWrapGrid for responsive layout -->
+            <ItemsControl x:Name="CardsContainer">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel x:Name="CardsPanel" Orientation="Vertical" Spacing="16" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- Operating System Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="OsInfoCard"
+                    AutomationProperties.Name="Operating System Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="OsCardHeader"
+                            Text="Operating System"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- OS Name -->
+                        <TextBlock x:Uid="OsNameLabel" Text="OS Name" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsName, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="OS Name value" />
+
+                        <!-- OS Version -->
+                        <TextBlock x:Uid="OsVersionLabel" Text="Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsVersion, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="OS Version value" />
+
+                        <!-- Build Number -->
+                        <TextBlock x:Uid="OsBuildLabel" Text="Build" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsBuildNumber, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Build number value" />
+
+                        <!-- Edition -->
+                        <TextBlock x:Uid="OsEditionLabel" Text="Edition" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsEdition, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Windows Edition value" />
+
+                        <!-- 64-bit OS -->
+                        <TextBlock x:Uid="OsIs64BitLabel" Text="64-bit OS" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsIs64Bit, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="64-bit OS value" />
+
+                        <!-- System Locale -->
+                        <TextBlock x:Uid="SystemLocaleLabel" Text="System Locale" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.SystemLocale, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="System Locale value" />
+
+                        <!-- Activation Status -->
+                        <TextBlock x:Uid="ActivationStatusLabel" Text="Activation Status" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ActivationStatus, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0"
+                            AutomationProperties.Name="Windows Activation Status value" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Device & Hardware Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="HardwareInfoCard"
+                    AutomationProperties.Name="Device and Hardware Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="HardwareCardHeader"
+                            Text="Device &amp; Hardware"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- Machine Name -->
+                        <TextBlock x:Uid="MachineNameLabel" Text="Machine Name" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.MachineName, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Machine Name value" />
+
+                        <!-- Processor Architecture -->
+                        <TextBlock x:Uid="ProcessorArchLabel" Text="Processor Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProcessorArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Processor Architecture value" />
+
+                        <!-- OS Architecture -->
+                        <TextBlock x:Uid="OsArchLabel" Text="OS Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="OS Architecture value" />
+
+                        <!-- Running Under Emulation -->
+                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Running under emulation value" />
+
+                        <!-- CPU Model -->
+                        <TextBlock x:Uid="CpuModelLabel" Text="CPU Model" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.CpuModel, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="CPU Model value" />
+
+                        <!-- Processor Count -->
+                        <TextBlock x:Uid="ProcessorCountLabel" Text="Processor Count" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProcessorCount, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Processor Count value" />
+
+                        <!-- Total RAM -->
+                        <TextBlock x:Uid="TotalRamLabel" Text="Total RAM" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.TotalRam, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Total RAM value" />
+
+                        <!-- 64-bit Process -->
+                        <TextBlock x:Uid="Is64BitProcessLabel" Text="64-bit Process" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.Is64BitProcess, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0"
+                            AutomationProperties.Name="64-bit Process value" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Packaged Service Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="ServiceInfoCard"
+                    AutomationProperties.Name="Packaged Service Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="ServiceCardHeader"
+                            Text="Packaged Service"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- Service Type Selector -->
+                        <TextBlock x:Uid="ServiceTypeLabel" Text="Service Type" Style="{StaticResource PropertyLabelStyle}" />
+                        <ComboBox
+                            x:Name="ServiceTypeComboBox"
+                            x:Uid="ServiceTypeComboBox"
+                            SelectedIndex="{x:Bind ViewModel.SelectedServiceIndex, Mode=TwoWay}"
+                            Margin="0,0,0,16"
+                            MinWidth="250"
+                            TabIndex="0"
+                            AutomationProperties.Name="Service type selector">
+                            <ComboBoxItem x:Uid="BackgroundTaskOption" Content="Background Task" />
+                            <ComboBoxItem x:Uid="AppServiceOption" Content="App Service" />
+                            <ComboBoxItem x:Uid="FullTrustProcessOption" Content="Full Trust Process" />
+                        </ComboBox>
+
+                        <!-- Status Row -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Status Label -->
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                x:Uid="StatusLabel"
+                                Text="Status"
+                                Style="{StaticResource PropertyLabelStyle}" />
+
+                            <!-- Status Indicator -->
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                VerticalAlignment="Center">
+                                <Ellipse
+                                    x:Name="StatusIndicator"
+                                    Width="12"
+                                    Height="12"
+                                    Fill="{StaticResource StatusStoppedBrush}"
+                                    AutomationProperties.Name="Service status indicator" />
+                                <TextBlock
+                                    Text="{x:Bind ViewModel.ServiceStatus, Mode=OneWay}"
+                                    Style="{StaticResource PropertyValueStyle}"
+                                    Margin="0"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.Name="Service status value" />
+                            </StackPanel>
+
+                            <!-- Uptime Label -->
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                x:Uid="UptimeLabel"
+                                Text="Uptime"
+                                Style="{StaticResource PropertyLabelStyle}"
+                                Margin="24,0,0,4" />
+
+                            <!-- Uptime Value -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{x:Bind ViewModel.ServiceUptime, Mode=OneWay}"
+                                Style="{StaticResource PropertyValueStyle}"
+                                Margin="24,0,0,0"
+                                AutomationProperties.Name="Service uptime value" />
+                        </Grid>
+
+                        <!-- Start/Stop Button -->
+                        <Button
+                            x:Name="StartStopButton"
+                            x:Uid="StartStopButton"
+                            Content="{x:Bind ViewModel.StartStopButtonText, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.ToggleServiceCommand}"
+                            MinWidth="120"
+                            Margin="0,0,0,16"
+                            TabIndex="1"
+                            AutomationProperties.Name="Start or stop service button" />
+
+                        <!-- Service Content Area -->
+                        <Border
+                            x:Name="ServiceContentArea"
+                            Background="{ThemeResource LayerFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12"
+                            MinHeight="100"
+                            Visibility="{x:Bind ViewModel.IsServiceRunning, Mode=OneWay}">
+                            <TextBlock
+                                Text="{x:Bind ViewModel.ServiceContent, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                AutomationProperties.Name="Service output content" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ItemsControl>
+
+            <!-- Visual State Manager for responsive layout -->
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="WindowSizeStates">
+                    <VisualState x:Name="NarrowState">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- Cards stack vertically (default) -->
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="WideState">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="1200" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- This state is handled in code-behind to switch to horizontal layout -->
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ScrollViewer>
+</Page>
