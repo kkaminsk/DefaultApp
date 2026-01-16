@@ -36,6 +36,11 @@ public sealed class ArchitectureInfo
     public string TotalRam { get; set; } = "Unavailable";
 
     /// <summary>
+    /// Gets or sets the device model name (e.g., "Surface Pro 9", "Dell XPS 15").
+    /// </summary>
+    public string DeviceModel { get; set; } = "Unavailable";
+
+    /// <summary>
     /// Gets or sets whether the current process is 64-bit.
     /// </summary>
     public bool Is64BitProcess { get; set; }

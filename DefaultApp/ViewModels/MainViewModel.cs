@@ -74,6 +74,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _totalRam = "Loading...";
 
     [ObservableProperty]
+    private string _deviceModel = "Loading...";
+
+    [ObservableProperty]
     private string _is64BitProcess = "Loading...";
 
     #endregion
@@ -113,6 +116,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             IsRunningUnderEmulation = archInfo.IsRunningUnderEmulation ? "Yes" : "No";
             CpuModel = FormatCpuModels(archInfo.CpuModels);
             ProcessorCount = archInfo.ProcessorCount.ToString();
+            DeviceModel = archInfo.DeviceModel;
             TotalRam = archInfo.TotalRam;
             Is64BitProcess = archInfo.Is64BitProcess ? "Yes" : "No";
 
@@ -165,6 +169,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             "MachineName" => MachineName,
             "Version" => OsVersion,
+            "OsName" => OsName,
+            "Build" => OsBuildNumber,
+            "Edition" => OsEdition,
+            "SystemLocale" => SystemLocale,
+            "CpuModel" => CpuModel,
+            "DeviceModel" => DeviceModel,
             _ => null
         };
 

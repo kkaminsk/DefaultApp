@@ -11,6 +11,7 @@ namespace DefaultApp.Services;
 public sealed class HardwareInfoService
 {
     private const string CentralProcessorRegistryKey = @"HARDWARE\DESCRIPTION\System\CentralProcessor";
+    private const string BiosRegistryKey = @"HARDWARE\DESCRIPTION\System\BIOS";
     private readonly ILogger<HardwareInfoService>? _logger;
 
     public HardwareInfoService()
@@ -36,6 +37,7 @@ public sealed class HardwareInfoService
             ProcessorCount = GetProcessorCount(),
             CpuModels = GetCpuModels(),
             TotalRam = GetTotalRam(),
+            DeviceModel = GetDeviceModel(),
             Is64BitProcess = GetIs64BitProcess(),
             IsRunningUnderEmulation = GetIsRunningUnderEmulation(processArch, osArch)
         };
@@ -177,6 +179,35 @@ public sealed class HardwareInfoService
         }
         catch
         {
+            return "Unavailable";
+        }
+    }
+
+    /// <summary>
+    /// Gets the device model name from the Registry.
+    /// </summary>
+    public string GetDeviceModel()
+    {
+        try
+        {
+            using var biosKey = Registry.LocalMachine.OpenSubKey(BiosRegistryKey);
+            if (biosKey is null)
+            {
+                _logger?.LogWarning("Failed to open Registry key for device model");
+                return "Unavailable";
+            }
+
+            var productName = biosKey.GetValue("SystemProductName") as string;
+            if (!string.IsNullOrWhiteSpace(productName))
+            {
+                return productName.Trim();
+            }
+
+            return "Unavailable";
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to retrieve device model from Registry");
             return "Unavailable";
         }
     }

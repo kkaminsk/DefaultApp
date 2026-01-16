@@ -186,6 +186,34 @@
     <value>Copy Version to clipboard</value>
     <comment>Accessibility name for copy version button</comment>
   </data>
+  <data name="CopyOsNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy OS Name to clipboard</value>
+    <comment>Accessibility name for copy OS name button</comment>
+  </data>
+  <data name="CopyBuildButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Build to clipboard</value>
+    <comment>Accessibility name for copy build button</comment>
+  </data>
+  <data name="CopyEditionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Edition to clipboard</value>
+    <comment>Accessibility name for copy edition button</comment>
+  </data>
+  <data name="CopySystemLocaleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy System Locale to clipboard</value>
+    <comment>Accessibility name for copy system locale button</comment>
+  </data>
+  <data name="CopyCpuModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy CPU Model to clipboard</value>
+    <comment>Accessibility name for copy CPU model button</comment>
+  </data>
+  <data name="CopyDeviceModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Device Model to clipboard</value>
+    <comment>Accessibility name for copy device model button</comment>
+  </data>
+  <data name="DeviceModelLabel.Text" xml:space="preserve">
+    <value>Device Model</value>
+    <comment>Label for device model field</comment>
+  </data>
   <data name="CopyToClipboardTooltip" xml:space="preserve">
     <value>Copy to clipboard</value>
     <comment>Tooltip text for copy buttons</comment>
