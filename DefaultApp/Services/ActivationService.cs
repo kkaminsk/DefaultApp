@@ -1,4 +1,5 @@
 using DefaultApp.Models;
+using Microsoft.Win32;
 
 namespace DefaultApp.Services;
 
@@ -7,6 +8,7 @@ namespace DefaultApp.Services;
 /// </summary>
 public sealed class ActivationService
 {
+    private const string SoftwareProtectionRegistryKey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform";
     private ActivationStatus? _cachedStatus;
     private readonly object _lock = new();
 
@@ -64,6 +66,59 @@ public sealed class ActivationService
     }
 
     private static ActivationStatus CheckActivationStatus()
+    {
+        // Try Registry-based detection first (more reliable in MSIX context)
+        var registryStatus = CheckActivationStatusFromRegistry();
+        if (registryStatus != ActivationStatus.Unavailable)
+        {
+            return registryStatus;
+        }
+
+        // Fall back to P/Invoke if Registry read fails
+        return CheckActivationStatusFromPInvoke();
+    }
+
+    /// <summary>
+    /// Checks activation status using Registry keys.
+    /// </summary>
+    private static ActivationStatus CheckActivationStatusFromRegistry()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(SoftwareProtectionRegistryKey);
+            if (key is null)
+            {
+                return ActivationStatus.Unavailable;
+            }
+
+            // Try to read LicenseStatus (not always present)
+            // We can also check activation status via other indicators
+            var notificationReason = key.GetValue("NotificationReason");
+            if (notificationReason is int reason)
+            {
+                // NotificationReason 0 = activated, non-zero = not activated
+                return reason == 0 ? ActivationStatus.Activated : ActivationStatus.NotActivated;
+            }
+
+            // Alternative: Check if genuine ticket exists
+            var genuineTicket = key.GetValue("GenuineTicket");
+            if (genuineTicket is not null)
+            {
+                return ActivationStatus.Activated;
+            }
+
+            return ActivationStatus.Unavailable;
+        }
+        catch
+        {
+            return ActivationStatus.Unavailable;
+        }
+    }
+
+    /// <summary>
+    /// Checks activation status using P/Invoke (SLIsGenuineLocal).
+    /// </summary>
+    private static ActivationStatus CheckActivationStatusFromPInvoke()
     {
         try
         {

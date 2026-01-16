@@ -27,7 +27,7 @@ public sealed class SystemInfoService
 
         var osInfo = new OsInfo
         {
-            Name = GetOsName(),
+            Name = GetFullOsDisplayName(),
             Version = GetOsVersion(),
             BuildNumber = GetBuildNumber(),
             Edition = GetEdition(),
@@ -54,6 +54,72 @@ public sealed class SystemInfoService
         {
             return "Unavailable";
         }
+    }
+
+    /// <summary>
+    /// Gets a user-friendly OS name (e.g., "Windows 11" or "Windows 10") based on build number.
+    /// </summary>
+    public string GetFriendlyOsName()
+    {
+        try
+        {
+            var buildNumber = Environment.OSVersion.Version.Build;
+            // Windows 11 starts at build 22000
+            return buildNumber >= 22000 ? "Windows 11" : "Windows 10";
+        }
+        catch
+        {
+            return "Windows";
+        }
+    }
+
+    /// <summary>
+    /// Gets the full OS display name combining friendly name with edition (e.g., "Windows 11 Enterprise").
+    /// </summary>
+    public string GetFullOsDisplayName()
+    {
+        try
+        {
+            var friendlyName = GetFriendlyOsName();
+            var edition = GetEdition();
+
+            if (string.IsNullOrWhiteSpace(edition) || edition == "Unavailable")
+            {
+                return friendlyName;
+            }
+
+            // Map EditionID to display name
+            var displayEdition = MapEditionToDisplayName(edition);
+            return $"{friendlyName} {displayEdition}";
+        }
+        catch
+        {
+            return "Unavailable";
+        }
+    }
+
+    /// <summary>
+    /// Maps the Registry EditionID value to a user-friendly display name.
+    /// </summary>
+    private static string MapEditionToDisplayName(string editionId)
+    {
+        return editionId switch
+        {
+            "Enterprise" => "Enterprise",
+            "Professional" => "Pro",
+            "Education" => "Education",
+            "Core" => "Home",
+            "CoreN" => "Home N",
+            "ProfessionalN" => "Pro N",
+            "EnterpriseN" => "Enterprise N",
+            "ProfessionalEducation" => "Pro Education",
+            "ProfessionalWorkstation" => "Pro for Workstations",
+            "EnterpriseS" => "Enterprise LTSC",
+            "EnterpriseSN" => "Enterprise LTSC N",
+            "ServerStandard" => "Server Standard",
+            "ServerDatacenter" => "Server Datacenter",
+            _ => editionId
+        };
     }
 
     /// <summary>

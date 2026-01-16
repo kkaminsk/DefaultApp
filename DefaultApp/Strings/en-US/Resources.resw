@@ -177,4 +177,17 @@
     <value>64-bit Process</value>
     <comment>Label for 64-bit process field</comment>
   </data>
+  <!-- Copy Buttons -->
+  <data name="CopyMachineNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Machine Name to clipboard</value>
+    <comment>Accessibility name for copy machine name button</comment>
+  </data>
+  <data name="CopyVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Version to clipboard</value>
+    <comment>Accessibility name for copy version button</comment>
+  </data>
+  <data name="CopyToClipboardTooltip" xml:space="preserve">
+    <value>Copy to clipboard</value>
+    <comment>Tooltip text for copy buttons</comment>
+  </data>
 </root>

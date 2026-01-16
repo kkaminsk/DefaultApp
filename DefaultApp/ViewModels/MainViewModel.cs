@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace DefaultApp.ViewModels;
 
@@ -152,6 +153,39 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
     private bool CanRefresh() => !IsRefreshing;
+
+    /// <summary>
+    /// Copies the specified field value to the clipboard.
+    /// </summary>
+    /// <param name="fieldName">The name of the field to copy (e.g., "MachineName", "Version").</param>
+    [RelayCommand]
+    private void CopyToClipboard(string fieldName)
+    {
+        var value = fieldName switch
+        {
+            "MachineName" => MachineName,
+            "Version" => OsVersion,
+            _ => null
+        };
+
+        if (string.IsNullOrEmpty(value) || value == "Loading..." || value == "Unavailable")
+        {
+            _logger?.LogWarning("Cannot copy empty or unavailable value for field: {Field}", fieldName);
+            return;
+        }
+
+        try
+        {
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(value);
+            Clipboard.SetContent(dataPackage);
+            _logger?.LogDebug("Copied {Field} to clipboard: {Value}", fieldName, value);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to copy {Field} to clipboard", fieldName);
+        }
+    }
 
     private static string FormatCpuModels(IReadOnlyList<string> cpuModels)
     {
