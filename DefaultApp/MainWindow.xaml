@@ -21,7 +21,8 @@
             x:Name="AppTitleBar"
             Grid.Row="0"
             Height="48"
-            VerticalAlignment="Top">
+            VerticalAlignment="Top"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -44,6 +45,7 @@
                     x:Uid="AppTitleText"
                     Text="Default App"
                     Style="{StaticResource CaptionTextBlockStyle}"
+                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                     VerticalAlignment="Center" />
             </StackPanel>
 
