@@ -74,12 +74,6 @@
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource CyberpunkSecondary}" />
     <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#1A0A2E" />
 
-    <!-- Status Indicator Colors for Service Card -->
-    <SolidColorBrush x:Key="StatusRunningBrush" Color="{StaticResource CyberpunkAccent}" />
-    <SolidColorBrush x:Key="StatusStoppedBrush" Color="#606060" />
-    <SolidColorBrush x:Key="StatusStartingBrush" Color="{StaticResource CyberpunkWarning}" />
-    <SolidColorBrush x:Key="StatusErrorBrush" Color="{StaticResource CyberpunkPrimary}" />
-
     <!-- Subtle Focus/Selection Glow -->
     <SolidColorBrush x:Key="FocusVisualPrimaryBrush" Color="{StaticResource CyberpunkSecondary}" />
     <SolidColorBrush x:Key="FocusVisualSecondaryBrush" Color="{StaticResource CyberpunkPrimary}" />

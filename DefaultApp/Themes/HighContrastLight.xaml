@@ -69,12 +69,6 @@
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource HCLightBorder}" />
     <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource HCLightBackground}" />
 
-    <!-- Status Indicator Colors - High contrast versions -->
-    <SolidColorBrush x:Key="StatusRunningBrush" Color="{StaticResource HCLightSelected}" />
-    <SolidColorBrush x:Key="StatusStoppedBrush" Color="{StaticResource HCLightDisabled}" />
-    <SolidColorBrush x:Key="StatusStartingBrush" Color="#CC6600" />
-    <SolidColorBrush x:Key="StatusErrorBrush" Color="#CC0000" />
-
     <!-- Focus Visual - High visibility -->
     <SolidColorBrush x:Key="FocusVisualPrimaryBrush" Color="{StaticResource HCLightForeground}" />
     <SolidColorBrush x:Key="FocusVisualSecondaryBrush" Color="{StaticResource HCLightAccent}" />

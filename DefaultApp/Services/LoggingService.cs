@@ -73,33 +73,6 @@ public sealed class LoggingService : IDisposable
     }
 
     /// <summary>
-    /// Logs a service start event.
-    /// </summary>
-    public void LogServiceStart(string serviceName)
-    {
-        WriteLog(LogLevel.Information, "Audit", $"Service started: {serviceName}");
-        _eventSource.ServiceStarted(serviceName);
-    }
-
-    /// <summary>
-    /// Logs a service stop event.
-    /// </summary>
-    public void LogServiceStop(string serviceName)
-    {
-        WriteLog(LogLevel.Information, "Audit", $"Service stopped: {serviceName}");
-        _eventSource.ServiceStopped(serviceName);
-    }
-
-    /// <summary>
-    /// Logs a service state transition.
-    /// </summary>
-    public void LogServiceStateChange(string serviceName, string fromState, string toState)
-    {
-        WriteLog(LogLevel.Information, "Audit", $"Service '{serviceName}' state changed: {fromState} -> {toState}");
-        _eventSource.ServiceStateChanged(serviceName, fromState, toState);
-    }
-
-    /// <summary>
     /// Logs an unhandled exception (for crash reporting).
     /// </summary>
     public void LogUnhandledException(Exception exception)
@@ -365,51 +338,33 @@ internal sealed class DefaultAppEventSource : EventSource
 {
     public static readonly DefaultAppEventSource Log = new();
 
-    [Event(1, Level = EventLevel.Informational, Message = "Service started: {0}")]
-    public void ServiceStarted(string serviceName)
-    {
-        WriteEvent(1, serviceName);
-    }
-
-    [Event(2, Level = EventLevel.Informational, Message = "Service stopped: {0}")]
-    public void ServiceStopped(string serviceName)
-    {
-        WriteEvent(2, serviceName);
-    }
-
-    [Event(3, Level = EventLevel.Informational, Message = "Service state changed: {0} from {1} to {2}")]
-    public void ServiceStateChanged(string serviceName, string fromState, string toState)
-    {
-        WriteEvent(3, serviceName, fromState, toState);
-    }
-
-    [Event(4, Level = EventLevel.Verbose, Message = "[{0}] {1}")]
+    [Event(1, Level = EventLevel.Verbose, Message = "[{0}] {1}")]
     public void Debug(string category, string message)
+    {
+        WriteEvent(1, category, message);
+    }
+
+    [Event(2, Level = EventLevel.Informational, Message = "[{0}] {1}")]
+    public void Info(string category, string message)
+    {
+        WriteEvent(2, category, message);
+    }
+
+    [Event(3, Level = EventLevel.Warning, Message = "[{0}] {1}")]
+    public void Warning(string category, string message)
+    {
+        WriteEvent(3, category, message);
+    }
+
+    [Event(4, Level = EventLevel.Error, Message = "[{0}] {1}")]
+    public void Error(string category, string message)
     {
         WriteEvent(4, category, message);
     }
 
-    [Event(5, Level = EventLevel.Informational, Message = "[{0}] {1}")]
-    public void Info(string category, string message)
-    {
-        WriteEvent(5, category, message);
-    }
-
-    [Event(6, Level = EventLevel.Warning, Message = "[{0}] {1}")]
-    public void Warning(string category, string message)
-    {
-        WriteEvent(6, category, message);
-    }
-
-    [Event(7, Level = EventLevel.Error, Message = "[{0}] {1}")]
-    public void Error(string category, string message)
-    {
-        WriteEvent(7, category, message);
-    }
-
-    [Event(8, Level = EventLevel.Critical, Message = "Unhandled exception: {0}: {1}")]
+    [Event(5, Level = EventLevel.Critical, Message = "Unhandled exception: {0}: {1}")]
     public void UnhandledException(string exceptionType, string message, string stackTrace)
     {
-        WriteEvent(8, exceptionType, message, stackTrace);
+        WriteEvent(5, exceptionType, message, stackTrace);
     }
 }

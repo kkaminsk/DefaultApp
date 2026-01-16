@@ -68,10 +68,26 @@ dotnet publish -c Release -r win-x64
 dotnet publish -c Release -r win-arm64
 ```
 
+## Custom Skills
+
+| Command | Description |
+|---------|-------------|
+| `/build-msix` | Build and sign the MSIX package using Azure Trusted Signing |
+
 ## Code Signing
 
-- Method: Azure Trusted Signing
-- Certificate location: `C:\Temp\tsscat\CodeSigning`
+- **Method:** Azure Trusted Signing
+- **Certificate:** Big Hat Group Inc.
+- **SDK Required:** Windows SDK 10.0.26100.0 (older versions don't support MSIX signing)
+- **Config Location:** `C:\Temp\tsscat\CodeSigning`
+
+### Signing Configuration
+
+| Setting | Value |
+|---------|-------|
+| Metadata File | `C:\Temp\tsscat\CodeSigning\metadata-privategpt.json` |
+| DLib Path | `C:\Temp\tsscat\CodeSigning\Microsoft.Trusted.Signing.Client.1.0.95\bin\x64\Azure.CodeSigning.Dlib.dll` |
+| Timestamp Server | http://timestamp.acs.microsoft.com |
 
 ## Testing
 
