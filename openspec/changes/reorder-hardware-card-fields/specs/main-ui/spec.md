@@ -12,5 +12,5 @@ The Device & Hardware card SHALL display fields in a specific order prioritizing
   3. Total RAM
   4. Processor Architecture
   5. OS Architecture
-  6. Running Under Emulation
-  7. 64-bit Process
+  6. 64-bit Process
+  7. Running Under Emulation

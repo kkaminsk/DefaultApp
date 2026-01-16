@@ -228,20 +228,20 @@
                             Style="{StaticResource PropertyValueStyle}"
                             AutomationProperties.Name="OS Architecture value" />
 
-                        <!-- Running Under Emulation -->
-                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
-                        <TextBlock
-                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
-                            Style="{StaticResource PropertyValueStyle}"
-                            AutomationProperties.Name="Running under emulation value" />
-
                         <!-- 64-bit Process -->
                         <TextBlock x:Uid="Is64BitProcessLabel" Text="64-bit Process" Style="{StaticResource PropertyLabelStyle}" />
                         <TextBlock
                             Text="{x:Bind ViewModel.Is64BitProcess, Mode=OneWay}"
                             Style="{StaticResource PropertyValueStyle}"
-                            Margin="0"
                             AutomationProperties.Name="64-bit Process value" />
+
+                        <!-- Running Under Emulation -->
+                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0"
+                            AutomationProperties.Name="Running under emulation value" />
                     </StackPanel>
                 </Border>
             </ItemsControl>
