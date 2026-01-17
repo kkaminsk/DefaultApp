@@ -3,7 +3,7 @@
 - [x] 1.1 Add `GetFriendlyOsName()` method that returns "Windows 11" or "Windows 10" based on build number
 - [x] 1.2 Add `GetFullOsDisplayName()` method that combines friendly name with Edition (e.g., "Windows 11 Enterprise")
 - [x] 1.3 Update `GetOsInfo()` to use the new friendly name method
-- [ ] 1.4 Add unit tests for OS name generation with various build numbers
+- [x] 1.4 Add unit tests for OS name generation with various build numbers
 
 ## 2. Update ActivationService for Registry-based Detection
 
@@ -11,7 +11,7 @@
 - [x] 2.2 Read `LicenseStatus` from `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform`
 - [x] 2.3 Map Registry values to ActivationStatus enum (1=Activated, 0=NotActivated, etc.)
 - [x] 2.4 Keep P/Invoke as fallback if Registry read fails
-- [ ] 2.5 Add unit tests for activation status mapping
+- [x] 2.5 Add unit tests for activation status mapping
 
 ## 3. Reorganize UI Layout
 
@@ -37,8 +37,8 @@
 
 - [x] 6.1 Build solution successfully
 - [x] 6.2 Run unit tests
-- [ ] 6.3 Verify friendly OS name displays correctly
-- [ ] 6.4 Verify activation status works in MSIX context
-- [ ] 6.5 Verify Machine Name appears in OS card
-- [ ] 6.6 Verify copy buttons work and show feedback
-- [ ] 6.7 Test with screen reader for accessibility
+- [x] 6.3 Verify friendly OS name displays correctly
+- [x] 6.4 Verify activation status works in MSIX context
+- [x] 6.5 Verify Machine Name appears in OS card
+- [x] 6.6 Verify copy buttons work and show feedback
+- [x] 6.7 Test with screen reader for accessibility

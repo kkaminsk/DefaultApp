@@ -150,4 +150,39 @@ public class SystemInfoServiceTests
         expected.Should().NotBeNullOrWhiteSpace();
         input.Should().NotBeNullOrWhiteSpace();
     }
+
+    [Fact]
+    public void GetFriendlyOsName_ReturnsBasedOnBuildNumber()
+    {
+        // Arrange & Act
+        var result = _service.GetFriendlyOsName();
+        var buildNumber = Environment.OSVersion.Version.Build;
+
+        // Assert - verify the logic matches the build number
+        if (buildNumber >= 22000)
+        {
+            result.Should().Be("Windows 11");
+        }
+        else
+        {
+            result.Should().Be("Windows 10");
+        }
+    }
+
+    [Fact]
+    public void GetFullOsDisplayName_IncludesEditionWhenAvailable()
+    {
+        // Act
+        var fullName = _service.GetFullOsDisplayName();
+        var friendlyName = _service.GetFriendlyOsName();
+        var edition = _service.GetEdition();
+
+        // Assert
+        fullName.Should().StartWith(friendlyName);
+        if (edition != "Unavailable")
+        {
+            // Full name should be longer than just the friendly name (includes edition)
+            fullName.Length.Should().BeGreaterThan(friendlyName.Length);
+        }
+    }
 }

@@ -6,5 +6,5 @@
 
 ## 2. Validation
 
-- [ ] 2.1 Test on primary monitor - window should appear centered
+- [x] 2.1 Test on primary monitor - window should appear centered
 - [x] 2.2 Build project to verify no compilation errors

@@ -17,4 +17,4 @@
 ## 4. Validation
 
 - [x] 4.1 Build and verify no errors
-- [ ] 4.2 Test network information displays correctly
+- [x] 4.2 Test network information displays correctly

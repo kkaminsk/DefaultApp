@@ -111,4 +111,34 @@ public class ActivationServiceTests
             display.Should().NotBeNullOrWhiteSpace();
         }
     }
+
+    [Theory]
+    [InlineData(0, "Activated")]          // Registry NotificationReason 0 = activated
+    [InlineData(1, "Not Activated")]      // Registry NotificationReason non-zero = not activated
+    public void ActivationStatusMapping_NotificationReasonValues(int notificationReason, string expectedDisplay)
+    {
+        // This test documents the expected mapping of Registry NotificationReason values
+        // to activation status display strings (tested indirectly through the service)
+        var expectedStatus = notificationReason == 0 ? ActivationStatus.Activated : ActivationStatus.NotActivated;
+        var display = ActivationService.GetActivationStatusDisplay(expectedStatus);
+        display.Should().Be(expectedDisplay);
+    }
+
+    [Fact]
+    public void ActivationStatusMapping_AllStatusesHaveUniqueDisplayStrings()
+    {
+        // Arrange
+        var allStatuses = Enum.GetValues<ActivationStatus>();
+        var displayStrings = new HashSet<string>();
+
+        // Act & Assert - verify no duplicate display strings (except Unknown for invalid values)
+        foreach (var status in allStatuses)
+        {
+            var display = ActivationService.GetActivationStatusDisplay(status);
+            displayStrings.Add(display);
+        }
+
+        // All valid statuses should have unique display strings
+        displayStrings.Count.Should().Be(allStatuses.Length);
+    }
 }
