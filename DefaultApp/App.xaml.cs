@@ -2,6 +2,7 @@ using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 
 namespace DefaultApp;
@@ -12,6 +13,7 @@ namespace DefaultApp;
 public partial class App : Application
 {
     private Window? _window;
+    private SplashWindow? _splashWindow;
     private LoggingService? _loggingService;
     private ILoggerFactory? _loggerFactory;
 
@@ -43,10 +45,22 @@ public partial class App : Application
     {
         _loggingService?.WriteLog(LogLevel.Information, "App", "Application launched");
 
+        _splashWindow = new SplashWindow();
+        _splashWindow.Activate();
+
+        _ = ShowMainWindowAfterSplashAsync();
+    }
+
+    private async Task ShowMainWindowAfterSplashAsync()
+    {
+        await Task.Delay(5000);
+
         _window = new MainWindow();
         _window.Activate();
-
         _window.Closed += OnWindowClosed;
+
+        _splashWindow?.Close();
+        _splashWindow = null;
     }
 
     /// <summary>
