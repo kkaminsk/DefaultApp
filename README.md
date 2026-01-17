@@ -6,7 +6,7 @@
 
 A WinUI 3 desktop application that displays comprehensive system information in an easy-to-read card-based layout. Built with .NET 8 and packaged as MSIX.
 
-Had a code review and fixed some issues.
+**[Download Version 1.2](https://github.com/kkaminsk/DefaultApp/releases/tag/Production)**
 
 ## Features
 
@@ -83,4 +83,4 @@ dotnet publish -c Release -r win-x64
 
 ## License
 
-Proprietary - Big Hat Group Inc.
+MIT License - See [LICENSE](LICENSE) for details.
