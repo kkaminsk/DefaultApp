@@ -54,6 +54,14 @@ Had a cdoe review and fixed some issues.
 - Windows 11 (Build 22000 or later)
 - x64 or ARM64 architecture
 
+### Why Full Trust?
+
+This application requires the `runFullTrust` capability because it accesses low-level system information not available through standard WinRT APIs:
+
+- **P/Invoke to native DLLs** - Calls `slc.dll` for Windows activation status and `kernel32.dll` for memory and firmware information
+- **HKLM Registry access** - Reads CPU details from `HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor` and Windows edition from `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion`
+- **Firmware table access** - Retrieves SMBIOS data for BIOS manufacturer, version, and TPM information via `GetSystemFirmwareTable`
+
 ## Build
 
 ```bash
