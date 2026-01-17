@@ -141,6 +141,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _defaultGateway = "Loading...";
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PingDnsCommand))]
     private string _dnsServer = "Loading...";
 
     [ObservableProperty]
@@ -151,6 +152,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private Brush? _pingButtonBackground;
+
+    [ObservableProperty]
+    private string _pingDnsButtonText = "Ping";
+
+    [ObservableProperty]
+    private Brush? _pingDnsButtonBackground;
 
     #endregion
 
@@ -404,6 +411,74 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _logger?.LogError(ex, "Ping operation failed");
             PingButtonText = "Error";
             PingButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
+        }
+    }
+
+    /// <summary>
+    /// Pings the DNS server 5 times and displays the results.
+    /// First click resets to "Ping", second click runs the test.
+    /// </summary>
+    [RelayCommand]
+    private void PingDns()
+    {
+        // Check if we can ping
+        if (string.IsNullOrEmpty(DnsServer) ||
+            DnsServer == "Loading..." ||
+            DnsServer == "Unavailable")
+        {
+            return;
+        }
+
+        // If showing results, reset to initial state
+        if (PingDnsButtonText != "Ping")
+        {
+            PingDnsButtonText = "Ping";
+            PingDnsButtonBackground = null;
+            _logger?.LogDebug("DNS ping button reset to initial state");
+            return;
+        }
+
+        // Start the ping test
+        _logger?.LogInformation("Starting ping to DNS server: {DnsServer}", DnsServer);
+        PingDnsButtonText = "0/5";
+
+        // Fire and forget the async ping operation
+        _ = ExecutePingDnsAsync();
+    }
+
+    private async Task ExecutePingDnsAsync()
+    {
+        var successCount = 0;
+        const int totalPings = 5;
+
+        try
+        {
+            for (var i = 1; i <= totalPings; i++)
+            {
+                var success = await _networkInfoService.PingAsync(DnsServer);
+                if (success)
+                {
+                    successCount++;
+                }
+                PingDnsButtonText = $"{successCount}/{i}";
+            }
+
+            PingDnsButtonText = $"{successCount}/{totalPings}";
+            _logger?.LogInformation("DNS ping completed: {Success}/{Total}", successCount, totalPings);
+
+            // Set button color based on results
+            PingDnsButtonBackground = successCount switch
+            {
+                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
+                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
+                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "DNS ping operation failed");
+            PingDnsButtonText = "Error";
+            PingDnsButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
         }
     }
 

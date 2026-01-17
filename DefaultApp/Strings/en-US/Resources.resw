@@ -329,6 +329,14 @@
     <value>Copy DNS Server to clipboard</value>
     <comment>Accessibility name for copy DNS server button</comment>
   </data>
+  <data name="PingDnsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping DNS Server</value>
+    <comment>Accessibility name for ping DNS server button</comment>
+  </data>
+  <data name="PingDnsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping the DNS server</value>
+    <comment>Tooltip for ping DNS server button</comment>
+  </data>
   <data name="MacAddressLabel.Text" xml:space="preserve">
     <value>MAC Address</value>
     <comment>Label for MAC address field</comment>

@@ -792,6 +792,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Column="0"
@@ -810,6 +811,18 @@
                                 AutomationProperties.Name="Copy DNS Server to clipboard">
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
                             </Button>
+                            <Button
+                                Grid.Column="2"
+                                x:Uid="PingDnsButton"
+                                Content="{x:Bind ViewModel.PingDnsButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingDnsButtonBackground, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingDnsCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping the DNS server"
+                                AutomationProperties.Name="Ping DNS Server" />
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
 
