@@ -90,7 +90,7 @@ public sealed class TpmInfoService
         }
         catch
         {
-            // Fall back to hex representation
+            // Fall through to return hex representation
         }
 
         return $"0x{manufacturerId:X8}";

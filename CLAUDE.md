@@ -28,7 +28,8 @@ This is a Windows 11 MSIX packaged application built with WinUI 3 and .NET 8. Th
 | File | Purpose |
 |------|---------|
 | `openspec/project.md` | Project context for OpenSpec |
-| `openspec/changes/` | Implementation proposals |
+| `openspec/specs/` | Consolidated capability specifications |
+| `openspec/changes/archive/` | Archived implementation proposals |
 
 ## Technology Stack
 
@@ -41,7 +42,23 @@ This is a Windows 11 MSIX packaged application built with WinUI 3 and .NET 8. Th
 
 ```
 DefaultApp/                        # Main WinUI 3 Application
-DefaultApp.Tests/                  # Unit Tests
+├── Views/                         # XAML pages (MainPage)
+├── ViewModels/                    # MVVM ViewModels (MainViewModel)
+├── Services/                      # Business logic services
+│   ├── SystemInfoService.cs       # OS information retrieval
+│   ├── HardwareInfoService.cs     # Hardware/architecture detection
+│   ├── ActivationService.cs       # Windows activation status
+│   ├── NetworkInfoService.cs      # Network info + ping
+│   ├── BiosInfoService.cs         # BIOS/Secure Boot info
+│   ├── TpmInfoService.cs          # TPM information
+│   ├── ThemeService.cs            # Theme management
+│   ├── LoggingService.cs          # File logging + ETW
+│   └── NativeMethods.cs           # P/Invoke declarations
+├── Models/                        # Data models
+├── Themes/                        # Custom theme resources
+└── Strings/                       # Localization resources
+
+DefaultApp.Tests/                  # Unit Tests (xUnit)
 ```
 
 ## Key Design Decisions
@@ -56,7 +73,7 @@ Keep the demo app simple - no DI container.
 Use `.resw` resource files from the start for all user-facing strings.
 
 ### Themes
-Five themes: Light, Dark, Cyberpunk, High Contrast Dark, High Contrast Light.
+Multiple themes available: System Default (follows Windows theme), Light, Dark, Cyberpunk, High Contrast Dark, and High Contrast Light. High contrast mode is automatically detected and respected.
 
 ## Build Commands
 
@@ -91,9 +108,9 @@ dotnet publish -c Release -r win-arm64
 
 ## Testing
 
-- Unit tests: xUnit
+- Unit tests: xUnit (136 tests)
 - UI automation: Microsoft.Windows.Apps.Test
-- Target coverage: 80% for service layer
+- Coverage: Service layer has comprehensive test coverage
 
 ## Important Constraints
 
@@ -142,3 +159,17 @@ Each proposal contains:
 - `proposal.md` - Why and what changes
 - `tasks.md` - Implementation checklist
 - `specs/<capability>/spec.md` - Requirements with scenarios
+
+## Specifications
+
+All feature specifications are consolidated in `openspec/specs/`. Key capability specs include:
+
+| Spec | Description |
+|------|-------------|
+| `system-info` | OS and hardware information display |
+| `network-info` | Network configuration and ping operations |
+| `themes` | Theme system and selection |
+| `logging` | File and ETW logging |
+| `testing` | Unit test requirements |
+
+View specs with `openspec list --specs` or `openspec show <spec-name>`.

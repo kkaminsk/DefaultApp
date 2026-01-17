@@ -69,18 +69,14 @@
                     <ComboBoxItem x:Uid="ThemeInverted" Content="Inverted" />
                 </ComboBox>
                 <Button
-                    x:Name="AboutButton"
-                    Click="AboutButton_Click"
-                    ToolTipService.ToolTip="About"
+                    x:Name="InfoButton"
+                    Click="InfoButton_Click"
                     Background="Transparent"
                     BorderThickness="0"
                     Padding="8"
-                    VerticalAlignment="Center"
-                    AutomationProperties.Name="About">
-                    <FontIcon
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xE946;"
-                        FontSize="16" />
+                    ToolTipService.ToolTip="About"
+                    AutomationProperties.Name="About this application">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE946;" FontSize="16" />
                 </Button>
             </StackPanel>
 

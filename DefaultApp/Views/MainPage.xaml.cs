@@ -21,12 +21,21 @@ public sealed partial class MainPage : Page
 
         // Load data when page is loaded
         this.Loaded += OnLoaded;
+
+        // Dispose ViewModel when page is unloaded
+        this.Unloaded += OnUnloaded;
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         // Load system information
         await ViewModel.LoadDataAsync();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        // Dispose ViewModel to release resources (e.g., MediaPlayer)
+        ViewModel.Dispose();
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)

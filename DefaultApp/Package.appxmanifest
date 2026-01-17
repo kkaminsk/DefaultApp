@@ -9,7 +9,7 @@
   <Identity
     Name="com.bighatgroup.defaultapp"
     Publisher="CN=Big Hat Group Inc., O=Big Hat Group Inc., L=Calgary, S=Alberta, C=CA"
-    Version="1.1.0.0" />
+    Version="1.2.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="8F9D3A1A-1B5C-4E6D-8F7A-9B0C1D2E3F4A" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

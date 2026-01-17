@@ -59,8 +59,9 @@ public sealed class HardwareInfoService
         {
             return RuntimeInformation.ProcessArchitecture.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get processor architecture");
             return "Unavailable";
         }
     }
@@ -74,8 +75,9 @@ public sealed class HardwareInfoService
         {
             return RuntimeInformation.OSArchitecture.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get OS architecture");
             return "Unavailable";
         }
     }
@@ -89,8 +91,9 @@ public sealed class HardwareInfoService
         {
             return Environment.MachineName;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get machine name");
             return "Unavailable";
         }
     }
@@ -104,8 +107,9 @@ public sealed class HardwareInfoService
         {
             return Environment.ProcessorCount;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get processor count");
             return 0;
         }
     }
@@ -158,30 +162,23 @@ public sealed class HardwareInfoService
 
     /// <summary>
     /// Gets the total RAM formatted as GB with 1 decimal place.
-    /// Uses Windows.System.MemoryManager as primary source with MEMORYSTATUSEX fallback.
+    /// Uses MEMORYSTATUSEX via P/Invoke.
     /// </summary>
     public string GetTotalRam()
     {
         try
         {
-            // Try Windows.System.MemoryManager first
-            var totalBytes = GetTotalRamFromMemoryManager();
-            if (totalBytes > 0)
+            var memStatus = NativeMethods.MEMORYSTATUSEX.Create();
+            if (NativeMethods.GlobalMemoryStatusEx(ref memStatus))
             {
-                return FormatBytesAsGb(totalBytes);
-            }
-
-            // Fallback to MEMORYSTATUSEX P/Invoke
-            totalBytes = GetTotalRamFromPInvoke();
-            if (totalBytes > 0)
-            {
-                return FormatBytesAsGb(totalBytes);
+                return FormatBytesAsGb(memStatus.ullTotalPhys);
             }
 
             return "Unavailable";
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get total RAM");
             return "Unavailable";
         }
     }
@@ -348,8 +345,9 @@ public sealed class HardwareInfoService
         {
             return Environment.Is64BitProcess;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to determine if process is 64-bit");
             return false;
         }
     }
@@ -365,39 +363,6 @@ public sealed class HardwareInfoService
         }
 
         return !string.Equals(processArchitecture, osArchitecture, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static ulong GetTotalRamFromMemoryManager()
-    {
-        try
-        {
-            // Windows.System.MemoryManager.AppMemoryUsageLimit returns the memory limit for the app
-            // For total system memory, we need to use a different approach
-            // MemoryManager is sandboxed and doesn't give system-wide info reliably
-            // So we'll return 0 to fall through to P/Invoke
-            return 0;
-        }
-        catch
-        {
-            return 0;
-        }
-    }
-
-    private static ulong GetTotalRamFromPInvoke()
-    {
-        try
-        {
-            var memStatus = NativeMethods.MEMORYSTATUSEX.Create();
-            if (NativeMethods.GlobalMemoryStatusEx(ref memStatus))
-            {
-                return memStatus.ullTotalPhys;
-            }
-            return 0;
-        }
-        catch
-        {
-            return 0;
-        }
     }
 
     private static string FormatBytesAsGb(ulong bytes)

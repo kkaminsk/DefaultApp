@@ -73,6 +73,22 @@ public sealed partial class MainWindow : Window
 
         // Initialize theme service
         InitializeThemeService();
+
+        // Clean up window subclassing on close
+        this.Closed += OnWindowClosed;
+    }
+
+    private void OnWindowClosed(object sender, WindowEventArgs args)
+    {
+        // Dispose ThemeService to unsubscribe from events
+        _themeService?.Dispose();
+
+        // Restore original window procedure to clean up subclassing
+        var hWnd = WindowNative.GetWindowHandle(this);
+        if (hWnd != IntPtr.Zero && _oldWndProc != IntPtr.Zero)
+        {
+            SetWindowLongPtr(hWnd, GWLP_WNDPROC, _oldWndProc);
+        }
     }
 
     private void SetMinimumWindowSize()
@@ -85,6 +101,9 @@ public sealed partial class MainWindow : Window
         {
             // Set initial size to 800x600
             _appWindow.Resize(new Windows.Graphics.SizeInt32(MinWidth, MinHeight));
+
+            // Center window on the primary display
+            CenterWindowOnScreen(hWnd);
 
             // Set presenter to allow resizing with minimum constraints
             if (_appWindow.Presenter is OverlappedPresenter presenter)
@@ -104,6 +123,30 @@ public sealed partial class MainWindow : Window
         _newWndProc = new WndProcDelegate(WndProc);
         _oldWndProc = GetWindowLongPtr(hWnd, GWLP_WNDPROC);
         SetWindowLongPtr(hWnd, GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(_newWndProc));
+    }
+
+    private void CenterWindowOnScreen(IntPtr hWnd)
+    {
+        if (_appWindow is null)
+        {
+            return;
+        }
+
+        var hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+        var monitorInfo = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+
+        if (GetMonitorInfo(hMonitor, ref monitorInfo))
+        {
+            var workArea = monitorInfo.rcWork;
+            var workWidth = workArea.right - workArea.left;
+            var workHeight = workArea.bottom - workArea.top;
+
+            var windowSize = _appWindow.Size;
+            var x = workArea.left + (workWidth - windowSize.Width) / 2;
+            var y = workArea.top + (workHeight - windowSize.Height) / 2;
+
+            _appWindow.Move(new Windows.Graphics.PointInt32(x, y));
+        }
     }
 
     private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -126,6 +169,33 @@ public sealed partial class MainWindow : Window
 
     [DllImport("user32.dll")]
     private static extern uint GetDpiForWindow(IntPtr hWnd);
+
+    // P/Invoke for window centering
+    private const int MONITOR_DEFAULTTONEAREST = 2;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int left;
+        public int top;
+        public int right;
+        public int bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MONITORINFO
+    {
+        public uint cbSize;
+        public RECT rcMonitor;
+        public RECT rcWork;
+        public uint dwFlags;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
+
+    [DllImport("user32.dll")]
+    private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
     private void ConfigureExtendedTitleBar()
     {
@@ -171,23 +241,17 @@ public sealed partial class MainWindow : Window
 
         // Subscribe to theme changes from the service (e.g., system theme changes)
         _themeService.ThemeChanged += OnThemeServiceThemeChanged;
-
-        System.Diagnostics.Debug.WriteLine($"[ThemeService] Initialized with theme: {_themeService.CurrentTheme}");
     }
 
     private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] SelectionChanged fired. SelectedIndex: {ThemeSelector.SelectedIndex}, IsInitializing: {_isInitializingTheme}, ThemeService null: {_themeService is null}");
-
         // Avoid handling during initialization
         if (_isInitializingTheme || _themeService is null)
         {
-            System.Diagnostics.Debug.WriteLine("[ThemeSelector] Skipping - initialization in progress or service not ready");
             return;
         }
 
         var selectedTheme = ThemeService.FromComboBoxIndex(ThemeSelector.SelectedIndex);
-        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] Applying theme: {selectedTheme}");
 
         _themeService.SetTheme(selectedTheme);
 
@@ -204,6 +268,12 @@ public sealed partial class MainWindow : Window
             ThemeSelector.SelectedIndex = ThemeService.ToComboBoxIndex(theme);
             _isInitializingTheme = false;
         }
+    }
+
+    private void InfoButton_Click(object sender, RoutedEventArgs e)
+    {
+        var aboutWindow = new AboutWindow();
+        aboutWindow.Activate();
     }
 
     private void UpdateTitleBarColors(AppTheme theme)

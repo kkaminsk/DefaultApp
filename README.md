@@ -1,13 +1,17 @@
 # Default App
 
-**Version 1.1** | System Information Viewer for Windows 11
+**Version 1.2** | System Information Viewer for Windows 11
 
 A WinUI 3 desktop application that displays comprehensive system information in an easy-to-read card-based layout. Built with .NET 8 and packaged as MSIX.
+
+Had a cdoe review and fixed some issues.
 
 ## Features
 
 ### Operating System Information
-- OS Name, Version, and Build Number
+- Friendly OS Name (Windows 11/10) with Edition
+- Machine Name with copy button
+- Version and Build Number
 - 64-bit OS detection
 - System Locale
 - Windows Activation Status
@@ -39,9 +43,10 @@ A WinUI 3 desktop application that displays comprehensive system information in 
 - MAC Address
 
 ### Additional Features
-- **Theme Support**: System Default, Inverted, Dark, Cyberpunk, High Contrast Dark, High Contrast Light
-- **Copy to Clipboard**: Quick copy buttons for key fields
+- **Theme Support**: System Default, Light, Dark, Cyberpunk, High Contrast Dark, High Contrast Light
+- **Copy to Clipboard**: Quick copy buttons for key fields (Machine Name, Version, IP, MAC, etc.)
 - **Refresh**: Single button to refresh all system information
+- **Window Centering**: Application window centers on primary display at launch
 - **Localization Ready**: Built with .resw resource files
 
 ## Requirements
@@ -56,6 +61,15 @@ dotnet restore
 dotnet build -c Release
 dotnet publish -c Release -r win-x64
 ```
+
+## What's New in 1.2
+
+- **Improved OS Display**: Shows friendly OS name (Windows 11/10) with edition (Pro, Enterprise, etc.)
+- **Machine Name**: Added to OS card with copy button
+- **Window Centering**: App now centers on primary display at launch
+- **Faster Startup**: Removed splash screen for instant launch
+- **Theme Fixes**: Resolved theme dropdown issues
+- **Code Quality**: Comprehensive unit test suite (136 tests)
 
 ## License
 

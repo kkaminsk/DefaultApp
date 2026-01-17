@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     Title="About Default App">
 
+
     <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,8 +21,8 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
             <Image
                 Source="ms-appx:///Assets/Square150x150Logo.png"
-                Width="64"
-                Height="64" />
+                Width="48"
+                Height="48" />
             <StackPanel VerticalAlignment="Center" Spacing="4">
                 <TextBlock
                     Text="Default App"
