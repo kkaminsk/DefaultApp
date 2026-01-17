@@ -384,7 +384,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
         SafeFireAndForget(ExecutePingAsync, "PingGateway");
     }
 
-    private async Task ExecutePingAsync()
+    private Task ExecutePingAsync() =>
+        ExecutePingToAddressAsync(
+            DefaultGateway,
+            text => PingButtonText = text,
+            bg => PingButtonBackground = bg,
+            "Gateway");
+
+    /// <summary>
+    /// Common ping implementation for all ping operations.
+    /// </summary>
+    private async Task ExecutePingToAddressAsync(
+        string address,
+        Action<string> setButtonText,
+        Action<Brush?> setBackground,
+        string logName)
     {
         var successCount = 0;
         const int totalPings = 5;
@@ -393,33 +407,33 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             for (var i = 1; i <= totalPings; i++)
             {
-                var success = await _networkInfoService.PingAsync(DefaultGateway);
+                var success = await _networkInfoService.PingAsync(address);
                 if (success)
                 {
                     successCount++;
                 }
-                PingButtonText = $"{successCount}/{i}";
+                setButtonText($"{successCount}/{i}");
                 if (i < totalPings)
                 {
                     await Task.Delay(1000);
                 }
             }
 
-            _logger?.LogInformation("Ping completed: {Success}/{Total}", successCount, totalPings);
+            _logger?.LogInformation("{LogName} ping completed: {Success}/{Total}", logName, successCount, totalPings);
 
             // Set button color based on results
-            PingButtonBackground = successCount switch
+            setBackground(successCount switch
             {
                 5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
                 0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
                 _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
-            };
+            });
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Ping operation failed");
-            PingButtonText = "Error";
-            PingButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
+            _logger?.LogError(ex, "{LogName} ping operation failed", logName);
+            setButtonText("Error");
+            setBackground(new SolidColorBrush(Color.FromArgb(255, 244, 67, 54))); // Red
         }
     }
 
@@ -455,44 +469,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
         SafeFireAndForget(ExecutePingDnsAsync, "PingDns");
     }
 
-    private async Task ExecutePingDnsAsync()
-    {
-        var successCount = 0;
-        const int totalPings = 5;
-
-        try
-        {
-            for (var i = 1; i <= totalPings; i++)
-            {
-                var success = await _networkInfoService.PingAsync(DnsServer);
-                if (success)
-                {
-                    successCount++;
-                }
-                PingDnsButtonText = $"{successCount}/{i}";
-                if (i < totalPings)
-                {
-                    await Task.Delay(1000);
-                }
-            }
-
-            _logger?.LogInformation("DNS ping completed: {Success}/{Total}", successCount, totalPings);
-
-            // Set button color based on results
-            PingDnsButtonBackground = successCount switch
-            {
-                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
-                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
-                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "DNS ping operation failed");
-            PingDnsButtonText = "Error";
-            PingDnsButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
-        }
-    }
+    private Task ExecutePingDnsAsync() =>
+        ExecutePingToAddressAsync(
+            DnsServer,
+            text => PingDnsButtonText = text,
+            bg => PingDnsButtonBackground = bg,
+            "DNS");
 
     /// <summary>
     /// Pings Google DNS (8.8.8.8) 5 times and displays the results.
@@ -518,45 +500,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
         SafeFireAndForget(ExecutePingGoogleDnsAsync, "PingGoogleDns");
     }
 
-    private async Task ExecutePingGoogleDnsAsync()
-    {
-        var successCount = 0;
-        const int totalPings = 5;
-        const string googleDns = "8.8.8.8";
-
-        try
-        {
-            for (var i = 1; i <= totalPings; i++)
-            {
-                var success = await _networkInfoService.PingAsync(googleDns);
-                if (success)
-                {
-                    successCount++;
-                }
-                PingGoogleDnsButtonText = $"{successCount}/{i}";
-                if (i < totalPings)
-                {
-                    await Task.Delay(1000);
-                }
-            }
-
-            _logger?.LogInformation("Google DNS ping completed: {Success}/{Total}", successCount, totalPings);
-
-            // Set button color based on results
-            PingGoogleDnsButtonBackground = successCount switch
-            {
-                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
-                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
-                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Google DNS ping operation failed");
-            PingGoogleDnsButtonText = "Error";
-            PingGoogleDnsButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
-        }
-    }
+    private Task ExecutePingGoogleDnsAsync() =>
+        ExecutePingToAddressAsync(
+            "8.8.8.8",
+            text => PingGoogleDnsButtonText = text,
+            bg => PingGoogleDnsButtonBackground = bg,
+            "Google DNS");
 
     private static string FormatCpuModels(IReadOnlyList<string> cpuModels)
     {

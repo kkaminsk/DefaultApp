@@ -88,9 +88,9 @@ public sealed class TpmInfoService
                 };
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Fall back to hex representation
+            System.Diagnostics.Debug.WriteLine($"[TpmInfoService] Failed to convert manufacturer ID to name: {ex.Message}");
         }
 
         return $"0x{manufacturerId:X8}";

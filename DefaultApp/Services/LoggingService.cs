@@ -123,9 +123,9 @@ public sealed class LoggingService : IDisposable
                 Directory.CreateDirectory(_logDirectory);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Silently fail if we can't create the directory
+            Debug.WriteLine($"[LoggingService] Failed to create log directory: {ex.Message}");
         }
     }
 
@@ -162,9 +162,9 @@ public sealed class LoggingService : IDisposable
             // Cleanup old files
             CleanupOldLogFiles();
         }
-        catch
+        catch (Exception ex)
         {
-            // Silently fail if we can't initialize the log file
+            Debug.WriteLine($"[LoggingService] Failed to initialize log file: {ex.Message}");
         }
     }
 
@@ -190,9 +190,9 @@ public sealed class LoggingService : IDisposable
                 _currentWriter?.WriteLine(logEntry);
                 _currentFileSize += entryBytes;
             }
-            catch
+            catch (Exception ex)
             {
-                // Silently fail if we can't write
+                Debug.WriteLine($"[LoggingService] Failed to write log entry: {ex.Message}");
             }
         }
     }
@@ -230,9 +230,9 @@ public sealed class LoggingService : IDisposable
 
             CleanupOldLogFiles();
         }
-        catch
+        catch (Exception ex)
         {
-            // Silently fail if rotation fails
+            Debug.WriteLine($"[LoggingService] Failed to rotate log file: {ex.Message}");
         }
     }
 
@@ -252,15 +252,15 @@ public sealed class LoggingService : IDisposable
                 {
                     file.Delete();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Skip files that can't be deleted
+                    Debug.WriteLine($"[LoggingService] Failed to delete old log file {file.Name}: {ex.Message}");
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Silently fail if cleanup fails
+            Debug.WriteLine($"[LoggingService] Failed to cleanup old log files: {ex.Message}");
         }
     }
 
@@ -290,9 +290,9 @@ public sealed class LoggingService : IDisposable
                     break;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // ETW failures should not affect logging
+            Debug.WriteLine($"[LoggingService] ETW write failed: {ex.Message}");
         }
     }
 

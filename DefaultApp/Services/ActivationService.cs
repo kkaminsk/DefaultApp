@@ -1,4 +1,5 @@
 using DefaultApp.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 namespace DefaultApp.Services;
@@ -11,6 +12,12 @@ public sealed class ActivationService
     private const string SoftwareProtectionRegistryKey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform";
     private ActivationStatus? _cachedStatus;
     private readonly object _lock = new();
+    private readonly ILogger<ActivationService>? _logger;
+
+    public ActivationService()
+    {
+        _logger = App.LoggerFactory?.CreateLogger<ActivationService>();
+    }
 
     /// <summary>
     /// Gets the Windows activation status asynchronously.
@@ -27,7 +34,7 @@ public sealed class ActivationService
             }
         }
 
-        var status = await Task.Run(CheckActivationStatus);
+        var status = await Task.Run(() => CheckActivationStatus());
 
         lock (_lock)
         {
@@ -65,12 +72,15 @@ public sealed class ActivationService
         }
     }
 
-    private static ActivationStatus CheckActivationStatus()
+    private ActivationStatus CheckActivationStatus()
     {
+        _logger?.LogDebug("Checking Windows activation status");
+
         // Try SLGetWindowsInformationDWORD first (most reliable)
         var slInfoStatus = CheckActivationStatusFromSlInfo();
         if (slInfoStatus != ActivationStatus.Unavailable)
         {
+            _logger?.LogInformation("Activation status from SLGetWindowsInformationDWORD: {Status}", slInfoStatus);
             return slInfoStatus;
         }
 
@@ -78,17 +88,20 @@ public sealed class ActivationService
         var genuineStatus = CheckActivationStatusFromPInvoke();
         if (genuineStatus != ActivationStatus.Unavailable)
         {
+            _logger?.LogInformation("Activation status from SLIsGenuineLocal: {Status}", genuineStatus);
             return genuineStatus;
         }
 
         // Fall back to Registry-based detection
-        return CheckActivationStatusFromRegistry();
+        var registryStatus = CheckActivationStatusFromRegistry();
+        _logger?.LogInformation("Activation status from Registry: {Status}", registryStatus);
+        return registryStatus;
     }
 
     /// <summary>
     /// Checks activation status using SLGetWindowsInformationDWORD.
     /// </summary>
-    private static ActivationStatus CheckActivationStatusFromSlInfo()
+    private ActivationStatus CheckActivationStatusFromSlInfo()
     {
         try
         {
@@ -103,10 +116,12 @@ public sealed class ActivationService
                 return genuineStatus == 0 ? ActivationStatus.Activated : ActivationStatus.NotActivated;
             }
 
+            _logger?.LogDebug("SLGetWindowsInformationDWORD returned HRESULT: 0x{Result:X8}", result);
             return ActivationStatus.Unavailable;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "SLGetWindowsInformationDWORD failed");
             return ActivationStatus.Unavailable;
         }
     }
@@ -114,13 +129,14 @@ public sealed class ActivationService
     /// <summary>
     /// Checks activation status using Registry keys.
     /// </summary>
-    private static ActivationStatus CheckActivationStatusFromRegistry()
+    private ActivationStatus CheckActivationStatusFromRegistry()
     {
         try
         {
             using var key = Registry.LocalMachine.OpenSubKey(SoftwareProtectionRegistryKey);
             if (key is null)
             {
+                _logger?.LogDebug("Software protection Registry key not found");
                 return ActivationStatus.Unavailable;
             }
 
@@ -140,10 +156,12 @@ public sealed class ActivationService
                 return ActivationStatus.Activated;
             }
 
+            _logger?.LogDebug("No activation indicators found in Registry");
             return ActivationStatus.Unavailable;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to check activation status from Registry");
             return ActivationStatus.Unavailable;
         }
     }
@@ -151,7 +169,7 @@ public sealed class ActivationService
     /// <summary>
     /// Checks activation status using P/Invoke (SLIsGenuineLocal).
     /// </summary>
-    private static ActivationStatus CheckActivationStatusFromPInvoke()
+    private ActivationStatus CheckActivationStatusFromPInvoke()
     {
         try
         {
@@ -174,11 +192,13 @@ public sealed class ActivationService
                 };
             }
 
+            _logger?.LogDebug("SLIsGenuineLocal returned HRESULT: 0x{Result:X8}", result);
             // Handle specific HRESULT codes
             return MapHResultToActivationStatus(result);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "SLIsGenuineLocal failed");
             return ActivationStatus.Unavailable;
         }
     }

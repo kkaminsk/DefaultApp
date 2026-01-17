@@ -17,13 +17,14 @@ public enum AppTheme
 /// <summary>
 /// Service for managing application themes with persistence and real-time switching.
 /// </summary>
-public sealed class ThemeService
+public sealed class ThemeService : IDisposable
 {
     private const string ThemeSettingsKey = "AppTheme";
     private readonly ILogger<ThemeService>? _logger;
     private readonly UISettings _uiSettings;
     private AppTheme _currentTheme;
     private FrameworkElement? _rootElement;
+    private bool _isDisposed;
 
     /// <summary>
     /// Event raised when the theme changes.
@@ -61,6 +62,11 @@ public sealed class ThemeService
     /// <param name="theme">The theme to apply.</param>
     public void SetTheme(AppTheme theme)
     {
+        if (_isDisposed)
+        {
+            return;
+        }
+
         System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Called with theme: {theme}, current: {_currentTheme}");
 
         if (_currentTheme == theme)
@@ -279,5 +285,20 @@ public sealed class ThemeService
             AppTheme.Inverted => 1,
             _ => 0
         };
+    }
+
+    /// <summary>
+    /// Disposes the theme service and unsubscribes from system events.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_isDisposed)
+        {
+            return;
+        }
+
+        _isDisposed = true;
+        _uiSettings.ColorValuesChanged -= OnSystemColorValuesChanged;
+        _logger?.LogDebug("ThemeService disposed");
     }
 }

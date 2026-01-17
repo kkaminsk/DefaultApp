@@ -57,8 +57,9 @@ public sealed class HardwareInfoService
         {
             return RuntimeInformation.ProcessArchitecture.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get processor architecture");
             return "Unavailable";
         }
     }
@@ -72,8 +73,9 @@ public sealed class HardwareInfoService
         {
             return RuntimeInformation.OSArchitecture.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get OS architecture");
             return "Unavailable";
         }
     }
@@ -87,8 +89,9 @@ public sealed class HardwareInfoService
         {
             return Environment.MachineName;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get machine name");
             return "Unavailable";
         }
     }
@@ -102,8 +105,9 @@ public sealed class HardwareInfoService
         {
             return Environment.ProcessorCount;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get processor count");
             return 0;
         }
     }
@@ -178,8 +182,9 @@ public sealed class HardwareInfoService
 
             return "Unavailable";
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get total RAM");
             return "Unavailable";
         }
     }
@@ -269,8 +274,9 @@ public sealed class HardwareInfoService
         {
             return Environment.Is64BitProcess;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to determine if process is 64-bit");
             return false;
         }
     }
@@ -288,7 +294,7 @@ public sealed class HardwareInfoService
         return !string.Equals(processArchitecture, osArchitecture, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static ulong GetTotalRamFromMemoryManager()
+    private ulong GetTotalRamFromMemoryManager()
     {
         try
         {
@@ -298,13 +304,14 @@ public sealed class HardwareInfoService
             // So we'll return 0 to fall through to P/Invoke
             return 0;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogDebug(ex, "MemoryManager approach failed, falling back to P/Invoke");
             return 0;
         }
     }
 
-    private static ulong GetTotalRamFromPInvoke()
+    private ulong GetTotalRamFromPInvoke()
     {
         try
         {
@@ -315,8 +322,9 @@ public sealed class HardwareInfoService
             }
             return 0;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get total RAM via P/Invoke");
             return 0;
         }
     }

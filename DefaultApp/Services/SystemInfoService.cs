@@ -50,8 +50,9 @@ public sealed class SystemInfoService
         {
             return Environment.OSVersion.Platform.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get OS name");
             return "Unavailable";
         }
     }
@@ -67,8 +68,9 @@ public sealed class SystemInfoService
             // Windows 11 starts at build 22000
             return buildNumber >= 22000 ? "Windows 11" : "Windows 10";
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get friendly OS name");
             return "Windows";
         }
     }
@@ -92,8 +94,9 @@ public sealed class SystemInfoService
             var displayEdition = MapEditionToDisplayName(edition);
             return $"{friendlyName} {displayEdition}";
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get full OS display name");
             return "Unavailable";
         }
     }
@@ -131,8 +134,9 @@ public sealed class SystemInfoService
         {
             return Environment.OSVersion.Version.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get OS version");
             return "Unavailable";
         }
     }
@@ -146,8 +150,9 @@ public sealed class SystemInfoService
         {
             return Environment.OSVersion.Version.Build.ToString();
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get build number");
             return "Unavailable";
         }
     }
@@ -185,8 +190,9 @@ public sealed class SystemInfoService
         {
             return Environment.Is64BitOperatingSystem;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to determine if OS is 64-bit");
             return false;
         }
     }
@@ -200,8 +206,9 @@ public sealed class SystemInfoService
         {
             return CultureInfo.CurrentCulture.Name;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger?.LogWarning(ex, "Failed to get system locale");
             return "Unavailable";
         }
     }

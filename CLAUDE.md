@@ -41,7 +41,23 @@ This is a Windows 11 MSIX packaged application built with WinUI 3 and .NET 8. Th
 
 ```
 DefaultApp/                        # Main WinUI 3 Application
-DefaultApp.Tests/                  # Unit Tests
+├── Views/                         # XAML pages (MainPage)
+├── ViewModels/                    # MVVM ViewModels (MainViewModel)
+├── Services/                      # Business logic services
+│   ├── SystemInfoService.cs       # OS information retrieval
+│   ├── HardwareInfoService.cs     # Hardware/architecture detection
+│   ├── ActivationService.cs       # Windows activation status
+│   ├── NetworkInfoService.cs      # Network info + ping
+│   ├── BiosInfoService.cs         # BIOS/Secure Boot info
+│   ├── TpmInfoService.cs          # TPM information
+│   ├── ThemeService.cs            # Theme management
+│   ├── LoggingService.cs          # File logging + ETW
+│   └── NativeMethods.cs           # P/Invoke declarations
+├── Models/                        # Data models
+├── Themes/                        # Custom theme resources
+└── Strings/                       # Localization resources
+
+DefaultApp.Tests/                  # Unit Tests (xUnit)
 ```
 
 ## Key Design Decisions
@@ -56,7 +72,7 @@ Keep the demo app simple - no DI container.
 Use `.resw` resource files from the start for all user-facing strings.
 
 ### Themes
-Five themes: Light, Dark, Cyberpunk, High Contrast Dark, High Contrast Light.
+Two themes: System Default (follows Windows theme) and Inverted (opposite of system theme). High contrast mode is automatically detected and respected.
 
 ## Build Commands
 
@@ -142,3 +158,29 @@ Each proposal contains:
 - `proposal.md` - Why and what changes
 - `tasks.md` - Implementation checklist
 - `specs/<capability>/spec.md` - Requirements with scenarios
+
+## Code Review
+
+A comprehensive code review was performed on 2026-01-16. See `codereview.md` in the project root for full details.
+
+### Completed Proposals
+
+| # | Proposal | Priority | Description |
+|---|----------|----------|-------------|
+| 1 | `1-fix-critical-issues` | Critical | Fire-and-forget async handling, MainViewModel disposal, window subclass cleanup |
+| 2 | `2-fix-high-priority-issues` | High | Exception logging, duplicate ping code, BIOS bug fix, ThemeService memory leak |
+
+### Remaining Proposals
+
+| # | Proposal | Priority | Description |
+|---|----------|----------|-------------|
+| 3 | `3-fix-medium-priority-issues` | Medium | Splash delay, dead code removal, Debug.WriteLine cleanup, magic numbers |
+| 4 | `4-add-unit-tests` | Low | Unit tests for service layer (target 80% coverage) |
+
+### Known Issues (from code review)
+
+**Medium Priority:**
+- 5-second splash screen delay is excessive
+- Unused `ApplyCustomTheme()`/`RemoveCustomTheme()` methods
+- Debug.WriteLine statements in production code
+- `GetTotalRamFromMemoryManager()` always returns 0

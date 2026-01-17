@@ -20,6 +20,6 @@
 ## 4. Validation
 
 - [x] 4.1 Build application and verify no compilation errors
-- [ ] 4.2 Test ping functionality works correctly
-- [ ] 4.3 Verify no exceptions are thrown when closing the application
-- [ ] 4.4 Confirm memory usage does not grow after repeated page navigation (if applicable)
+- [x] 4.2 Test ping functionality works correctly
+- [x] 4.3 Verify no exceptions are thrown when closing the application
+- [x] 4.4 Confirm memory usage does not grow after repeated page navigation (if applicable)

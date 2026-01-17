@@ -50,11 +50,45 @@ public sealed class BiosInfoService
     }
 
     /// <summary>
-    /// Gets the BIOS name.
+    /// Gets the BIOS name (SystemBiosVersion which contains the full BIOS identifier).
     /// </summary>
     public string GetBiosName()
     {
-        return GetBiosRegistryValue("BIOSVersion");
+        try
+        {
+            using var biosKey = Registry.LocalMachine.OpenSubKey(BiosRegistryKey);
+            if (biosKey is null)
+            {
+                _logger?.LogWarning("Failed to open Registry key for BIOS name");
+                return "Unavailable";
+            }
+
+            // SystemBiosVersion contains the full BIOS identifier string
+            var systemBiosVersion = biosKey.GetValue("SystemBiosVersion");
+            if (systemBiosVersion is string[] versions && versions.Length > 0)
+            {
+                // Often stored as a string array, take the first meaningful entry
+                var name = string.Join(" ", versions.Where(v => !string.IsNullOrWhiteSpace(v)));
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    return name.Trim();
+                }
+            }
+
+            // Fall back to BaseBoardProduct (motherboard name) if SystemBiosVersion unavailable
+            var baseBoardProduct = biosKey.GetValue("BaseBoardProduct") as string;
+            if (!string.IsNullOrWhiteSpace(baseBoardProduct))
+            {
+                return baseBoardProduct.Trim();
+            }
+
+            return "Unavailable";
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to retrieve BIOS name from Registry");
+            return "Unavailable";
+        }
     }
 
     /// <summary>

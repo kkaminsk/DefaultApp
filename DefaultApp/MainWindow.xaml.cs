@@ -79,6 +79,9 @@ public sealed partial class MainWindow : Window
 
     private void OnWindowClosed(object sender, WindowEventArgs args)
     {
+        // Dispose ThemeService to unsubscribe from events
+        _themeService?.Dispose();
+
         // Restore original window procedure to clean up subclassing
         var hWnd = WindowNative.GetWindowHandle(this);
         if (hWnd != IntPtr.Zero && _oldWndProc != IntPtr.Zero)
