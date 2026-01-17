@@ -828,7 +828,7 @@
 
                         <!-- MAC Address -->
                         <TextBlock x:Uid="MacAddressLabel" Text="MAC Address" Style="{StaticResource PropertyLabelStyle}" />
-                        <Grid Margin="0,0,0,0">
+                        <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -850,6 +850,34 @@
                                 AutomationProperties.Name="Copy MAC Address to clipboard">
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
                             </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Google DNS -->
+                        <TextBlock x:Uid="GoogleDnsLabel" Text="Google DNS" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="8.8.8.8"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Google DNS value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="PingGoogleDnsButton"
+                                Content="{x:Bind ViewModel.PingGoogleDnsButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingGoogleDnsButtonBackground, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingGoogleDnsCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping Google DNS"
+                                AutomationProperties.Name="Ping Google DNS" />
                         </Grid>
                     </StackPanel>
                 </Border>

@@ -159,6 +159,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private Brush? _pingDnsButtonBackground;
 
+    [ObservableProperty]
+    private string _pingGoogleDnsButtonText = "Ping";
+
+    [ObservableProperty]
+    private Brush? _pingGoogleDnsButtonBackground;
+
     #endregion
 
     #region Refresh State
@@ -479,6 +485,67 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _logger?.LogError(ex, "DNS ping operation failed");
             PingDnsButtonText = "Error";
             PingDnsButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
+        }
+    }
+
+    /// <summary>
+    /// Pings Google DNS (8.8.8.8) 5 times and displays the results.
+    /// First click resets to "Ping", second click runs the test.
+    /// </summary>
+    [RelayCommand]
+    private void PingGoogleDns()
+    {
+        // If showing results, reset to initial state
+        if (PingGoogleDnsButtonText != "Ping")
+        {
+            PingGoogleDnsButtonText = "Ping";
+            PingGoogleDnsButtonBackground = null;
+            _logger?.LogDebug("Google DNS ping button reset to initial state");
+            return;
+        }
+
+        // Start the ping test
+        _logger?.LogInformation("Starting ping to Google DNS: 8.8.8.8");
+        PingGoogleDnsButtonText = "0/5";
+
+        // Fire and forget the async ping operation
+        _ = ExecutePingGoogleDnsAsync();
+    }
+
+    private async Task ExecutePingGoogleDnsAsync()
+    {
+        var successCount = 0;
+        const int totalPings = 5;
+        const string googleDns = "8.8.8.8";
+
+        try
+        {
+            for (var i = 1; i <= totalPings; i++)
+            {
+                var success = await _networkInfoService.PingAsync(googleDns);
+                if (success)
+                {
+                    successCount++;
+                }
+                PingGoogleDnsButtonText = $"{successCount}/{i}";
+            }
+
+            PingGoogleDnsButtonText = $"{successCount}/{totalPings}";
+            _logger?.LogInformation("Google DNS ping completed: {Success}/{Total}", successCount, totalPings);
+
+            // Set button color based on results
+            PingGoogleDnsButtonBackground = successCount switch
+            {
+                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
+                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
+                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Google DNS ping operation failed");
+            PingGoogleDnsButtonText = "Error";
+            PingGoogleDnsButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
         }
     }
 

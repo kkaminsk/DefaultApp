@@ -345,4 +345,17 @@
     <value>Copy MAC Address to clipboard</value>
     <comment>Accessibility name for copy MAC address button</comment>
   </data>
+  <!-- Google DNS -->
+  <data name="GoogleDnsLabel.Text" xml:space="preserve">
+    <value>Google DNS</value>
+    <comment>Label for Google DNS field</comment>
+  </data>
+  <data name="PingGoogleDnsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping Google DNS</value>
+    <comment>Accessibility name for ping Google DNS button</comment>
+  </data>
+  <data name="PingGoogleDnsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping Google DNS</value>
+    <comment>Tooltip for ping Google DNS button</comment>
+  </data>
 </root>
