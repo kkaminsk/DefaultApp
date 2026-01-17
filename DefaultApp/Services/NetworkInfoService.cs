@@ -91,6 +91,36 @@ public sealed class NetworkInfoService
         return networkInfo;
     }
 
+    /// <summary>
+    /// Pings the specified IP address.
+    /// </summary>
+    /// <param name="ipAddress">The IP address to ping.</param>
+    /// <param name="timeoutMs">Timeout in milliseconds (default 1000).</param>
+    /// <returns>True if the ping was successful, false otherwise.</returns>
+    public async Task<bool> PingAsync(string ipAddress, int timeoutMs = 1000)
+    {
+        if (string.IsNullOrEmpty(ipAddress) || ipAddress == "Unavailable")
+        {
+            _logger?.LogWarning("Cannot ping invalid address: {Address}", ipAddress);
+            return false;
+        }
+
+        try
+        {
+            using var ping = new Ping();
+            var reply = await ping.SendPingAsync(ipAddress, timeoutMs);
+            var success = reply.Status == IPStatus.Success;
+            _logger?.LogDebug("Ping to {Address}: {Status} ({RoundtripTime}ms)",
+                ipAddress, reply.Status, reply.RoundtripTime);
+            return success;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Ping to {Address} failed", ipAddress);
+            return false;
+        }
+    }
+
     private NetworkInterface? GetActiveNetworkInterface()
     {
         // Get all network interfaces that are up and have an IPv4 address

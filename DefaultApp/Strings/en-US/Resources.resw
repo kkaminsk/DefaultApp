@@ -313,6 +313,14 @@
     <value>Copy Default Gateway to clipboard</value>
     <comment>Accessibility name for copy default gateway button</comment>
   </data>
+  <data name="PingGatewayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping Default Gateway</value>
+    <comment>Accessibility name for ping gateway button</comment>
+  </data>
+  <data name="PingGatewayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping the gateway</value>
+    <comment>Tooltip for ping gateway button</comment>
+  </data>
   <data name="DnsServerLabel.Text" xml:space="preserve">
     <value>DNS Server</value>
     <comment>Label for DNS server field</comment>

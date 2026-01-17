@@ -135,6 +135,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _subnetMask = "Loading...";
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PingGatewayCommand))]
     private string _defaultGateway = "Loading...";
 
     [ObservableProperty]
@@ -142,6 +143,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string _macAddress = "Loading...";
+
+    [ObservableProperty]
+    private string _pingButtonText = "Ping";
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PingGatewayCommand))]
+    private bool _isPinging;
 
     #endregion
 
@@ -329,6 +337,49 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _logger?.LogError(ex, "Failed to play audio");
         }
     }
+
+    /// <summary>
+    /// Pings the default gateway 5 times and displays the results.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanPingGateway))]
+    private async Task PingGatewayAsync()
+    {
+        _logger?.LogInformation("Starting ping to gateway: {Gateway}", DefaultGateway);
+        IsPinging = true;
+        var successCount = 0;
+        const int totalPings = 5;
+
+        try
+        {
+            for (var i = 1; i <= totalPings; i++)
+            {
+                var success = await _networkInfoService.PingAsync(DefaultGateway);
+                if (success)
+                {
+                    successCount++;
+                }
+                PingButtonText = $"{successCount}/{i}";
+            }
+
+            PingButtonText = $"{successCount}/{totalPings}";
+            _logger?.LogInformation("Ping completed: {Success}/{Total}", successCount, totalPings);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Ping operation failed");
+            PingButtonText = "Error";
+        }
+        finally
+        {
+            IsPinging = false;
+        }
+    }
+
+    private bool CanPingGateway() =>
+        !IsPinging &&
+        !string.IsNullOrEmpty(DefaultGateway) &&
+        DefaultGateway != "Loading..." &&
+        DefaultGateway != "Unavailable";
 
     private static string FormatCpuModels(IReadOnlyList<string> cpuModels)
     {

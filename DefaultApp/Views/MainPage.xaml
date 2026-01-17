@@ -752,6 +752,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Column="0"
@@ -770,6 +771,17 @@
                                 AutomationProperties.Name="Copy Default Gateway to clipboard">
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
                             </Button>
+                            <Button
+                                Grid.Column="2"
+                                x:Uid="PingGatewayButton"
+                                Content="{x:Bind ViewModel.PingButtonText, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingGatewayCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping the gateway"
+                                AutomationProperties.Name="Ping Default Gateway" />
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
 
