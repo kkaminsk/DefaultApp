@@ -9,6 +9,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- Disable WinUI packaging features for unit tests -->
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <UseWinUI>true</UseWinUI>
+    <EnableDefaultPriItems>false</EnableDefaultPriItems>
+    <GeneratePriFile>false</GeneratePriFile>
+    <DisableMrtCodeGen>true</DisableMrtCodeGen>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +35,19 @@
     </PackageReference>
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <!-- Add Windows App SDK but exclude build transitive assets to prevent PriGen -->
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000">
+      <ExcludeAssets>buildTransitive</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DefaultApp\DefaultApp.csproj">
+      <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>buildTransitive</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
