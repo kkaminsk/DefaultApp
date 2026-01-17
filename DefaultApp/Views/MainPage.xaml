@@ -775,6 +775,7 @@
                                 Grid.Column="2"
                                 x:Uid="PingGatewayButton"
                                 Content="{x:Bind ViewModel.PingButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingButtonBackground, Mode=OneWay}"
                                 Command="{x:Bind ViewModel.PingGatewayCommand}"
                                 MinWidth="50"
                                 Padding="8,4"

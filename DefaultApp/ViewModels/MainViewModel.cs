@@ -2,9 +2,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.UI;
 
 namespace DefaultApp.ViewModels;
 
@@ -148,8 +150,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _pingButtonText = "Ping";
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PingGatewayCommand))]
-    private bool _isPinging;
+    private Brush? _pingButtonBackground;
 
     #endregion
 
@@ -340,12 +341,38 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     /// <summary>
     /// Pings the default gateway 5 times and displays the results.
+    /// First click resets to "Ping", second click runs the test.
     /// </summary>
-    [RelayCommand(CanExecute = nameof(CanPingGateway))]
-    private async Task PingGatewayAsync()
+    [RelayCommand]
+    private void PingGateway()
     {
+        // Check if we can ping
+        if (string.IsNullOrEmpty(DefaultGateway) ||
+            DefaultGateway == "Loading..." ||
+            DefaultGateway == "Unavailable")
+        {
+            return;
+        }
+
+        // If showing results, reset to initial state
+        if (PingButtonText != "Ping")
+        {
+            PingButtonText = "Ping";
+            PingButtonBackground = null;
+            _logger?.LogDebug("Ping button reset to initial state");
+            return;
+        }
+
+        // Start the ping test
         _logger?.LogInformation("Starting ping to gateway: {Gateway}", DefaultGateway);
-        IsPinging = true;
+        PingButtonText = "0/5";
+
+        // Fire and forget the async ping operation
+        _ = ExecutePingAsync();
+    }
+
+    private async Task ExecutePingAsync()
+    {
         var successCount = 0;
         const int totalPings = 5;
 
@@ -363,23 +390,22 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
             PingButtonText = $"{successCount}/{totalPings}";
             _logger?.LogInformation("Ping completed: {Success}/{Total}", successCount, totalPings);
+
+            // Set button color based on results
+            PingButtonBackground = successCount switch
+            {
+                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
+                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
+                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
+            };
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Ping operation failed");
             PingButtonText = "Error";
-        }
-        finally
-        {
-            IsPinging = false;
+            PingButtonBackground = new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)); // Red
         }
     }
-
-    private bool CanPingGateway() =>
-        !IsPinging &&
-        !string.IsNullOrEmpty(DefaultGateway) &&
-        DefaultGateway != "Loading..." &&
-        DefaultGateway != "Unavailable";
 
     private static string FormatCpuModels(IReadOnlyList<string> cpuModels)
     {
