@@ -1,9 +1,0 @@
-Network information:
-
-IP Address: 
-Subnet Mask: 
-Default Gateway: 
-DNS Server: 
-MAC Address: 
-
-All require an icon to copy the value to the clipboard.

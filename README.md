@@ -1,5 +1,7 @@
 # Default App
 
+![](.\Graphics\DefaultApp.png)
+
 **Version 1.2** | System Information Viewer for Windows 11
 
 A WinUI 3 desktop application that displays comprehensive system information in an easy-to-read card-based layout. Built with .NET 8 and packaged as MSIX.
