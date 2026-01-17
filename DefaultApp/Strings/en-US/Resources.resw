@@ -284,4 +284,49 @@
     <value>Test audio file</value>
     <comment>Accessibility name for test audio button</comment>
   </data>
+  <!-- Network Information Card -->
+  <data name="NetworkInfoCardHeader.Text" xml:space="preserve">
+    <value>Network Information</value>
+    <comment>Header for the network information card</comment>
+  </data>
+  <data name="IpAddressLabel.Text" xml:space="preserve">
+    <value>IP Address</value>
+    <comment>Label for IP address field</comment>
+  </data>
+  <data name="CopyIpAddressButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy IP Address to clipboard</value>
+    <comment>Accessibility name for copy IP address button</comment>
+  </data>
+  <data name="SubnetMaskLabel.Text" xml:space="preserve">
+    <value>Subnet Mask</value>
+    <comment>Label for subnet mask field</comment>
+  </data>
+  <data name="CopySubnetMaskButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Subnet Mask to clipboard</value>
+    <comment>Accessibility name for copy subnet mask button</comment>
+  </data>
+  <data name="DefaultGatewayLabel.Text" xml:space="preserve">
+    <value>Default Gateway</value>
+    <comment>Label for default gateway field</comment>
+  </data>
+  <data name="CopyDefaultGatewayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Default Gateway to clipboard</value>
+    <comment>Accessibility name for copy default gateway button</comment>
+  </data>
+  <data name="DnsServerLabel.Text" xml:space="preserve">
+    <value>DNS Server</value>
+    <comment>Label for DNS server field</comment>
+  </data>
+  <data name="CopyDnsServerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy DNS Server to clipboard</value>
+    <comment>Accessibility name for copy DNS server button</comment>
+  </data>
+  <data name="MacAddressLabel.Text" xml:space="preserve">
+    <value>MAC Address</value>
+    <comment>Label for MAC address field</comment>
+  </data>
+  <data name="CopyMacAddressButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy MAC Address to clipboard</value>
+    <comment>Accessibility name for copy MAC address button</comment>
+  </data>
 </root>

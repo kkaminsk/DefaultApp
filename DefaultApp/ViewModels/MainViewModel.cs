@@ -18,6 +18,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly ActivationService _activationService;
     private readonly BiosInfoService _biosInfoService;
     private readonly TpmInfoService _tpmInfoService;
+    private readonly NetworkInfoService _networkInfoService;
     private readonly ILogger<MainViewModel>? _logger;
     private readonly MediaPlayer _mediaPlayer;
     private bool _isDisposed;
@@ -29,6 +30,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _activationService = new ActivationService();
         _biosInfoService = new BiosInfoService();
         _tpmInfoService = new TpmInfoService();
+        _networkInfoService = new NetworkInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
         _mediaPlayer = new MediaPlayer();
     }
@@ -124,6 +126,25 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     #endregion
 
+    #region Network Information Properties
+
+    [ObservableProperty]
+    private string _ipAddress = "Loading...";
+
+    [ObservableProperty]
+    private string _subnetMask = "Loading...";
+
+    [ObservableProperty]
+    private string _defaultGateway = "Loading...";
+
+    [ObservableProperty]
+    private string _dnsServer = "Loading...";
+
+    [ObservableProperty]
+    private string _macAddress = "Loading...";
+
+    #endregion
+
     #region Refresh State
 
     [ObservableProperty]
@@ -177,6 +198,14 @@ public partial class MainViewModel : ObservableObject, IDisposable
             var tpmInfo = _tpmInfoService.GetTpmInfo();
             TpmManufacturerId = tpmInfo.ManufacturerId;
             TpmManufacturerVersion = tpmInfo.ManufacturerVersion;
+
+            // Load network information
+            var networkInfo = _networkInfoService.GetNetworkInfo();
+            IpAddress = networkInfo.IpAddress;
+            SubnetMask = networkInfo.SubnetMask;
+            DefaultGateway = networkInfo.DefaultGateway;
+            DnsServer = networkInfo.DnsServer;
+            MacAddress = networkInfo.MacAddress;
 
             // Load activation status asynchronously
             var status = await _activationService.GetActivationStatusAsync();
@@ -242,6 +271,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "SmbiosVersion" => SmbiosVersion,
             "TpmManufacturerId" => TpmManufacturerId,
             "TpmManufacturerVersion" => TpmManufacturerVersion,
+            "IpAddress" => IpAddress,
+            "SubnetMask" => SubnetMask,
+            "DefaultGateway" => DefaultGateway,
+            "DnsServer" => DnsServer,
+            "MacAddress" => MacAddress,
             _ => null
         };
 

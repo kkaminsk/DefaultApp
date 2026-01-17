@@ -678,6 +678,155 @@
                         </Grid>
                     </StackPanel>
                 </Border>
+
+                <!-- Network Information Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="NetworkInfoCard"
+                    AutomationProperties.Name="Network Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="NetworkInfoCardHeader"
+                            Text="Network Information"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- IP Address -->
+                        <TextBlock x:Uid="IpAddressLabel" Text="IP Address" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.IpAddress, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="IP Address value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyIpAddressButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="IpAddress"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy IP Address to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Subnet Mask -->
+                        <TextBlock x:Uid="SubnetMaskLabel" Text="Subnet Mask" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.SubnetMask, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Subnet Mask value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopySubnetMaskButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="SubnetMask"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Subnet Mask to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Default Gateway -->
+                        <TextBlock x:Uid="DefaultGatewayLabel" Text="Default Gateway" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.DefaultGateway, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Default Gateway value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyDefaultGatewayButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="DefaultGateway"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Default Gateway to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- DNS Server -->
+                        <TextBlock x:Uid="DnsServerLabel" Text="DNS Server" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.DnsServer, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="DNS Server value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyDnsServerButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="DnsServer"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy DNS Server to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- MAC Address -->
+                        <TextBlock x:Uid="MacAddressLabel" Text="MAC Address" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.MacAddress, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="MAC Address value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyMacAddressButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="MacAddress"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy MAC Address to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
             </ItemsControl>
 
             <!-- Visual State Manager for responsive layout -->
