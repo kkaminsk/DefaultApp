@@ -399,9 +399,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     successCount++;
                 }
                 PingButtonText = $"{successCount}/{i}";
+                if (i < totalPings)
+                {
+                    await Task.Delay(1000);
+                }
             }
 
-            PingButtonText = $"{successCount}/{totalPings}";
             _logger?.LogInformation("Ping completed: {Success}/{Total}", successCount, totalPings);
 
             // Set button color based on results
@@ -467,9 +470,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     successCount++;
                 }
                 PingDnsButtonText = $"{successCount}/{i}";
+                if (i < totalPings)
+                {
+                    await Task.Delay(1000);
+                }
             }
 
-            PingDnsButtonText = $"{successCount}/{totalPings}";
             _logger?.LogInformation("DNS ping completed: {Success}/{Total}", successCount, totalPings);
 
             // Set button color based on results
@@ -528,9 +534,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     successCount++;
                 }
                 PingGoogleDnsButtonText = $"{successCount}/{i}";
+                if (i < totalPings)
+                {
+                    await Task.Delay(1000);
+                }
             }
 
-            PingGoogleDnsButtonText = $"{successCount}/{totalPings}";
             _logger?.LogInformation("Google DNS ping completed: {Success}/{Total}", successCount, totalPings);
 
             // Set button color based on results
