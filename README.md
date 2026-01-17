@@ -1,6 +1,6 @@
 # Default App
 
-![](.\Graphics\DefaultApp.png)
+![](https://github.com/kkaminsk/DefaultApp/blob/main/Graphics/DefaultApp.png?raw=true)
 
 **Version 1.2** | System Information Viewer for Windows 11
 
