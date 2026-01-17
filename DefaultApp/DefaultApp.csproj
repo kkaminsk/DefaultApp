@@ -42,6 +42,12 @@
     <Content Include="Assets\*.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Assets\Audio\*.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <EnableDefaultPriItems>false</EnableDefaultPriItems>
   </PropertyGroup>

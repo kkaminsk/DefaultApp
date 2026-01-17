@@ -275,4 +275,13 @@
     <value>Secure Boot Status</value>
     <comment>Label for Secure Boot status field</comment>
   </data>
+  <!-- Test Audio Button -->
+  <data name="TestAudioButton.Content" xml:space="preserve">
+    <value>Test Audio</value>
+    <comment>Text on test audio button</comment>
+  </data>
+  <data name="TestAudioButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Test audio file</value>
+    <comment>Accessibility name for test audio button</comment>
+  </data>
 </root>

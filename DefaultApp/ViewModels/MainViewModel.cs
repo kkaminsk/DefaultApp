@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 
 namespace DefaultApp.ViewModels;
 
@@ -17,6 +19,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly BiosInfoService _biosInfoService;
     private readonly TpmInfoService _tpmInfoService;
     private readonly ILogger<MainViewModel>? _logger;
+    private readonly MediaPlayer _mediaPlayer;
     private bool _isDisposed;
 
     public MainViewModel()
@@ -27,6 +30,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _biosInfoService = new BiosInfoService();
         _tpmInfoService = new TpmInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
+        _mediaPlayer = new MediaPlayer();
     }
 
     #region OS Information Properties
@@ -260,6 +264,38 @@ public partial class MainViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Plays the audio file.
+    /// </summary>
+    [RelayCommand]
+    private void PlayAudio()
+    {
+        try
+        {
+            _logger?.LogInformation("Playing audio file");
+
+            // Get the path to the audio file relative to the executable
+            var exePath = AppContext.BaseDirectory;
+            var audioPath = Path.Combine(exePath, "Assets", "Audio", "Testing_Final.mp3");
+
+            _logger?.LogDebug("Audio file path: {Path}", audioPath);
+
+            if (!File.Exists(audioPath))
+            {
+                _logger?.LogWarning("Audio file not found at: {Path}", audioPath);
+                return;
+            }
+
+            var uri = new Uri(audioPath);
+            _mediaPlayer.Source = MediaSource.CreateFromUri(uri);
+            _mediaPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to play audio");
+        }
+    }
+
     private static string FormatCpuModels(IReadOnlyList<string> cpuModels)
     {
         if (cpuModels.Count == 0)
@@ -283,6 +319,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             return;
         }
 
+        _mediaPlayer.Dispose();
         _isDisposed = true;
         _logger?.LogDebug("MainViewModel disposed");
     }
