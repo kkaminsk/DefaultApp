@@ -18,7 +18,7 @@ A WinUI 3 desktop application that displays comprehensive system information in 
 - BIOS and Secure Boot status
 - TPM manufacturer and firmware version
 - Network configuration with ping tests
-- Six theme options including high contrast modes
+- Theme options: System Default and Inverted
 - Copy buttons for key fields
 
 ## Requirements

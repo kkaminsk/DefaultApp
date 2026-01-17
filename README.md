@@ -6,7 +6,7 @@
 
 A WinUI 3 desktop application that displays comprehensive system information in an easy-to-read card-based layout. Built with .NET 8 and packaged as MSIX.
 
-Had a cdoe review and fixed some issues.
+Had a code review and fixed some issues.
 
 ## Features
 
@@ -45,7 +45,7 @@ Had a cdoe review and fixed some issues.
 - MAC Address
 
 ### Additional Features
-- **Theme Support**: System Default, Light, Dark, Cyberpunk, High Contrast Dark, High Contrast Light
+- **Theme Support**: System Default, Inverted (swaps light/dark from system setting)
 - **Copy to Clipboard**: Quick copy buttons for key fields (Machine Name, Version, IP, MAC, etc.)
 - **Refresh**: Single button to refresh all system information
 - **Window Centering**: Application window centers on primary display at launch

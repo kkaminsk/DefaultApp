@@ -55,7 +55,6 @@ DefaultApp/                        # Main WinUI 3 Application
 │   ├── LoggingService.cs          # File logging + ETW
 │   └── NativeMethods.cs           # P/Invoke declarations
 ├── Models/                        # Data models
-├── Themes/                        # Custom theme resources
 └── Strings/                       # Localization resources
 
 DefaultApp.Tests/                  # Unit Tests (xUnit)
@@ -73,7 +72,7 @@ Keep the demo app simple - no DI container.
 Use `.resw` resource files from the start for all user-facing strings.
 
 ### Themes
-Multiple themes available: System Default (follows Windows theme), Light, Dark, Cyberpunk, High Contrast Dark, and High Contrast Light. High contrast mode is automatically detected and respected.
+Two themes available: System Default (follows Windows theme) and Inverted (swaps light/dark from system setting). High contrast mode is automatically detected and respected.
 
 ## Build Commands
 
