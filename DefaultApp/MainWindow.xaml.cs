@@ -72,6 +72,19 @@ public sealed partial class MainWindow : Window
 
         // Initialize theme service
         InitializeThemeService();
+
+        // Clean up window subclassing on close
+        this.Closed += OnWindowClosed;
+    }
+
+    private void OnWindowClosed(object sender, WindowEventArgs args)
+    {
+        // Restore original window procedure to clean up subclassing
+        var hWnd = WindowNative.GetWindowHandle(this);
+        if (hWnd != IntPtr.Zero && _oldWndProc != IntPtr.Zero)
+        {
+            SetWindowLongPtr(hWnd, GWLP_WNDPROC, _oldWndProc);
+        }
     }
 
     private void SetMinimumWindowSize()

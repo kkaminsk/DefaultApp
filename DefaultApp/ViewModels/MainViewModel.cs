@@ -380,8 +380,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _logger?.LogInformation("Starting ping to gateway: {Gateway}", DefaultGateway);
         PingButtonText = "0/5";
 
-        // Fire and forget the async ping operation
-        _ = ExecutePingAsync();
+        // Fire and forget the async ping operation with exception handling
+        SafeFireAndForget(ExecutePingAsync, "PingGateway");
     }
 
     private async Task ExecutePingAsync()
@@ -451,8 +451,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _logger?.LogInformation("Starting ping to DNS server: {DnsServer}", DnsServer);
         PingDnsButtonText = "0/5";
 
-        // Fire and forget the async ping operation
-        _ = ExecutePingDnsAsync();
+        // Fire and forget the async ping operation with exception handling
+        SafeFireAndForget(ExecutePingDnsAsync, "PingDns");
     }
 
     private async Task ExecutePingDnsAsync()
@@ -514,8 +514,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _logger?.LogInformation("Starting ping to Google DNS: 8.8.8.8");
         PingGoogleDnsButtonText = "0/5";
 
-        // Fire and forget the async ping operation
-        _ = ExecutePingGoogleDnsAsync();
+        // Fire and forget the async ping operation with exception handling
+        SafeFireAndForget(ExecutePingGoogleDnsAsync, "PingGoogleDns");
     }
 
     private async Task ExecutePingGoogleDnsAsync()
@@ -572,6 +572,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         // Multiple CPUs - format as list
         return string.Join("\n", cpuModels.Select((model, index) => $"{index + 1}. {model}"));
+    }
+
+    /// <summary>
+    /// Safely executes a fire-and-forget async operation with exception logging.
+    /// </summary>
+    private async void SafeFireAndForget(Func<Task> asyncAction, string operationName)
+    {
+        try
+        {
+            await asyncAction();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Unhandled exception in {Operation}", operationName);
+        }
     }
 
     public void Dispose()
