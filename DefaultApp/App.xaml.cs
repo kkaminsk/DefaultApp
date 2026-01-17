@@ -53,7 +53,7 @@ public partial class App : Application
 
     private async Task ShowMainWindowAfterSplashAsync()
     {
-        await Task.Delay(5000);
+        await Task.Delay(2000);
 
         _window = new MainWindow();
         _window.Activate();

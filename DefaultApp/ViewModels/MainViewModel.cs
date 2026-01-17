@@ -15,6 +15,11 @@ namespace DefaultApp.ViewModels;
 /// </summary>
 public partial class MainViewModel : ObservableObject, IDisposable
 {
+    // Ping result color constants
+    private static readonly Color PingSuccessColor = Color.FromArgb(255, 76, 175, 80);    // Green - all pings succeeded
+    private static readonly Color PingFailureColor = Color.FromArgb(255, 244, 67, 54);    // Red - all pings failed
+    private static readonly Color PingPartialColor = Color.FromArgb(255, 255, 193, 7);    // Yellow - partial success
+
     private readonly SystemInfoService _systemInfoService;
     private readonly HardwareInfoService _hardwareInfoService;
     private readonly ActivationService _activationService;
@@ -424,16 +429,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
             // Set button color based on results
             setBackground(successCount switch
             {
-                5 => new SolidColorBrush(Color.FromArgb(255, 76, 175, 80)),   // Green
-                0 => new SolidColorBrush(Color.FromArgb(255, 244, 67, 54)),   // Red
-                _ => new SolidColorBrush(Color.FromArgb(255, 255, 193, 7))    // Yellow (1-4)
+                5 => new SolidColorBrush(PingSuccessColor),
+                0 => new SolidColorBrush(PingFailureColor),
+                _ => new SolidColorBrush(PingPartialColor)
             });
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "{LogName} ping operation failed", logName);
             setButtonText("Error");
-            setBackground(new SolidColorBrush(Color.FromArgb(255, 244, 67, 54))); // Red
+            setBackground(new SolidColorBrush(PingFailureColor));
         }
     }
 

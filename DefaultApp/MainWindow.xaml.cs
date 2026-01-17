@@ -240,23 +240,17 @@ public sealed partial class MainWindow : Window
 
         // Subscribe to theme changes from the service (e.g., system theme changes)
         _themeService.ThemeChanged += OnThemeServiceThemeChanged;
-
-        System.Diagnostics.Debug.WriteLine($"[ThemeService] Initialized with theme: {_themeService.CurrentTheme}");
     }
 
     private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] SelectionChanged fired. SelectedIndex: {ThemeSelector.SelectedIndex}, IsInitializing: {_isInitializingTheme}, ThemeService null: {_themeService is null}");
-
         // Avoid handling during initialization
         if (_isInitializingTheme || _themeService is null)
         {
-            System.Diagnostics.Debug.WriteLine("[ThemeSelector] Skipping - initialization in progress or service not ready");
             return;
         }
 
         var selectedTheme = ThemeService.FromComboBoxIndex(ThemeSelector.SelectedIndex);
-        System.Diagnostics.Debug.WriteLine($"[ThemeSelector] Applying theme: {selectedTheme}");
 
         _themeService.SetTheme(selectedTheme);
 

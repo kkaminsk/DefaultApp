@@ -67,23 +67,17 @@ public sealed class ThemeService : IDisposable
             return;
         }
 
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Called with theme: {theme}, current: {_currentTheme}");
-
         if (_currentTheme == theme)
         {
-            System.Diagnostics.Debug.WriteLine("[ThemeService.SetTheme] Theme unchanged, skipping");
             return;
         }
 
         _logger?.LogInformation("Changing theme from {OldTheme} to {NewTheme}", _currentTheme, theme);
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Changing from {_currentTheme} to {theme}");
 
         _currentTheme = theme;
         SaveTheme(theme);
         ApplyTheme(theme);
         ThemeChanged?.Invoke(this, theme);
-
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.SetTheme] Theme change complete");
     }
 
     /// <summary>
@@ -120,12 +114,9 @@ public sealed class ThemeService : IDisposable
 
     private void ApplyTheme(AppTheme theme)
     {
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Called with theme: {theme}, rootElement null: {_rootElement is null}");
-
         if (_rootElement is null)
         {
             _logger?.LogWarning("Cannot apply theme: root element not initialized");
-            System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] ERROR: Root element is null!");
             return;
         }
 
@@ -133,81 +124,24 @@ public sealed class ThemeService : IDisposable
         if (IsHighContrastEnabled())
         {
             _logger?.LogInformation("Windows high contrast mode detected, using system default");
-            System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] High contrast override - using Default");
             _rootElement.RequestedTheme = ElementTheme.Default;
             return;
         }
 
         _logger?.LogDebug("Applying theme: {Theme}", theme);
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Setting RequestedTheme for theme: {theme}");
 
         switch (theme)
         {
             case AppTheme.Inverted:
                 // Apply the opposite of the system theme
                 var invertedTheme = IsSystemInDarkMode() ? ElementTheme.Light : ElementTheme.Dark;
-                System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Applying Inverted theme (system is {(IsSystemInDarkMode() ? "dark" : "light")}, using {invertedTheme})");
                 _rootElement.RequestedTheme = invertedTheme;
                 break;
 
             case AppTheme.SystemDefault:
             default:
-                System.Diagnostics.Debug.WriteLine("[ThemeService.ApplyTheme] Applying Default theme");
                 _rootElement.RequestedTheme = ElementTheme.Default;
                 break;
-        }
-
-        System.Diagnostics.Debug.WriteLine($"[ThemeService.ApplyTheme] Complete. RequestedTheme is now: {_rootElement.RequestedTheme}");
-    }
-
-    private void ApplyCustomTheme(string themeName)
-    {
-        try
-        {
-            var app = Application.Current;
-            var resources = app.Resources;
-
-            // Remove any existing custom theme
-            RemoveCustomTheme();
-
-            // Load and apply the custom theme
-            var themeUri = new Uri($"ms-appx:///Themes/{themeName}.xaml");
-            var themeDictionary = new ResourceDictionary { Source = themeUri };
-
-            // Mark this dictionary so we can remove it later
-            themeDictionary["_CustomThemeMarker"] = themeName;
-
-            resources.MergedDictionaries.Add(themeDictionary);
-
-            _logger?.LogDebug("Applied custom theme: {Theme}", themeName);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Failed to apply custom theme: {Theme}", themeName);
-        }
-    }
-
-    private void RemoveCustomTheme()
-    {
-        try
-        {
-            var app = Application.Current;
-            var resources = app.Resources;
-
-            // Find and remove custom theme dictionaries
-            var toRemove = resources.MergedDictionaries
-                .Where(d => d.ContainsKey("_CustomThemeMarker"))
-                .ToList();
-
-            foreach (var dict in toRemove)
-            {
-                resources.MergedDictionaries.Remove(dict);
-                _logger?.LogDebug("Removed custom theme dictionary");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Failed to remove custom theme");
         }
     }
 
