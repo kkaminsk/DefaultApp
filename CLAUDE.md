@@ -28,7 +28,8 @@ This is a Windows 11 MSIX packaged application built with WinUI 3 and .NET 8. Th
 | File | Purpose |
 |------|---------|
 | `openspec/project.md` | Project context for OpenSpec |
-| `openspec/changes/` | Implementation proposals |
+| `openspec/specs/` | Consolidated capability specifications |
+| `openspec/changes/archive/` | Archived implementation proposals |
 
 ## Technology Stack
 
@@ -72,7 +73,7 @@ Keep the demo app simple - no DI container.
 Use `.resw` resource files from the start for all user-facing strings.
 
 ### Themes
-Two themes: System Default (follows Windows theme) and Inverted (opposite of system theme). High contrast mode is automatically detected and respected.
+Multiple themes available: System Default (follows Windows theme), Light, Dark, Cyberpunk, High Contrast Dark, and High Contrast Light. High contrast mode is automatically detected and respected.
 
 ## Build Commands
 
@@ -107,9 +108,9 @@ dotnet publish -c Release -r win-arm64
 
 ## Testing
 
-- Unit tests: xUnit
+- Unit tests: xUnit (136 tests)
 - UI automation: Microsoft.Windows.Apps.Test
-- Target coverage: 80% for service layer
+- Coverage: Service layer has comprehensive test coverage
 
 ## Important Constraints
 
@@ -159,28 +160,16 @@ Each proposal contains:
 - `tasks.md` - Implementation checklist
 - `specs/<capability>/spec.md` - Requirements with scenarios
 
-## Code Review
+## Specifications
 
-A comprehensive code review was performed on 2026-01-16. See `codereview.md` in the project root for full details.
+All feature specifications are consolidated in `openspec/specs/`. Key capability specs include:
 
-### Completed Proposals
+| Spec | Description |
+|------|-------------|
+| `system-info` | OS and hardware information display |
+| `network-info` | Network configuration and ping operations |
+| `themes` | Theme system and selection |
+| `logging` | File and ETW logging |
+| `testing` | Unit test requirements |
 
-| # | Proposal | Priority | Description |
-|---|----------|----------|-------------|
-| 1 | `1-fix-critical-issues` | Critical | Fire-and-forget async handling, MainViewModel disposal, window subclass cleanup |
-| 2 | `2-fix-high-priority-issues` | High | Exception logging, duplicate ping code, BIOS bug fix, ThemeService memory leak |
-
-### Remaining Proposals
-
-| # | Proposal | Priority | Description |
-|---|----------|----------|-------------|
-| 3 | `3-fix-medium-priority-issues` | Medium | Splash delay, dead code removal, Debug.WriteLine cleanup, magic numbers |
-| 4 | `4-add-unit-tests` | Low | Unit tests for service layer (target 80% coverage) |
-
-### Known Issues (from code review)
-
-**Medium Priority:**
-- 5-second splash screen delay is excessive
-- Unused `ApplyCustomTheme()`/`RemoveCustomTheme()` methods
-- Debug.WriteLine statements in production code
-- `GetTotalRamFromMemoryManager()` always returns 0
+View specs with `openspec list --specs` or `openspec show <spec-name>`.
