@@ -67,22 +67,46 @@ public sealed class ActivationService
 
     private static ActivationStatus CheckActivationStatus()
     {
-        // Try SLGetWindowsInformationDWORD first (most reliable)
+        // Try slmgr first - most reliable for all license types including Volume/Enterprise
+        var slmgrStatus = CheckActivationStatusFromSlmgr();
+        if (slmgrStatus != ActivationStatus.Unavailable)
+        {
+            return slmgrStatus;
+        }
+
+        // Try SLGetWindowsInformationDWORD - works well for retail licenses
         var slInfoStatus = CheckActivationStatusFromSlInfo();
+        if (slInfoStatus == ActivationStatus.Activated)
+        {
+            // Only trust "Activated" result - "Not Genuine" can be wrong for volume licenses
+            return slInfoStatus;
+        }
+
+        // Try SLIsGenuineLocal
+        var genuineStatus = CheckActivationStatusFromPInvoke();
+        if (genuineStatus == ActivationStatus.Activated)
+        {
+            return genuineStatus;
+        }
+
+        // Try Registry-based detection
+        var registryStatus = CheckActivationStatusFromRegistry();
+        if (registryStatus != ActivationStatus.Unavailable)
+        {
+            return registryStatus;
+        }
+
+        // Return the best non-Unavailable result we got, or Unavailable
         if (slInfoStatus != ActivationStatus.Unavailable)
         {
             return slInfoStatus;
         }
-
-        // Try SLIsGenuineLocal next
-        var genuineStatus = CheckActivationStatusFromPInvoke();
         if (genuineStatus != ActivationStatus.Unavailable)
         {
             return genuineStatus;
         }
 
-        // Fall back to Registry-based detection
-        return CheckActivationStatusFromRegistry();
+        return ActivationStatus.Unavailable;
     }
 
     /// <summary>
@@ -92,12 +116,31 @@ public sealed class ActivationService
     {
         try
         {
-            var result = NativeMethods.SLGetWindowsInformationDWORD(
+            // Try Kernel-WindowsLicenseStatus first - this directly indicates license status
+            // Values: 0=Unlicensed, 1=Licensed, 2=OOBGrace, 3=OOTGrace, 4=NonGenuineGrace, 5=Notification, 6=ExtendedGrace
+            var licenseResult = NativeMethods.SLGetWindowsInformationDWORD(
+                "Kernel-WindowsLicenseStatus",
+                out var licenseStatus);
+
+            if (licenseResult == 0)
+            {
+                return licenseStatus switch
+                {
+                    1 => ActivationStatus.Activated,     // Licensed
+                    2 or 3 or 6 => ActivationStatus.GracePeriod, // Various grace periods
+                    4 or 5 => ActivationStatus.NotificationMode, // Non-genuine or notification
+                    0 => ActivationStatus.NotActivated,   // Unlicensed
+                    _ => ActivationStatus.Unavailable
+                };
+            }
+
+            // Fall back to Security-SPP-GenuineLocalStatus
+            var genuineResult = NativeMethods.SLGetWindowsInformationDWORD(
                 "Security-SPP-GenuineLocalStatus",
                 out var genuineStatus);
 
             // S_OK = 0
-            if (result == 0)
+            if (genuineResult == 0)
             {
                 // 0 = Genuine/Activated, 1 = Not Genuine
                 return genuineStatus == 0 ? ActivationStatus.Activated : ActivationStatus.NotActivated;
@@ -138,6 +181,69 @@ public sealed class ActivationService
             if (genuineTicket is not null)
             {
                 return ActivationStatus.Activated;
+            }
+
+            return ActivationStatus.Unavailable;
+        }
+        catch
+        {
+            return ActivationStatus.Unavailable;
+        }
+    }
+
+    /// <summary>
+    /// Checks activation status using slmgr script output.
+    /// This is the most reliable method for all license types including Volume/Enterprise.
+    /// </summary>
+    private static ActivationStatus CheckActivationStatusFromSlmgr()
+    {
+        try
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cscript.exe",
+                Arguments = "//nologo C:\\Windows\\System32\\slmgr.vbs /dli",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+
+            using var process = System.Diagnostics.Process.Start(startInfo);
+            if (process is null)
+            {
+                return ActivationStatus.Unavailable;
+            }
+
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(5000);
+
+            if (string.IsNullOrEmpty(output))
+            {
+                return ActivationStatus.Unavailable;
+            }
+
+            // Check for license status in output
+            // The output contains "License Status: Licensed" or similar
+            if (output.Contains("License Status: Licensed", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.Activated;
+            }
+
+            if (output.Contains("License Status: Notification", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.NotificationMode;
+            }
+
+            if (output.Contains("License Status: Initial Grace", StringComparison.OrdinalIgnoreCase) ||
+                output.Contains("License Status: Extended Grace", StringComparison.OrdinalIgnoreCase) ||
+                output.Contains("Grace", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.GracePeriod;
+            }
+
+            if (output.Contains("License Status: Unlicensed", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.NotActivated;
             }
 
             return ActivationStatus.Unavailable;
