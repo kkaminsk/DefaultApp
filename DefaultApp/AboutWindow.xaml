@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     Title="About Default App">
 
+
     <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

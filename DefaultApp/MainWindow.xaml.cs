@@ -259,6 +259,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private void InfoButton_Click(object sender, RoutedEventArgs e)
+    {
+        var aboutWindow = new AboutWindow();
+        aboutWindow.Activate();
+    }
+
     private void UpdateTitleBarColors(AppTheme theme)
     {
         if (_appWindow is null)
