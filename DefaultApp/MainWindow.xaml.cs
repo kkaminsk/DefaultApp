@@ -85,6 +85,9 @@ public sealed partial class MainWindow : Window
             // Set initial size to 800x600
             _appWindow.Resize(new Windows.Graphics.SizeInt32(MinWidth, MinHeight));
 
+            // Center window on the primary display
+            CenterWindowOnScreen(hWnd);
+
             // Set presenter to allow resizing with minimum constraints
             if (_appWindow.Presenter is OverlappedPresenter presenter)
             {
@@ -103,6 +106,30 @@ public sealed partial class MainWindow : Window
         _newWndProc = new WndProcDelegate(WndProc);
         _oldWndProc = GetWindowLongPtr(hWnd, GWLP_WNDPROC);
         SetWindowLongPtr(hWnd, GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(_newWndProc));
+    }
+
+    private void CenterWindowOnScreen(IntPtr hWnd)
+    {
+        if (_appWindow is null)
+        {
+            return;
+        }
+
+        var hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+        var monitorInfo = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+
+        if (GetMonitorInfo(hMonitor, ref monitorInfo))
+        {
+            var workArea = monitorInfo.rcWork;
+            var workWidth = workArea.right - workArea.left;
+            var workHeight = workArea.bottom - workArea.top;
+
+            var windowSize = _appWindow.Size;
+            var x = workArea.left + (workWidth - windowSize.Width) / 2;
+            var y = workArea.top + (workHeight - windowSize.Height) / 2;
+
+            _appWindow.Move(new Windows.Graphics.PointInt32(x, y));
+        }
     }
 
     private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -125,6 +152,33 @@ public sealed partial class MainWindow : Window
 
     [DllImport("user32.dll")]
     private static extern uint GetDpiForWindow(IntPtr hWnd);
+
+    // P/Invoke for window centering
+    private const int MONITOR_DEFAULTTONEAREST = 2;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int left;
+        public int top;
+        public int right;
+        public int bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MONITORINFO
+    {
+        public uint cbSize;
+        public RECT rcMonitor;
+        public RECT rcWork;
+        public uint dwFlags;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
+
+    [DllImport("user32.dll")]
+    private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
     private void ConfigureExtendedTitleBar()
     {
