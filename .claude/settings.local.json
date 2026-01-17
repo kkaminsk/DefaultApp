@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(openspec list:*)",
+      "Bash(openspec validate:*)",
+      "Bash(python3 -c \"\nfrom base64 import b64decode\nimport os\n\n# Minimal 1x1 transparent PNG\npng_data = b64decode\\(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==''\\)\n\nassets_dir = r''C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\Assets''\nfiles = [''StoreLogo.png'', ''Square150x150Logo.png'', ''Square44x44Logo.png'', ''Wide310x150Logo.png'', ''SplashScreen.png'']\n\nfor f in files:\n    with open\\(os.path.join\\(assets_dir, f\\), ''wb''\\) as fp:\n        fp.write\\(png_data\\)\n    print\\(f''Created {f}''\\)\n\")",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet run)",
+      "Bash(dotnet run:*)",
+      "Bash(start DefaultApp.exe)",
+      "Bash(del \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.AppService\\\\EventLogService.cs\")",
+      "Bash(cmd /c \"del C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.AppService\\\\EventLogService.cs\")",
+      "Bash(cmd /c \"cd /d C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Debug\\\\net8.0-windows10.0.22000.0\\\\win-x64 && start DefaultApp.exe\")",
+      "Skill(openspec:apply)",
+      "Bash(ls -la \"C:\\\\Temp\\\\tsscat\\\\PrivateGPT\\\\.github\"\" 2>/dev/null || echo \"Directory not found or empty \")",
+      "Bash(ls:*)",
+      "Bash(pwsh:*)",
+      "Bash(Remove-Item -Path \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\TimerBackgroundTaskTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\EventLoggerServiceTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\EventLogAppServiceTests.cs\", \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp.Tests\\\\NamedPipeProtocolTests.cs\" -Force)",
+      "Bash(dotnet publish:*)",
+      "Bash(git reset:*)",
+      "Bash(signtool sign:*)",
+      "Bash(\"/c/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe\" sign /v /fd SHA256 /tr \"http://timestamp.acs.microsoft.com\" /td SHA256 /dlib \"C:/Temp/tsscat/CodeSigning/bin/x64/Azure.CodeSigning.Dlib.dll\" /dmdf \"C:/Temp/tsscat/CodeSigning/metadata.json\" \"C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix\")",
+      "Bash(\"/c/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe\" sign /fd SHA256 /tr \"http://timestamp.acs.microsoft.com\" /td SHA256 /dlib \"C:/Temp/tsscat/CodeSigning/bin/x64/Azure.CodeSigning.Dlib.dll\" /dmdf \"C:/Temp/tsscat/CodeSigning/metadata.json\" \"C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix\")",
+      "Bash(cmd.exe /c:*)",
+      "Bash(powershell.exe -Command \"& ''C:/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe'' sign /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:/Temp/tsscat/CodeSigning/bin/x64/Azure.CodeSigning.Dlib.dll'' /dmdf ''C:/Temp/tsscat/CodeSigning/metadata.json'' ''C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe'' sign /a /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:/Temp/tsscat/CodeSigning/bin/x64/Azure.CodeSigning.Dlib.dll'' /dmdf ''C:/Temp/tsscat/CodeSigning/metadata.json'' ''C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe'' sign /a /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:/Temp/tsscat/CodeSigning/Microsoft.Trusted.Signing.Client.1.0.95/bin/x64/Azure.CodeSigning.Dlib.dll'' /dmdf ''C:/Temp/tsscat/CodeSigning/metadata-privategpt.json'' ''C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:/Program Files \\(x86\\)/Windows Kits/10/bin/10.0.22621.0/x64/signtool.exe'' sign /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:/Temp/tsscat/CodeSigning/Microsoft.Trusted.Signing.Client.1.0.95/bin/x64/Azure.CodeSigning.Dlib.dll'' /dmdf ''C:/Temp/tsscat/CodeSigning/metadata-privategpt.json'' ''C:/Temp/tsscat/DefaultApp/DefaultApp/bin/x64/Release/net8.0-windows10.0.22000.0/win-x64/AppPackages/DefaultApp_1.0.0.0_x64_Test/DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:\\\\Program Files \\(x86\\)\\\\Windows Kits\\\\10\\\\bin\\\\10.0.22621.0\\\\x64\\\\signtool.exe'' sign /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\Microsoft.Trusted.Signing.Client.1.0.95\\\\bin\\\\x64\\\\Azure.CodeSigning.Dlib.dll'' /dmdf ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\metadata-privategpt.json'' ''C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Release\\\\net8.0-windows10.0.22000.0\\\\win-x64\\\\AppPackages\\\\DefaultApp_1.0.0.0_x64_Test\\\\DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:\\\\Program Files \\(x86\\)\\\\Windows Kits\\\\10\\\\bin\\\\10.0.22621.0\\\\x64\\\\signtool.exe'' sign /debug /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\Microsoft.Trusted.Signing.Client.1.0.95\\\\bin\\\\x64\\\\Azure.CodeSigning.Dlib.dll'' /dmdf ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\metadata-privategpt.json'' ''C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Release\\\\net8.0-windows10.0.22000.0\\\\win-x64\\\\AppPackages\\\\DefaultApp_1.0.0.0_x64_Test\\\\DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:\\\\Program Files \\(x86\\)\\\\Windows Kits\\\\10\\\\bin\\\\10.0.22621.0\\\\x64\\\\signtool.exe'' verify /pa ''C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Release\\\\net8.0-windows10.0.22000.0\\\\win-x64\\\\AppPackages\\\\DefaultApp_1.0.0.0_x64_Test\\\\DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command \"& ''C:\\\\Program Files \\(x86\\)\\\\Windows Kits\\\\10\\\\bin\\\\10.0.26100.0\\\\x64\\\\signtool.exe'' sign /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\Microsoft.Trusted.Signing.Client.1.0.95\\\\bin\\\\x64\\\\Azure.CodeSigning.Dlib.dll'' /dmdf ''C:\\\\Temp\\\\tsscat\\\\CodeSigning\\\\metadata-privategpt.json'' ''C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\bin\\\\x64\\\\Release\\\\net8.0-windows10.0.22000.0\\\\win-x64\\\\AppPackages\\\\DefaultApp_1.0.0.0_x64_Test\\\\DefaultApp_1.0.0.0_x64.msix''\")",
+      "Bash(powershell.exe -Command:*)",
+      "Bash(unzip:*)"
+    ]
+  }
+}

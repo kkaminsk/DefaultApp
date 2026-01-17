@@ -1,0 +1,50 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Test Results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# MSIX packaging
+AppPackages/
+BundleArtifacts/
+*.appx
+*.msix
+*.msixbundle
+*.appxbundle
+*.appxupload
+
+# Generated files
+*.g.cs
+*.g.i.cs
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Local settings
+appsettings.local.json
