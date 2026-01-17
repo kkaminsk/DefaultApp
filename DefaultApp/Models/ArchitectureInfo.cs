@@ -36,6 +36,11 @@ public sealed class ArchitectureInfo
     public string TotalRam { get; set; } = "Unavailable";
 
     /// <summary>
+    /// Gets or sets the total VRAM formatted as GB (e.g., "8.0 GB").
+    /// </summary>
+    public string Vram { get; set; } = "Unavailable";
+
+    /// <summary>
     /// Gets or sets the device model name (e.g., "Surface Pro 9", "Dell XPS 15").
     /// </summary>
     public string DeviceModel { get; set; } = "Unavailable";

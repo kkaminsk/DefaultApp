@@ -18,6 +18,7 @@ public sealed partial class MainWindow : Window
 {
     private AppWindow? _appWindow;
     private ThemeService? _themeService;
+    private AboutWindow? _aboutWindow;
     private bool _isInitializingTheme;
     private const int MinWidth = 800;
     private const int MinHeight = 600;
@@ -244,5 +245,27 @@ public sealed partial class MainWindow : Window
                 titleBar.ButtonHoverBackgroundColor = null;
                 break;
         }
+    }
+
+    private void AboutButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Close existing About window if open
+        if (_aboutWindow is not null)
+        {
+            try
+            {
+                _aboutWindow.Activate();
+                return;
+            }
+            catch
+            {
+                // Window was closed, create a new one
+                _aboutWindow = null;
+            }
+        }
+
+        _aboutWindow = new AboutWindow();
+        _aboutWindow.Closed += (s, args) => _aboutWindow = null;
+        _aboutWindow.Activate();
     }
 }

@@ -2,6 +2,7 @@ using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 
 namespace DefaultApp;
@@ -12,6 +13,7 @@ namespace DefaultApp;
 public partial class App : Application
 {
     private Window? _window;
+    private SplashWindow? _splashWindow;
     private LoggingService? _loggingService;
     private ILoggerFactory? _loggerFactory;
 
@@ -43,10 +45,54 @@ public partial class App : Application
     {
         _loggingService?.WriteLog(LogLevel.Information, "App", "Application launched");
 
-        _window = new MainWindow();
-        _window.Activate();
+        // Show splash screen first
+        _splashWindow = new SplashWindow();
+        _splashWindow.Activate();
 
-        _window.Closed += OnWindowClosed;
+        // Initialize main window in background
+        _ = InitializeAndShowMainWindowAsync();
+    }
+
+    private async Task InitializeAndShowMainWindowAsync()
+    {
+        try
+        {
+            _splashWindow?.SetLoadingStatus("Initializing...");
+
+            // Small delay to ensure splash is visible
+            await Task.Delay(300);
+
+            // Create main window (this does the heavy initialization)
+            _window = new MainWindow();
+
+            _splashWindow?.SetLoadingStatus("Loading system information...");
+
+            // Signal splash that app initialization is complete
+            _splashWindow?.SignalAppReady();
+
+            // Wait for splash to complete its full sequence (min time + fade out)
+            if (_splashWindow is not null)
+            {
+                await _splashWindow.SplashCompleteTask;
+            }
+
+            // Show main window and close splash
+            _window.Activate();
+            _window.Closed += OnWindowClosed;
+
+            _splashWindow?.Close();
+            _splashWindow = null;
+
+            _loggingService?.WriteLog(LogLevel.Information, "App", "Main window activated");
+        }
+        catch (Exception ex)
+        {
+            _loggingService?.WriteLog(LogLevel.Error, "App", $"Error during initialization: {ex.Message}");
+
+            // If something goes wrong, still try to show the main window
+            _window?.Activate();
+            _splashWindow?.Close();
+        }
     }
 
     /// <summary>

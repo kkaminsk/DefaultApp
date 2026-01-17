@@ -12,6 +12,7 @@ public sealed class HardwareInfoService
 {
     private const string CentralProcessorRegistryKey = @"HARDWARE\DESCRIPTION\System\CentralProcessor";
     private const string BiosRegistryKey = @"HARDWARE\DESCRIPTION\System\BIOS";
+    private const string DisplayAdapterRegistryKey = @"SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}";
     private readonly ILogger<HardwareInfoService>? _logger;
 
     public HardwareInfoService()
@@ -37,6 +38,7 @@ public sealed class HardwareInfoService
             ProcessorCount = GetProcessorCount(),
             CpuModels = GetCpuModels(),
             TotalRam = GetTotalRam(),
+            Vram = GetVram(),
             DeviceModel = GetDeviceModel(),
             SerialNumber = GetSerialNumber(),
             Is64BitProcess = GetIs64BitProcess(),
@@ -180,6 +182,83 @@ public sealed class HardwareInfoService
         }
         catch
         {
+            return "Unavailable";
+        }
+    }
+
+    /// <summary>
+    /// Gets the total VRAM from the primary display adapter formatted as GB.
+    /// </summary>
+    public string GetVram()
+    {
+        try
+        {
+            using var baseKey = Registry.LocalMachine.OpenSubKey(DisplayAdapterRegistryKey);
+            if (baseKey is null)
+            {
+                _logger?.LogWarning("Failed to open Registry key for display adapters");
+                return "Unavailable";
+            }
+
+            // Try to find a display adapter with VRAM info (usually "0000" is primary)
+            foreach (var subKeyName in baseKey.GetSubKeyNames())
+            {
+                // Skip non-numeric subkeys (like "Properties")
+                if (!subKeyName.All(char.IsDigit))
+                {
+                    continue;
+                }
+
+                using var adapterKey = baseKey.OpenSubKey(subKeyName);
+                if (adapterKey is null)
+                {
+                    continue;
+                }
+
+                // Try qwMemorySize first (64-bit value, in bytes)
+                var qwMemorySize = adapterKey.GetValue("HardwareInformation.qwMemorySize");
+                if (qwMemorySize is long qwSize && qwSize > 0)
+                {
+                    return FormatBytesAsGb((ulong)qwSize);
+                }
+                if (qwMemorySize is byte[] qwBytes && qwBytes.Length >= 8)
+                {
+                    var size = BitConverter.ToUInt64(qwBytes, 0);
+                    if (size > 0)
+                    {
+                        return FormatBytesAsGb(size);
+                    }
+                }
+
+                // Try MemorySize (32-bit value, in bytes) as fallback
+                var memorySize = adapterKey.GetValue("HardwareInformation.MemorySize");
+                if (memorySize is int intSize && intSize > 0)
+                {
+                    return FormatBytesAsGb((ulong)intSize);
+                }
+                if (memorySize is byte[] bytes && bytes.Length >= 4)
+                {
+                    var size = BitConverter.ToUInt32(bytes, 0);
+                    if (size > 0)
+                    {
+                        return FormatBytesAsGb(size);
+                    }
+                }
+
+                // Try AdapterRAM (DWORD, in bytes)
+                var adapterRam = adapterKey.GetValue("HardwareInformation.AdapterRAM");
+                if (adapterRam is int ramSize && ramSize > 0)
+                {
+                    // Note: This value can be negative for >2GB due to signed int
+                    return FormatBytesAsGb((ulong)(uint)ramSize);
+                }
+            }
+
+            return "Unavailable";
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to retrieve VRAM from Registry");
             return "Unavailable";
         }
     }

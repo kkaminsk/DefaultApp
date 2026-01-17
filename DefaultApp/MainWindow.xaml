@@ -52,19 +52,37 @@
             <!-- Drag Region (spacer) -->
             <Border Grid.Column="1" x:Name="DragRegion" Background="Transparent" />
 
-            <!-- Theme Selector -->
-            <ComboBox
-                x:Name="ThemeSelector"
-                x:Uid="ThemeSelector"
+            <!-- Theme Selector and Info Button -->
+            <StackPanel
                 Grid.Column="2"
+                Orientation="Horizontal"
+                Spacing="4"
                 VerticalAlignment="Center"
-                Margin="0,0,8,0"
-                MinWidth="160"
-                TabIndex="0"
-                AutomationProperties.Name="Theme selector">
-                <ComboBoxItem x:Uid="ThemeSystemDefault" Content="System Default" />
-                <ComboBoxItem x:Uid="ThemeInverted" Content="Inverted" />
-            </ComboBox>
+                Margin="0,0,8,0">
+                <ComboBox
+                    x:Name="ThemeSelector"
+                    x:Uid="ThemeSelector"
+                    MinWidth="160"
+                    TabIndex="0"
+                    AutomationProperties.Name="Theme selector">
+                    <ComboBoxItem x:Uid="ThemeSystemDefault" Content="System Default" />
+                    <ComboBoxItem x:Uid="ThemeInverted" Content="Inverted" />
+                </ComboBox>
+                <Button
+                    x:Name="AboutButton"
+                    Click="AboutButton_Click"
+                    ToolTipService.ToolTip="About"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="8"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="About">
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Glyph="&#xE946;"
+                        FontSize="16" />
+                </Button>
+            </StackPanel>
 
             <!-- Space for window controls -->
             <Border Grid.Column="3" />
