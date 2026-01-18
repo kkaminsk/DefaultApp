@@ -76,7 +76,15 @@ public sealed class ActivationService
     {
         _logger?.LogDebug("Checking Windows activation status");
 
-        // Try SLGetWindowsInformationDWORD first (most reliable)
+        // Try slmgr.vbs first (most reliable)
+        var slmgrStatus = CheckActivationStatusFromSlmgr();
+        if (slmgrStatus != ActivationStatus.Unavailable)
+        {
+            _logger?.LogInformation("Activation status from slmgr.vbs: {Status}", slmgrStatus);
+            return slmgrStatus;
+        }
+
+        // Try SLGetWindowsInformationDWORD next
         var slInfoStatus = CheckActivationStatusFromSlInfo();
         if (slInfoStatus != ActivationStatus.Unavailable)
         {
@@ -96,6 +104,62 @@ public sealed class ActivationService
         var registryStatus = CheckActivationStatusFromRegistry();
         _logger?.LogInformation("Activation status from Registry: {Status}", registryStatus);
         return registryStatus;
+    }
+
+    /// <summary>
+    /// Checks activation status using slmgr.vbs script.
+    /// </summary>
+    private ActivationStatus CheckActivationStatusFromSlmgr()
+    {
+        try
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cscript.exe",
+                Arguments = "//nologo C:\\Windows\\System32\\slmgr.vbs /xpr",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            using var process = System.Diagnostics.Process.Start(startInfo);
+            if (process is null)
+            {
+                _logger?.LogDebug("Failed to start slmgr.vbs process");
+                return ActivationStatus.Unavailable;
+            }
+
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(5000); // 5 second timeout
+
+            _logger?.LogDebug("slmgr.vbs output: {Output}", output);
+
+            // Parse the output
+            // "Windows is permanently activated" or similar indicates activation
+            // "Windows is in Notification mode" indicates not activated
+            if (output.Contains("permanently activated", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.Activated;
+            }
+            else if (output.Contains("will expire", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.GracePeriod;
+            }
+            else if (output.Contains("Notification mode", StringComparison.OrdinalIgnoreCase) ||
+                     output.Contains("not activated", StringComparison.OrdinalIgnoreCase))
+            {
+                return ActivationStatus.NotActivated;
+            }
+
+            _logger?.LogDebug("Could not parse slmgr.vbs output: {Output}", output);
+            return ActivationStatus.Unavailable;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning(ex, "slmgr.vbs check failed");
+            return ActivationStatus.Unavailable;
+        }
     }
 
     /// <summary>
