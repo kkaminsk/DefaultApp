@@ -1,12 +1,14 @@
 # Default App
 
+Inspired by the Default Application found in SoftGrid/App-V. This MSIX application simply tests delivery and launching of a modern application. It could have been kept more simple but I decided to add some basic information gathering and troubleshooting functions.
+
 ![](https://github.com/kkaminsk/DefaultApp/blob/main/Graphics/DefaultApp.png?raw=true)
 
 **Version 1.2** | System Information Viewer for Windows 11
 
 A WinUI 3 desktop application that displays comprehensive system information in an easy-to-read card-based layout. Built with .NET 8 and packaged as MSIX.
 
-Had a cdoe review and fixed some issues.
+Had a code review and fixed some issues.
 
 ## Features
 

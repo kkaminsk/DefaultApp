@@ -8,6 +8,11 @@ namespace DefaultApp.Services;
 /// <summary>
 /// Central logging service that handles file output, log rotation, and ETW integration.
 /// </summary>
+/// <remarks>
+/// This service uses Trace.WriteLine for its own error handling because it cannot log
+/// failures through itself (bootstrap problem). Trace output works in both debug and release
+/// builds and can be captured via TraceListeners if needed.
+/// </remarks>
 public sealed class LoggingService : IDisposable
 {
     private const string LogFolderName = "Logs";
@@ -125,7 +130,7 @@ public sealed class LoggingService : IDisposable
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[LoggingService] Failed to create log directory: {ex.Message}");
+            Trace.WriteLine($"[LoggingService] Failed to create log directory: {ex.Message}");
         }
     }
 
@@ -164,7 +169,7 @@ public sealed class LoggingService : IDisposable
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[LoggingService] Failed to initialize log file: {ex.Message}");
+            Trace.WriteLine($"[LoggingService] Failed to initialize log file: {ex.Message}");
         }
     }
 
@@ -192,7 +197,7 @@ public sealed class LoggingService : IDisposable
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[LoggingService] Failed to write log entry: {ex.Message}");
+                Trace.WriteLine($"[LoggingService] Failed to write log entry: {ex.Message}");
             }
         }
     }
@@ -232,7 +237,7 @@ public sealed class LoggingService : IDisposable
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[LoggingService] Failed to rotate log file: {ex.Message}");
+            Trace.WriteLine($"[LoggingService] Failed to rotate log file: {ex.Message}");
         }
     }
 
@@ -254,13 +259,13 @@ public sealed class LoggingService : IDisposable
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[LoggingService] Failed to delete old log file {file.Name}: {ex.Message}");
+                    Trace.WriteLine($"[LoggingService] Failed to delete old log file {file.Name}: {ex.Message}");
                 }
             }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[LoggingService] Failed to cleanup old log files: {ex.Message}");
+            Trace.WriteLine($"[LoggingService] Failed to cleanup old log files: {ex.Message}");
         }
     }
 
@@ -292,7 +297,7 @@ public sealed class LoggingService : IDisposable
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[LoggingService] ETW write failed: {ex.Message}");
+            Trace.WriteLine($"[LoggingService] ETW write failed: {ex.Message}");
         }
     }
 

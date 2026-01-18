@@ -62,7 +62,7 @@ public sealed class TpmInfoService
         return tpmInfo;
     }
 
-    private static string ConvertManufacturerIdToName(int manufacturerId)
+    private string ConvertManufacturerIdToName(int manufacturerId)
     {
         // ManufacturerId is a 4-byte ASCII string packed into a DWORD
         try
@@ -88,9 +88,9 @@ public sealed class TpmInfoService
                 };
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Fall through to return hex representation
+            _logger?.LogWarning(ex, "Failed to convert TPM manufacturer ID {ManufacturerId} to name, using hex representation", manufacturerId);
         }
 
         return $"0x{manufacturerId:X8}";
