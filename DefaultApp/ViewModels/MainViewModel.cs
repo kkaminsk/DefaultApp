@@ -29,6 +29,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly NetworkInfoService _networkInfoService;
     private readonly ILogger<MainViewModel>? _logger;
     private readonly MediaPlayer _mediaPlayer;
+    private readonly MediaPlayer _pingSoundPlayer;
     private readonly DispatcherQueue _dispatcherQueue;
     private DispatcherQueueTimer? _copyFeedbackTimer;
     private bool _isDisposed;
@@ -43,6 +44,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _networkInfoService = new NetworkInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
         _mediaPlayer = new MediaPlayer();
+        _pingSoundPlayer = new MediaPlayer();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
 
@@ -395,6 +397,32 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
     /// <summary>
+    /// Plays the sonar sound for successful ping responses.
+    /// </summary>
+    private void PlayPingSound()
+    {
+        try
+        {
+            var exePath = AppContext.BaseDirectory;
+            var audioPath = Path.Combine(exePath, "Assets", "Audio", "sonar.mp3");
+
+            if (!File.Exists(audioPath))
+            {
+                _logger?.LogWarning("Sonar sound file not found at: {Path}", audioPath);
+                return;
+            }
+
+            var uri = new Uri(audioPath);
+            _pingSoundPlayer.Source = MediaSource.CreateFromUri(uri);
+            _pingSoundPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to play ping sound");
+        }
+    }
+
+    /// <summary>
     /// Pings the default gateway 5 times and displays the results.
     /// First click resets to "Ping", second click runs the test.
     /// </summary>
@@ -453,6 +481,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 if (success)
                 {
                     successCount++;
+                    PlayPingSound();
                 }
                 setButtonText($"{successCount}/{i}");
                 if (i < totalPings)
@@ -589,6 +618,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         _copyFeedbackTimer?.Stop();
         _mediaPlayer.Dispose();
+        _pingSoundPlayer.Dispose();
         _isDisposed = true;
         _logger?.LogDebug("MainViewModel disposed");
     }
