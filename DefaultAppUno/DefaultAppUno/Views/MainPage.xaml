@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DefaultApp.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DefaultApp.Views"
+    xmlns:viewmodels="using:DefaultApp.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled">
+
+    <Page.Resources>
+        <!-- InfoCard Style Template -->
+        <Style x:Key="InfoCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="MinWidth" Value="300" />
+        </Style>
+
+        <!-- Card Header Style -->
+        <Style x:Key="CardHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+
+        <!-- Property Label Style -->
+        <Style x:Key="PropertyLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <!-- Property Value Style -->
+        <Style x:Key="PropertyValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- Copy Button Style -->
+        <Style x:Key="CopyButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="MinWidth" Value="28" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+
+        <!-- Property Separator Style -->
+        <Style x:Key="PropertySeparatorStyle" TargetType="Border">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto"
+        HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Padding="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Cards Container with VariableSizedWrapGrid for responsive layout -->
+            <ItemsControl x:Name="CardsContainer">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel x:Name="CardsPanel" Orientation="Vertical" Spacing="16" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- Operating System Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="OsInfoCard"
+                    AutomationProperties.Name="Operating System Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="OsCardHeader"
+                            Text="Operating System"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- Machine Name -->
+                        <TextBlock x:Uid="MachineNameLabel" Text="Machine Name" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.MachineName, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Machine Name value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyMachineNameButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="MachineName"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Machine Name to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- OS Name -->
+                        <TextBlock x:Uid="OsNameLabel" Text="OS Name" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.OsName, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="OS Name value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyOsNameButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="OsName"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy OS Name to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- OS Version -->
+                        <TextBlock x:Uid="OsVersionLabel" Text="Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.OsVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="OS Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="Version"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Build Number -->
+                        <TextBlock x:Uid="OsBuildLabel" Text="Build" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.OsBuildNumber, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Build number value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyBuildButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="Build"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Build to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- 64-bit OS -->
+                        <TextBlock x:Uid="OsIs64BitLabel" Text="64-bit OS" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsIs64Bit, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="64-bit OS value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- System Locale -->
+                        <TextBlock x:Uid="SystemLocaleLabel" Text="System Locale" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.SystemLocale, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="System Locale value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopySystemLocaleButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="SystemLocale"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy System Locale to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Activation Status -->
+                        <TextBlock x:Uid="ActivationStatusLabel" Text="Activation Status" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ActivationStatus, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0,0,0,12"
+                            AutomationProperties.Name="Windows Activation Status value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Test Audio Button -->
+                        <Button
+                            x:Uid="TestAudioButton"
+                            Content="Test Audio"
+                            Command="{x:Bind ViewModel.PlayAudioCommand}"
+                            HorizontalAlignment="Stretch"
+                            Padding="12,8"
+                            AutomationProperties.Name="Test audio file">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE768;" FontSize="16" />
+                                        <TextBlock Text="Test Audio" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Device & Hardware Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="HardwareInfoCard"
+                    AutomationProperties.Name="Device and Hardware Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="HardwareCardHeader"
+                            Text="Device &amp; Hardware"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- CPU Model -->
+                        <TextBlock x:Uid="CpuModelLabel" Text="CPU Model" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.CpuModel, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="CPU Model value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyCpuModelButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="CpuModel"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy CPU Model to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Processor Count -->
+                        <TextBlock x:Uid="ProcessorCountLabel" Text="Processor Count" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProcessorCount, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Processor Count value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Device Model -->
+                        <TextBlock x:Uid="DeviceModelLabel" Text="Device Model" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.DeviceModel, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Device Model value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyDeviceModelButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="DeviceModel"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Device Model to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Serial Number -->
+                        <TextBlock x:Uid="SerialNumberLabel" Text="Serial Number" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.SerialNumber, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Serial Number value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopySerialNumberButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="SerialNumber"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Serial Number to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Total RAM -->
+                        <TextBlock x:Uid="TotalRamLabel" Text="Total RAM" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TotalRam, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Total RAM value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTotalRamButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TotalRam"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Total RAM to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- VRAM -->
+                        <TextBlock x:Uid="VramLabel" Text="VRAM" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.Vram, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="VRAM value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyVramButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="Vram"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy VRAM to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Processor Architecture -->
+                        <TextBlock x:Uid="ProcessorArchLabel" Text="Processor Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProcessorArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="Processor Architecture value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- OS Architecture -->
+                        <TextBlock x:Uid="OsArchLabel" Text="OS Architecture" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.OsArchitecture, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="OS Architecture value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- 64-bit Process -->
+                        <TextBlock x:Uid="Is64BitProcessLabel" Text="64-bit Process" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.Is64BitProcess, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            AutomationProperties.Name="64-bit Process value" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Running Under Emulation -->
+                        <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.IsRunningUnderEmulation, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0"
+                            AutomationProperties.Name="Running under emulation value" />
+                    </StackPanel>
+                </Border>
+
+                <!-- BIOS & Security Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="BiosSecurityCard"
+                    AutomationProperties.Name="BIOS and Security Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="BiosSecurityCardHeader"
+                            Text="BIOS &amp; Security"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- BIOS Manufacturer -->
+                        <TextBlock x:Uid="BiosManufacturerLabel" Text="BIOS Manufacturer" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.BiosManufacturer, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="BIOS Manufacturer value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyBiosManufacturerButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="BiosManufacturer"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy BIOS Manufacturer to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- BIOS Name -->
+                        <TextBlock x:Uid="BiosNameLabel" Text="BIOS Name" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.BiosName, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="BIOS Name value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyBiosNameButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="BiosName"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy BIOS Name to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- BIOS Version -->
+                        <TextBlock x:Uid="BiosVersionLabel" Text="BIOS Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.BiosVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="BIOS Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyBiosVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="BiosVersion"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy BIOS Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- BIOS Release Date -->
+                        <TextBlock x:Uid="BiosReleaseDateLabel" Text="BIOS Release Date" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.BiosReleaseDate, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="BIOS Release Date value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyBiosReleaseDateButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="BiosReleaseDate"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy BIOS Release Date to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- SMBIOS Version -->
+                        <TextBlock x:Uid="SmbiosVersionLabel" Text="SMBIOS Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.SmbiosVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="SMBIOS Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopySmbiosVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="SmbiosVersion"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy SMBIOS Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Secure Boot Status -->
+                        <TextBlock x:Uid="SecureBootStatusLabel" Text="Secure Boot Status" Style="{StaticResource PropertyLabelStyle}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.SecureBootStatus, Mode=OneWay}"
+                            Style="{StaticResource PropertyValueStyle}"
+                            Margin="0"
+                            AutomationProperties.Name="Secure Boot Status value" />
+                    </StackPanel>
+                </Border>
+
+                <!-- TPM Information Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="TpmInfoCard"
+                    AutomationProperties.Name="TPM Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="TpmInfoCardHeader"
+                            Text="TPM Information"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- TPM Manufacturer ID -->
+                        <TextBlock x:Uid="TpmManufacturerIdLabel" Text="Manufacturer" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmManufacturerId, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Manufacturer value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmManufacturerIdButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmManufacturerId"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Manufacturer to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- TPM Firmware Version -->
+                        <TextBlock x:Uid="TpmManufacturerVersionLabel" Text="Firmware Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmManufacturerVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Firmware Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmManufacturerVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmManufacturerVersion"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Firmware Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Network Information Card -->
+                <Border
+                    Style="{StaticResource InfoCardStyle}"
+                    AutomationProperties.AutomationId="NetworkInfoCard"
+                    AutomationProperties.Name="Network Information">
+
+                    <StackPanel>
+                        <TextBlock
+                            x:Uid="NetworkInfoCardHeader"
+                            Text="Network Information"
+                            Style="{StaticResource CardHeaderStyle}"
+                            AutomationProperties.HeadingLevel="Level2" />
+
+                        <!-- IP Address -->
+                        <TextBlock x:Uid="IpAddressLabel" Text="IP Address" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.IpAddress, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="IP Address value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyIpAddressButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="IpAddress"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy IP Address to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Subnet Mask -->
+                        <TextBlock x:Uid="SubnetMaskLabel" Text="Subnet Mask" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.SubnetMask, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Subnet Mask value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopySubnetMaskButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="SubnetMask"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Subnet Mask to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Default Gateway -->
+                        <TextBlock x:Uid="DefaultGatewayLabel" Text="Default Gateway" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.DefaultGateway, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Default Gateway value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyDefaultGatewayButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="DefaultGateway"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy Default Gateway to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                            <Button
+                                Grid.Column="2"
+                                x:Uid="PingGatewayButton"
+                                Content="{x:Bind ViewModel.PingButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingButtonBackground, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingGatewayCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping the gateway"
+                                AutomationProperties.Name="Ping Default Gateway" />
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- DNS Server -->
+                        <TextBlock x:Uid="DnsServerLabel" Text="DNS Server" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.DnsServer, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="DNS Server value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyDnsServerButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="DnsServer"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy DNS Server to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                            <Button
+                                Grid.Column="2"
+                                x:Uid="PingDnsButton"
+                                Content="{x:Bind ViewModel.PingDnsButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingDnsButtonBackground, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingDnsCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping the DNS server"
+                                AutomationProperties.Name="Ping DNS Server" />
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- MAC Address -->
+                        <TextBlock x:Uid="MacAddressLabel" Text="MAC Address" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.MacAddress, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="MAC Address value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyMacAddressButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="MacAddress"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy MAC Address to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- Google DNS -->
+                        <TextBlock x:Uid="GoogleDnsLabel" Text="Google DNS" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="8.8.8.8"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Google DNS value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="PingGoogleDnsButton"
+                                Content="{x:Bind ViewModel.PingGoogleDnsButtonText, Mode=OneWay}"
+                                Background="{x:Bind ViewModel.PingGoogleDnsButtonBackground, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PingGoogleDnsCommand}"
+                                MinWidth="50"
+                                Padding="8,4"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="Ping Google DNS"
+                                AutomationProperties.Name="Ping Google DNS" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ItemsControl>
+
+            <!-- Visual State Manager for responsive layout -->
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="WindowSizeStates">
+                    <VisualState x:Name="NarrowState">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- Cards stack vertically (default) -->
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="WideState">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="1200" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <!-- This state is handled in code-behind to switch to horizontal layout -->
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ScrollViewer>
+</Page>

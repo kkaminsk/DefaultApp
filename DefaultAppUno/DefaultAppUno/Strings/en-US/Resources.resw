@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Default App</value>
+    <comment>Application display name shown in title bar and Start menu</comment>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>System Information Viewer</value>
+    <comment>Application description</comment>
+  </data>
+  <!-- Title Bar -->
+  <data name="AppTitleText.Text" xml:space="preserve">
+    <value>Default App</value>
+    <comment>Application title shown in the title bar</comment>
+  </data>
+  <data name="ThemeSelector.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Theme selector</value>
+    <comment>Accessibility name for theme dropdown</comment>
+  </data>
+  <data name="ThemeSystemDefault.Content" xml:space="preserve">
+    <value>System Default</value>
+    <comment>Follow system theme option</comment>
+  </data>
+  <data name="ThemeInverted.Content" xml:space="preserve">
+    <value>Inverted</value>
+    <comment>Inverted theme option (opposite of system theme)</comment>
+  </data>
+  <data name="ThemeDark.Content" xml:space="preserve">
+    <value>Dark</value>
+    <comment>Dark theme option</comment>
+  </data>
+  <data name="ThemeCyberpunk.Content" xml:space="preserve">
+    <value>Cyberpunk</value>
+    <comment>Cyberpunk theme option</comment>
+  </data>
+  <data name="ThemeHighContrastDark.Content" xml:space="preserve">
+    <value>High Contrast Dark</value>
+    <comment>High contrast dark theme option</comment>
+  </data>
+  <data name="ThemeHighContrastLight.Content" xml:space="preserve">
+    <value>High Contrast Light</value>
+    <comment>High contrast light theme option</comment>
+  </data>
+  <data name="RefreshButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh all data</value>
+    <comment>Accessibility name for refresh button</comment>
+  </data>
+  <data name="RefreshText.Text" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Text on refresh button</comment>
+  </data>
+  <!-- Operating System Card -->
+  <data name="OsCardHeader.Text" xml:space="preserve">
+    <value>Operating System</value>
+    <comment>Header for the operating system information card</comment>
+  </data>
+  <data name="OsNameLabel.Text" xml:space="preserve">
+    <value>OS Name</value>
+    <comment>Label for OS name field</comment>
+  </data>
+  <data name="OsVersionLabel.Text" xml:space="preserve">
+    <value>Version</value>
+    <comment>Label for OS version field</comment>
+  </data>
+  <data name="OsBuildLabel.Text" xml:space="preserve">
+    <value>Build</value>
+    <comment>Label for OS build number field</comment>
+  </data>
+  <data name="OsEditionLabel.Text" xml:space="preserve">
+    <value>Edition</value>
+    <comment>Label for Windows edition field</comment>
+  </data>
+  <data name="OsIs64BitLabel.Text" xml:space="preserve">
+    <value>64-bit OS</value>
+    <comment>Label for 64-bit OS field</comment>
+  </data>
+  <data name="SystemLocaleLabel.Text" xml:space="preserve">
+    <value>System Locale</value>
+    <comment>Label for system locale field</comment>
+  </data>
+  <data name="ActivationStatusLabel.Text" xml:space="preserve">
+    <value>Activation Status</value>
+    <comment>Label for Windows activation status field</comment>
+  </data>
+  <!-- Device &amp; Hardware Card -->
+  <data name="HardwareCardHeader.Text" xml:space="preserve">
+    <value>Device &amp; Hardware</value>
+    <comment>Header for the hardware information card</comment>
+  </data>
+  <data name="MachineNameLabel.Text" xml:space="preserve">
+    <value>Machine Name</value>
+    <comment>Label for machine/computer name field</comment>
+  </data>
+  <data name="ProcessorArchLabel.Text" xml:space="preserve">
+    <value>Processor Architecture</value>
+    <comment>Label for processor architecture field</comment>
+  </data>
+  <data name="OsArchLabel.Text" xml:space="preserve">
+    <value>OS Architecture</value>
+    <comment>Label for OS architecture field</comment>
+  </data>
+  <data name="EmulationLabel.Text" xml:space="preserve">
+    <value>Running Under Emulation</value>
+    <comment>Label for emulation status field</comment>
+  </data>
+  <data name="CpuModelLabel.Text" xml:space="preserve">
+    <value>CPU Model</value>
+    <comment>Label for CPU model field</comment>
+  </data>
+  <data name="ProcessorCountLabel.Text" xml:space="preserve">
+    <value>Processor Count</value>
+    <comment>Label for processor count field</comment>
+  </data>
+  <data name="TotalRamLabel.Text" xml:space="preserve">
+    <value>Total RAM</value>
+    <comment>Label for total RAM field</comment>
+  </data>
+  <data name="Is64BitProcessLabel.Text" xml:space="preserve">
+    <value>64-bit Process</value>
+    <comment>Label for 64-bit process field</comment>
+  </data>
+  <!-- Copy Buttons -->
+  <data name="CopyMachineNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Machine Name to clipboard</value>
+    <comment>Accessibility name for copy machine name button</comment>
+  </data>
+  <data name="CopyVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Version to clipboard</value>
+    <comment>Accessibility name for copy version button</comment>
+  </data>
+  <data name="CopyOsNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy OS Name to clipboard</value>
+    <comment>Accessibility name for copy OS name button</comment>
+  </data>
+  <data name="CopyBuildButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Build to clipboard</value>
+    <comment>Accessibility name for copy build button</comment>
+  </data>
+  <data name="CopyEditionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Edition to clipboard</value>
+    <comment>Accessibility name for copy edition button</comment>
+  </data>
+  <data name="CopySystemLocaleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy System Locale to clipboard</value>
+    <comment>Accessibility name for copy system locale button</comment>
+  </data>
+  <data name="CopyCpuModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy CPU Model to clipboard</value>
+    <comment>Accessibility name for copy CPU model button</comment>
+  </data>
+  <data name="CopyDeviceModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Device Model to clipboard</value>
+    <comment>Accessibility name for copy device model button</comment>
+  </data>
+  <data name="DeviceModelLabel.Text" xml:space="preserve">
+    <value>Device Model</value>
+    <comment>Label for device model field</comment>
+  </data>
+  <data name="SerialNumberLabel.Text" xml:space="preserve">
+    <value>Serial Number</value>
+    <comment>Label for serial number field</comment>
+  </data>
+  <data name="CopySerialNumberButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Serial Number to clipboard</value>
+    <comment>Accessibility name for copy serial number button</comment>
+  </data>
+  <data name="CopyToClipboardTooltip" xml:space="preserve">
+    <value>Copy to clipboard</value>
+    <comment>Tooltip text for copy buttons</comment>
+  </data>
+  <!-- BIOS & Security Card -->
+  <data name="BiosSecurityCardHeader.Text" xml:space="preserve">
+    <value>BIOS &amp; Security</value>
+    <comment>Header for BIOS and Security information card</comment>
+  </data>
+  <data name="BiosManufacturerLabel.Text" xml:space="preserve">
+    <value>BIOS Manufacturer</value>
+    <comment>Label for BIOS manufacturer field</comment>
+  </data>
+  <data name="CopyBiosManufacturerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Manufacturer to clipboard</value>
+    <comment>Accessibility name for copy BIOS manufacturer button</comment>
+  </data>
+  <data name="BiosNameLabel.Text" xml:space="preserve">
+    <value>BIOS Name</value>
+    <comment>Label for BIOS name field</comment>
+  </data>
+  <data name="CopyBiosNameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Name to clipboard</value>
+    <comment>Accessibility name for copy BIOS name button</comment>
+  </data>
+  <data name="BiosVersionLabel.Text" xml:space="preserve">
+    <value>BIOS Version</value>
+    <comment>Label for BIOS version field</comment>
+  </data>
+  <data name="CopyBiosVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Version to clipboard</value>
+    <comment>Accessibility name for copy BIOS version button</comment>
+  </data>
+  <data name="BiosReleaseDateLabel.Text" xml:space="preserve">
+    <value>BIOS Release Date</value>
+    <comment>Label for BIOS release date field</comment>
+  </data>
+  <data name="CopyBiosReleaseDateButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy BIOS Release Date to clipboard</value>
+    <comment>Accessibility name for copy BIOS release date button</comment>
+  </data>
+  <data name="SmbiosVersionLabel.Text" xml:space="preserve">
+    <value>SMBIOS Version</value>
+    <comment>Label for SMBIOS version field</comment>
+  </data>
+  <data name="CopySmbiosVersionButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy SMBIOS Version to clipboard</value>
+    <comment>Accessibility name for copy SMBIOS version button</comment>
+  </data>
+  <data name="SecureBootStatusLabel.Text" xml:space="preserve">
+    <value>Secure Boot Status</value>
+    <comment>Label for Secure Boot status field</comment>
+  </data>
+  <!-- Test Audio Button -->
+  <data name="TestAudioButton.Content" xml:space="preserve">
+    <value>Test Audio</value>
+    <comment>Text on test audio button</comment>
+  </data>
+  <data name="TestAudioButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Test audio file</value>
+    <comment>Accessibility name for test audio button</comment>
+  </data>
+  <!-- Network Information Card -->
+  <data name="NetworkInfoCardHeader.Text" xml:space="preserve">
+    <value>Network Information</value>
+    <comment>Header for the network information card</comment>
+  </data>
+  <data name="IpAddressLabel.Text" xml:space="preserve">
+    <value>IP Address</value>
+    <comment>Label for IP address field</comment>
+  </data>
+  <data name="CopyIpAddressButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy IP Address to clipboard</value>
+    <comment>Accessibility name for copy IP address button</comment>
+  </data>
+  <data name="SubnetMaskLabel.Text" xml:space="preserve">
+    <value>Subnet Mask</value>
+    <comment>Label for subnet mask field</comment>
+  </data>
+  <data name="CopySubnetMaskButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Subnet Mask to clipboard</value>
+    <comment>Accessibility name for copy subnet mask button</comment>
+  </data>
+  <data name="DefaultGatewayLabel.Text" xml:space="preserve">
+    <value>Default Gateway</value>
+    <comment>Label for default gateway field</comment>
+  </data>
+  <data name="CopyDefaultGatewayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy Default Gateway to clipboard</value>
+    <comment>Accessibility name for copy default gateway button</comment>
+  </data>
+  <data name="PingGatewayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping Default Gateway</value>
+    <comment>Accessibility name for ping gateway button</comment>
+  </data>
+  <data name="PingGatewayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping the gateway</value>
+    <comment>Tooltip for ping gateway button</comment>
+  </data>
+  <data name="DnsServerLabel.Text" xml:space="preserve">
+    <value>DNS Server</value>
+    <comment>Label for DNS server field</comment>
+  </data>
+  <data name="CopyDnsServerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy DNS Server to clipboard</value>
+    <comment>Accessibility name for copy DNS server button</comment>
+  </data>
+  <data name="PingDnsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping DNS Server</value>
+    <comment>Accessibility name for ping DNS server button</comment>
+  </data>
+  <data name="PingDnsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping the DNS server</value>
+    <comment>Tooltip for ping DNS server button</comment>
+  </data>
+  <data name="MacAddressLabel.Text" xml:space="preserve">
+    <value>MAC Address</value>
+    <comment>Label for MAC address field</comment>
+  </data>
+  <data name="CopyMacAddressButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy MAC Address to clipboard</value>
+    <comment>Accessibility name for copy MAC address button</comment>
+  </data>
+  <!-- Google DNS -->
+  <data name="GoogleDnsLabel.Text" xml:space="preserve">
+    <value>Google DNS</value>
+    <comment>Label for Google DNS field</comment>
+  </data>
+  <data name="PingGoogleDnsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ping Google DNS</value>
+    <comment>Accessibility name for ping Google DNS button</comment>
+  </data>
+  <data name="PingGoogleDnsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ping Google DNS</value>
+    <comment>Tooltip for ping Google DNS button</comment>
+  </data>
+</root>
