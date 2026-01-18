@@ -30,6 +30,8 @@ This is a Windows 11 MSIX packaged application built with WinUI 3 and .NET 8. Th
 | `openspec/project.md` | Project context for OpenSpec |
 | `openspec/specs/` | Consolidated capability specifications |
 | `openspec/changes/archive/` | Archived implementation proposals |
+| `uienhancements.md` | UI polish suggestions and recommendations |
+| `uiquestions.md` | Decision questions for UI refinements |
 
 ## Technology Stack
 
@@ -173,3 +175,19 @@ All feature specifications are consolidated in `openspec/specs/`. Key capability
 | `testing` | Unit test requirements |
 
 View specs with `openspec list --specs` or `openspec show <spec-name>`.
+
+## Pending Proposals
+
+| Proposal | Effort | Description |
+|----------|--------|-------------|
+| `polish-ui-medium-effort` | Medium | Focus indicators, theme selector polish, About window separator, button consistency |
+| `add-loading-states` | Higher | Skeleton placeholders, shimmer effects, refresh indicators |
+| `add-ping-sonar-sound` | Low | Play sonar sound effect on successful ping responses |
+| `add-sound-button-pulse` | Medium | Pulsating background on Test Audio button during playback |
+
+### UI Design Decisions
+
+- **Copy feedback**: Checkmark icon displays briefly (1 second) after copying
+- **Ping buttons**: Text changes to show result (e.g., "12ms" or "Failed")
+- **Empty states**: Standardized to "N/A" when data unavailable
+- **Utility aesthetic**: Clean and functional, not flashy

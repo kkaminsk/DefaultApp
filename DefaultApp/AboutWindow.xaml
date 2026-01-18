@@ -30,7 +30,7 @@
                     FontWeight="SemiBold" />
                 <TextBlock
                     x:Name="VersionText"
-                    Text="Version 1.1"
+                    Text="Version 1.3"
                     FontSize="14"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             </StackPanel>
