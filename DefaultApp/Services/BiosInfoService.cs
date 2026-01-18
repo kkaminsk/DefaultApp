@@ -60,7 +60,7 @@ public sealed class BiosInfoService
             if (biosKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for BIOS name");
-                return "Unavailable";
+                return "N/A";
             }
 
             // SystemBiosVersion contains the full BIOS identifier string
@@ -82,12 +82,12 @@ public sealed class BiosInfoService
                 return baseBoardProduct.Trim();
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve BIOS name from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -118,7 +118,7 @@ public sealed class BiosInfoService
             if (biosKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for SMBIOS version");
-                return "Unavailable";
+                return "N/A";
             }
 
             var majorRelease = biosKey.GetValue("BiosMajorRelease");
@@ -129,12 +129,12 @@ public sealed class BiosInfoService
                 return $"{major}.{minor}";
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve SMBIOS version from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -175,7 +175,7 @@ public sealed class BiosInfoService
             if (biosKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for {ValueName}", valueName);
-                return "Unavailable";
+                return "N/A";
             }
 
             var value = biosKey.GetValue(valueName) as string;
@@ -184,12 +184,12 @@ public sealed class BiosInfoService
                 return value.Trim();
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve {ValueName} from Registry", valueName);
-            return "Unavailable";
+            return "N/A";
         }
     }
 }

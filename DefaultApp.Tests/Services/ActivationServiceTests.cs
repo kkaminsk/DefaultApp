@@ -23,7 +23,7 @@ public class ActivationServiceTests
     [InlineData(ActivationStatus.GracePeriod, "Grace Period")]
     [InlineData(ActivationStatus.NotificationMode, "Notification Mode")]
     [InlineData(ActivationStatus.Checking, "Checking...")]
-    [InlineData(ActivationStatus.Unavailable, "Unavailable")]
+    [InlineData(ActivationStatus.Unavailable, "N/A")]
     public void GetActivationStatusDisplay_ReturnsCorrectStrings(
         ActivationStatus status, string expectedDisplay)
     {

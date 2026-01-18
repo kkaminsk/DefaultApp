@@ -24,18 +24,18 @@ public class NetworkInfoServiceTests
 
         // Assert
         result.Should().NotBeNull();
-        // Note: Properties might be "Unavailable" if no network is connected
+        // Note: Properties might be "N/A" if no network is connected
     }
 
     [Fact]
-    public void GetNetworkInfo_IpAddressIsValidOrUnavailable()
+    public void GetNetworkInfo_IpAddressIsValidOrNA()
     {
         // Act
         var result = _service.GetNetworkInfo();
 
         // Assert
         result.IpAddress.Should().NotBeNull();
-        if (result.IpAddress != "Unavailable")
+        if (result.IpAddress != "N/A")
         {
             // Should be a valid IPv4 address
             result.IpAddress.Should().MatchRegex(@"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$");
@@ -53,10 +53,10 @@ public class NetworkInfoServiceTests
     }
 
     [Fact]
-    public async Task PingAsync_WithUnavailable_ReturnsFalse()
+    public async Task PingAsync_WithNA_ReturnsFalse()
     {
         // Act
-        var result = await _service.PingAsync("Unavailable");
+        var result = await _service.PingAsync("N/A");
 
         // Assert
         result.Should().BeFalse();
@@ -99,7 +99,7 @@ public class NetworkInfoServiceTests
         var result = _service.GetNetworkInfo();
 
         // Assert
-        if (result.MacAddress != "Unavailable" && !string.IsNullOrEmpty(result.MacAddress))
+        if (result.MacAddress != "N/A" && !string.IsNullOrEmpty(result.MacAddress))
         {
             // MAC address should be formatted as XX:XX:XX:XX:XX:XX
             result.MacAddress.Should().MatchRegex(@"^([0-9A-F]{2}:){5}[0-9A-F]{2}$");
@@ -107,14 +107,14 @@ public class NetworkInfoServiceTests
     }
 
     [Fact]
-    public void GetNetworkInfo_SubnetMaskIsValidOrUnavailable()
+    public void GetNetworkInfo_SubnetMaskIsValidOrNA()
     {
         // Act
         var result = _service.GetNetworkInfo();
 
         // Assert
         result.SubnetMask.Should().NotBeNull();
-        if (result.SubnetMask != "Unavailable")
+        if (result.SubnetMask != "N/A")
         {
             // Should be a valid IPv4 address (subnet mask format)
             result.SubnetMask.Should().MatchRegex(@"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$");
@@ -122,14 +122,14 @@ public class NetworkInfoServiceTests
     }
 
     [Fact]
-    public void GetNetworkInfo_DefaultGatewayIsValidOrUnavailable()
+    public void GetNetworkInfo_DefaultGatewayIsValidOrNA()
     {
         // Act
         var result = _service.GetNetworkInfo();
 
         // Assert
         result.DefaultGateway.Should().NotBeNull();
-        if (result.DefaultGateway != "Unavailable")
+        if (result.DefaultGateway != "N/A")
         {
             // Should be a valid IPv4 address
             result.DefaultGateway.Should().MatchRegex(@"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$");
@@ -137,14 +137,14 @@ public class NetworkInfoServiceTests
     }
 
     [Fact]
-    public void GetNetworkInfo_DnsServerIsValidOrUnavailable()
+    public void GetNetworkInfo_DnsServerIsValidOrNA()
     {
         // Act
         var result = _service.GetNetworkInfo();
 
         // Assert
         result.DnsServer.Should().NotBeNull();
-        if (result.DnsServer != "Unavailable")
+        if (result.DnsServer != "N/A")
         {
             // Should be a valid IPv4 address
             result.DnsServer.Should().MatchRegex(@"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$");

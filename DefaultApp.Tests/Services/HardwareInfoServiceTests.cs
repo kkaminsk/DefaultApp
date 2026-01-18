@@ -24,7 +24,7 @@ public class HardwareInfoServiceTests
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().BeOneOf("X64", "X86", "Arm64", "Arm", "Unavailable");
+        result.Should().BeOneOf("X64", "X86", "Arm64", "Arm", "N/A");
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class HardwareInfoServiceTests
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().BeOneOf("X64", "X86", "Arm64", "Arm", "Unavailable");
+        result.Should().BeOneOf("X64", "X86", "Arm64", "Arm", "N/A");
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class HardwareInfoServiceTests
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().NotBe("Unavailable");
+        result.Should().NotBe("N/A");
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class HardwareInfoServiceTests
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
-        if (result != "Unavailable")
+        if (result != "N/A")
         {
             result.Should().EndWith(" GB");
             // Should have format like "31.7 GB"
@@ -102,8 +102,8 @@ public class HardwareInfoServiceTests
     [InlineData("X86", "X64", true)]
     [InlineData("Arm64", "Arm64", false)]
     [InlineData("X64", "Arm64", true)]
-    [InlineData("Unavailable", "X64", false)]
-    [InlineData("X64", "Unavailable", false)]
+    [InlineData("N/A", "X64", false)]
+    [InlineData("X64", "N/A", false)]
     public void GetIsRunningUnderEmulation_ReturnsCorrectResult(
         string processArch, string osArch, bool expectedEmulation)
     {
@@ -131,26 +131,26 @@ public class HardwareInfoServiceTests
     }
 
     [Fact]
-    public void GetDeviceModel_ReturnsStringOrUnavailable()
+    public void GetDeviceModel_ReturnsStringOrNA()
     {
         // Act
         var result = _service.GetDeviceModel();
 
         // Assert
         result.Should().NotBeNull();
-        // Should be either "Unavailable" or an actual device model
+        // Should be either "N/A" or an actual device model
         result.Should().NotBeEmpty();
     }
 
     [Fact]
-    public void GetSerialNumber_ReturnsStringOrUnavailable()
+    public void GetSerialNumber_ReturnsStringOrNA()
     {
         // Act
         var result = _service.GetSerialNumber();
 
         // Assert
         result.Should().NotBeNull();
-        // Should be either "Unavailable" or an actual serial number
+        // Should be either "N/A" or an actual serial number
         result.Should().NotBeEmpty();
     }
 }

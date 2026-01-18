@@ -56,7 +56,7 @@ public sealed class ActivationService
             ActivationStatus.GracePeriod => "Grace Period",
             ActivationStatus.NotificationMode => "Notification Mode",
             ActivationStatus.Checking => "Checking...",
-            ActivationStatus.Unavailable => "Unavailable",
+            ActivationStatus.Unavailable => "N/A",
             _ => "Unknown"
         };
     }

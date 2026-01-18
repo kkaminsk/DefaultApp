@@ -5,12 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DefaultApp.Views"
     xmlns:viewmodels="using:DefaultApp.ViewModels"
+    xmlns:converters="using:DefaultApp.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled">
 
     <Page.Resources>
+        <converters:CopyIconConverter x:Key="CopyIconConverter" />
         <!-- InfoCard Style Template -->
         <Style x:Key="InfoCardStyle" TargetType="Border">
             <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
@@ -50,7 +52,49 @@
             <Setter Property="MinWidth" Value="28" />
             <Setter Property="MinHeight" Value="28" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlFillColorSecondaryBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlFillColorTertiaryBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- Property Separator Style -->
@@ -113,7 +157,7 @@
                                 CommandParameter="MachineName"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Machine Name to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=MachineName}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -140,7 +184,7 @@
                                 CommandParameter="OsName"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy OS Name to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=OsName}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -167,7 +211,7 @@
                                 CommandParameter="Version"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Version to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=Version}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -194,7 +238,7 @@
                                 CommandParameter="Build"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Build to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=Build}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -205,7 +249,6 @@
                             Text="{x:Bind ViewModel.OsIs64Bit, Mode=OneWay}"
                             Style="{StaticResource PropertyValueStyle}"
                             AutomationProperties.Name="64-bit OS value" />
-                        <Border Style="{StaticResource PropertySeparatorStyle}" />
 
                         <!-- System Locale -->
                         <TextBlock x:Uid="SystemLocaleLabel" Text="System Locale" Style="{StaticResource PropertyLabelStyle}" />
@@ -229,7 +272,7 @@
                                 CommandParameter="SystemLocale"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy System Locale to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=SystemLocale}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -241,7 +284,6 @@
                             Style="{StaticResource PropertyValueStyle}"
                             Margin="0,0,0,12"
                             AutomationProperties.Name="Windows Activation Status value" />
-                        <Border Style="{StaticResource PropertySeparatorStyle}" />
 
                         <!-- Test Audio Button -->
                         <Button
@@ -298,7 +340,7 @@
                                 CommandParameter="CpuModel"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy CPU Model to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=CpuModel}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -333,7 +375,7 @@
                                 CommandParameter="DeviceModel"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Device Model to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=DeviceModel}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -360,7 +402,7 @@
                                 CommandParameter="SerialNumber"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Serial Number to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=SerialNumber}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -387,7 +429,7 @@
                                 CommandParameter="TotalRam"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Total RAM to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TotalRam}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -414,7 +456,7 @@
                                 CommandParameter="Vram"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy VRAM to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=Vram}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -433,7 +475,6 @@
                             Text="{x:Bind ViewModel.OsArchitecture, Mode=OneWay}"
                             Style="{StaticResource PropertyValueStyle}"
                             AutomationProperties.Name="OS Architecture value" />
-                        <Border Style="{StaticResource PropertySeparatorStyle}" />
 
                         <!-- 64-bit Process -->
                         <TextBlock x:Uid="Is64BitProcessLabel" Text="64-bit Process" Style="{StaticResource PropertyLabelStyle}" />
@@ -441,7 +482,6 @@
                             Text="{x:Bind ViewModel.Is64BitProcess, Mode=OneWay}"
                             Style="{StaticResource PropertyValueStyle}"
                             AutomationProperties.Name="64-bit Process value" />
-                        <Border Style="{StaticResource PropertySeparatorStyle}" />
 
                         <!-- Running Under Emulation -->
                         <TextBlock x:Uid="EmulationLabel" Text="Running Under Emulation" Style="{StaticResource PropertyLabelStyle}" />
@@ -488,7 +528,7 @@
                                 CommandParameter="BiosManufacturer"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy BIOS Manufacturer to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=BiosManufacturer}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -515,7 +555,7 @@
                                 CommandParameter="BiosName"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy BIOS Name to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=BiosName}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -542,7 +582,7 @@
                                 CommandParameter="BiosVersion"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy BIOS Version to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=BiosVersion}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -569,7 +609,7 @@
                                 CommandParameter="BiosReleaseDate"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy BIOS Release Date to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=BiosReleaseDate}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -596,7 +636,7 @@
                                 CommandParameter="SmbiosVersion"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy SMBIOS Version to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=SmbiosVersion}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -646,7 +686,7 @@
                                 CommandParameter="TpmManufacturerId"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy TPM Manufacturer to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TpmManufacturerId}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -673,7 +713,7 @@
                                 CommandParameter="TpmManufacturerVersion"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy TPM Firmware Version to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TpmManufacturerVersion}" FontSize="14" />
                             </Button>
                         </Grid>
                     </StackPanel>
@@ -714,7 +754,7 @@
                                 CommandParameter="IpAddress"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy IP Address to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=IpAddress}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -741,7 +781,7 @@
                                 CommandParameter="SubnetMask"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Subnet Mask to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=SubnetMask}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
@@ -769,7 +809,7 @@
                                 CommandParameter="DefaultGateway"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy Default Gateway to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=DefaultGateway}" FontSize="14" />
                             </Button>
                             <Button
                                 Grid.Column="2"
@@ -809,7 +849,7 @@
                                 CommandParameter="DnsServer"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy DNS Server to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=DnsServer}" FontSize="14" />
                             </Button>
                             <Button
                                 Grid.Column="2"
@@ -848,7 +888,7 @@
                                 CommandParameter="MacAddress"
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy MAC Address to clipboard">
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" FontSize="14" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=MacAddress}" FontSize="14" />
                             </Button>
                         </Grid>
                         <Border Style="{StaticResource PropertySeparatorStyle}" />

@@ -91,7 +91,7 @@ public class BiosInfoServiceTests
         result.Should().NotBeNull();
         result.Should().NotBeEmpty();
 
-        if (result != "Unavailable")
+        if (result != "N/A")
         {
             // Should be in format "X.Y"
             result.Should().MatchRegex(@"^\d+\.\d+$");

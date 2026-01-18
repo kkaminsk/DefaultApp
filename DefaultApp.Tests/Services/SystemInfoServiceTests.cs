@@ -62,15 +62,15 @@ public class SystemInfoServiceTests
     }
 
     [Fact]
-    public void GetEdition_ReturnsValidEditionOrUnavailable()
+    public void GetEdition_ReturnsValidEditionOrNA()
     {
         // Act
         var result = _service.GetEdition();
 
         // Assert
         result.Should().NotBeNullOrWhiteSpace();
-        // Should be a known edition or "Unavailable"
-        if (result != "Unavailable")
+        // Should be a known edition or "N/A"
+        if (result != "N/A")
         {
             // Known Windows editions
             var knownEditions = new[]
@@ -179,7 +179,7 @@ public class SystemInfoServiceTests
 
         // Assert
         fullName.Should().StartWith(friendlyName);
-        if (edition != "Unavailable")
+        if (edition != "N/A")
         {
             // Full name should be longer than just the friendly name (includes edition)
             fullName.Length.Should().BeGreaterThan(friendlyName.Length);

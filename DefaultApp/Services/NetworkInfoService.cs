@@ -48,7 +48,7 @@ public sealed class NetworkInfoService
                 if (unicast.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     networkInfo.IpAddress = unicast.Address.ToString();
-                    networkInfo.SubnetMask = unicast.IPv4Mask?.ToString() ?? "Unavailable";
+                    networkInfo.SubnetMask = unicast.IPv4Mask?.ToString() ?? "N/A";
                     break;
                 }
             }
@@ -99,7 +99,7 @@ public sealed class NetworkInfoService
     /// <returns>True if the ping was successful, false otherwise.</returns>
     public async Task<bool> PingAsync(string ipAddress, int timeoutMs = 1000)
     {
-        if (string.IsNullOrEmpty(ipAddress) || ipAddress == "Unavailable")
+        if (string.IsNullOrEmpty(ipAddress) || ipAddress == "N/A")
         {
             _logger?.LogWarning("Cannot ping invalid address: {Address}", ipAddress);
             return false;

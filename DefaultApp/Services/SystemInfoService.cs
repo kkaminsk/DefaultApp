@@ -53,7 +53,7 @@ public sealed class SystemInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get OS name");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -85,7 +85,7 @@ public sealed class SystemInfoService
             var friendlyName = GetFriendlyOsName();
             var edition = GetEdition();
 
-            if (string.IsNullOrWhiteSpace(edition) || edition == "Unavailable")
+            if (string.IsNullOrWhiteSpace(edition) || edition == "N/A")
             {
                 return friendlyName;
             }
@@ -97,7 +97,7 @@ public sealed class SystemInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get full OS display name");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -137,7 +137,7 @@ public sealed class SystemInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get OS version");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -153,7 +153,7 @@ public sealed class SystemInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get build number");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -168,16 +168,16 @@ public sealed class SystemInfoService
             if (key is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for Windows edition");
-                return "Unavailable";
+                return "N/A";
             }
 
             var edition = key.GetValue("EditionID") as string;
-            return string.IsNullOrWhiteSpace(edition) ? "Unavailable" : edition;
+            return string.IsNullOrWhiteSpace(edition) ? "N/A" : edition;
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve Windows edition from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -209,7 +209,7 @@ public sealed class SystemInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get system locale");
-            return "Unavailable";
+            return "N/A";
         }
     }
 }

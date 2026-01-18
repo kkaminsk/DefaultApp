@@ -10,7 +10,7 @@ namespace DefaultApp.Tests.ViewModels;
 public class MainViewModelTests
 {
     [Fact]
-    public void FormatCpuModels_WithEmptyList_ReturnsUnavailable()
+    public void FormatCpuModels_WithEmptyList_ReturnsNA()
     {
         // Arrange
         var emptyList = new List<string>();
@@ -19,7 +19,7 @@ public class MainViewModelTests
         var result = FormatCpuModels(emptyList);
 
         // Assert
-        result.Should().Be("Unavailable");
+        result.Should().Be("N/A");
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class MainViewModelTests
     {
         if (cpuModels.Count == 0)
         {
-            return "Unavailable";
+            return "N/A";
         }
 
         if (cpuModels.Count == 1)

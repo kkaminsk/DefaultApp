@@ -62,7 +62,7 @@ public sealed class HardwareInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get processor architecture");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -78,7 +78,7 @@ public sealed class HardwareInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get OS architecture");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -94,7 +94,7 @@ public sealed class HardwareInfoService
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get machine name");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -127,7 +127,7 @@ public sealed class HardwareInfoService
             if (baseKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for CPU models");
-                return ["Unavailable"];
+                return ["N/A"];
             }
 
             var subKeyNames = baseKey.GetSubKeyNames();
@@ -154,10 +154,10 @@ public sealed class HardwareInfoService
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve CPU models from Registry");
-            return ["Unavailable"];
+            return ["N/A"];
         }
 
-        return models.Count > 0 ? models : ["Unavailable"];
+        return models.Count > 0 ? models : ["N/A"];
     }
 
     /// <summary>
@@ -174,12 +174,12 @@ public sealed class HardwareInfoService
                 return FormatBytesAsGb(memStatus.ullTotalPhys);
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogWarning(ex, "Failed to get total RAM");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -194,7 +194,7 @@ public sealed class HardwareInfoService
             if (baseKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for display adapters");
-                return "Unavailable";
+                return "N/A";
             }
 
             // Try to find a display adapter with VRAM info (usually "0000" is primary)
@@ -251,12 +251,12 @@ public sealed class HardwareInfoService
                 }
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve VRAM from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -271,7 +271,7 @@ public sealed class HardwareInfoService
             if (biosKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for device model");
-                return "Unavailable";
+                return "N/A";
             }
 
             var productName = biosKey.GetValue("SystemProductName") as string;
@@ -280,12 +280,12 @@ public sealed class HardwareInfoService
                 return productName.Trim();
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve device model from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -310,7 +310,7 @@ public sealed class HardwareInfoService
             if (biosKey is null)
             {
                 _logger?.LogWarning("Failed to open Registry key for serial number");
-                return "Unavailable";
+                return "N/A";
             }
 
             // Try SystemSerialNumber first
@@ -327,12 +327,12 @@ public sealed class HardwareInfoService
                 return serialNumber.Trim();
             }
 
-            return "Unavailable";
+            return "N/A";
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to retrieve serial number from Registry");
-            return "Unavailable";
+            return "N/A";
         }
     }
 
@@ -357,7 +357,7 @@ public sealed class HardwareInfoService
     /// </summary>
     public bool GetIsRunningUnderEmulation(string processArchitecture, string osArchitecture)
     {
-        if (processArchitecture == "Unavailable" || osArchitecture == "Unavailable")
+        if (processArchitecture == "N/A" || osArchitecture == "N/A")
         {
             return false;
         }

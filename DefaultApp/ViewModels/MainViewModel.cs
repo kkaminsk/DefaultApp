@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DefaultApp.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
@@ -28,6 +29,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly NetworkInfoService _networkInfoService;
     private readonly ILogger<MainViewModel>? _logger;
     private readonly MediaPlayer _mediaPlayer;
+    private readonly DispatcherQueue _dispatcherQueue;
+    private DispatcherQueueTimer? _copyFeedbackTimer;
     private bool _isDisposed;
 
     public MainViewModel()
@@ -40,6 +43,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _networkInfoService = new NetworkInfoService();
         _logger = App.LoggerFactory?.CreateLogger<MainViewModel>();
         _mediaPlayer = new MediaPlayer();
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
 
     #region OS Information Properties
@@ -180,6 +184,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     #endregion
 
+    #region Copy Feedback State
+
+    [ObservableProperty]
+    private string? _copiedFieldName;
+
+    #endregion
+
     /// <summary>
     /// Loads all data asynchronously.
     /// </summary>
@@ -306,7 +317,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _ => null
         };
 
-        if (string.IsNullOrEmpty(value) || value == "Loading..." || value == "Unavailable")
+        if (string.IsNullOrEmpty(value) || value == "Loading..." || value == "N/A")
         {
             _logger?.LogWarning("Cannot copy empty or unavailable value for field: {Field}", fieldName);
             return;
@@ -318,11 +329,37 @@ public partial class MainViewModel : ObservableObject, IDisposable
             dataPackage.SetText(value);
             Clipboard.SetContent(dataPackage);
             _logger?.LogDebug("Copied {Field} to clipboard: {Value}", fieldName, value);
+
+            // Show copy feedback
+            ShowCopyFeedback(fieldName);
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to copy {Field} to clipboard", fieldName);
         }
+    }
+
+    /// <summary>
+    /// Shows copy feedback by setting the CopiedFieldName and resetting after 1 second.
+    /// </summary>
+    private void ShowCopyFeedback(string fieldName)
+    {
+        // Cancel any existing timer
+        _copyFeedbackTimer?.Stop();
+
+        // Set the copied field name to show the checkmark
+        CopiedFieldName = fieldName;
+
+        // Create a new timer to reset after 1 second
+        _copyFeedbackTimer = _dispatcherQueue.CreateTimer();
+        _copyFeedbackTimer.Interval = TimeSpan.FromSeconds(1);
+        _copyFeedbackTimer.IsRepeating = false;
+        _copyFeedbackTimer.Tick += (_, _) =>
+        {
+            CopiedFieldName = null;
+            _copyFeedbackTimer = null;
+        };
+        _copyFeedbackTimer.Start();
     }
 
     /// <summary>
@@ -367,7 +404,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // Check if we can ping
         if (string.IsNullOrEmpty(DefaultGateway) ||
             DefaultGateway == "Loading..." ||
-            DefaultGateway == "Unavailable")
+            DefaultGateway == "N/A")
         {
             return;
         }
@@ -452,7 +489,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // Check if we can ping
         if (string.IsNullOrEmpty(DnsServer) ||
             DnsServer == "Loading..." ||
-            DnsServer == "Unavailable")
+            DnsServer == "N/A")
         {
             return;
         }
@@ -516,7 +553,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     {
         if (cpuModels.Count == 0)
         {
-            return "Unavailable";
+            return "N/A";
         }
 
         if (cpuModels.Count == 1)
@@ -550,6 +587,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             return;
         }
 
+        _copyFeedbackTimer?.Stop();
         _mediaPlayer.Dispose();
         _isDisposed = true;
         _logger?.LogDebug("MainViewModel disposed");
