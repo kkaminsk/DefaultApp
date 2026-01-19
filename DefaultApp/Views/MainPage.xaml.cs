@@ -1,6 +1,8 @@
 using DefaultApp.ViewModels;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
 
 namespace DefaultApp.Views;
 
@@ -10,6 +12,7 @@ namespace DefaultApp.Views;
 public sealed partial class MainPage : Page
 {
     public MainViewModel ViewModel { get; }
+    private ScalarKeyFrameAnimation? _shimmerAnimation;
 
     public MainPage()
     {
@@ -28,8 +31,48 @@ public sealed partial class MainPage : Page
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Start shimmer animation on skeleton
+        StartShimmerAnimation();
+
         // Load system information
         await ViewModel.LoadDataAsync();
+
+        // Stop shimmer animation when loading completes
+        StopShimmerAnimation();
+    }
+
+    private void StartShimmerAnimation()
+    {
+        // Check if Windows reduced motion setting is enabled
+        var uiSettings = new Windows.UI.ViewManagement.UISettings();
+        if (!uiSettings.AnimationsEnabled)
+        {
+            return;
+        }
+
+        var compositor = ElementCompositionPreview.GetElementVisual(SkeletonContainer).Compositor;
+
+        // Create opacity pulsing animation for a subtle shimmer effect
+        _shimmerAnimation = compositor.CreateScalarKeyFrameAnimation();
+        _shimmerAnimation.InsertKeyFrame(0f, 0.4f);
+        _shimmerAnimation.InsertKeyFrame(0.5f, 0.8f);
+        _shimmerAnimation.InsertKeyFrame(1f, 0.4f);
+        _shimmerAnimation.Duration = TimeSpan.FromSeconds(1.5);
+        _shimmerAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+        var visual = ElementCompositionPreview.GetElementVisual(SkeletonContainer);
+        visual.StartAnimation("Opacity", _shimmerAnimation);
+    }
+
+    private void StopShimmerAnimation()
+    {
+        if (_shimmerAnimation != null)
+        {
+            var visual = ElementCompositionPreview.GetElementVisual(SkeletonContainer);
+            visual.StopAnimation("Opacity");
+            visual.Opacity = 1f;
+            _shimmerAnimation = null;
+        }
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

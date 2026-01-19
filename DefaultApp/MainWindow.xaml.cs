@@ -276,6 +276,29 @@ public sealed partial class MainWindow : Window
         aboutWindow.Activate();
     }
 
+    private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Disable button and show progress ring
+        RefreshButton.IsEnabled = false;
+        RefreshIcon.Visibility = Visibility.Collapsed;
+        RefreshProgressRing.Visibility = Visibility.Visible;
+        RefreshProgressRing.IsActive = true;
+
+        try
+        {
+            // Call refresh on the MainPage
+            await MainPageContent.RefreshAsync();
+        }
+        finally
+        {
+            // Re-enable button and hide progress ring
+            RefreshButton.IsEnabled = true;
+            RefreshProgressRing.IsActive = false;
+            RefreshProgressRing.Visibility = Visibility.Collapsed;
+            RefreshIcon.Visibility = Visibility.Visible;
+        }
+    }
+
     private void UpdateTitleBarColors(AppTheme theme)
     {
         if (_appWindow is null)

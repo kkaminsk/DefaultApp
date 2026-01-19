@@ -13,6 +13,7 @@
 
     <Page.Resources>
         <converters:CopyIconConverter x:Key="CopyIconConverter" />
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
         <!-- InfoCard Style Template -->
         <Style x:Key="InfoCardStyle" TargetType="Border">
             <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
@@ -103,6 +104,34 @@
             <Setter Property="Background" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
             <Setter Property="Margin" Value="0,0,0,12" />
         </Style>
+
+        <!-- Skeleton Placeholder Styles -->
+        <Style x:Key="SkeletonRectangleStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style x:Key="SkeletonHeaderStyle" TargetType="Border" BasedOn="{StaticResource SkeletonRectangleStyle}">
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Width" Value="180" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="SkeletonLabelStyle" TargetType="Border" BasedOn="{StaticResource SkeletonRectangleStyle}">
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="SkeletonValueStyle" TargetType="Border" BasedOn="{StaticResource SkeletonRectangleStyle}">
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Width" Value="220" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
     </Page.Resources>
 
     <ScrollViewer
@@ -114,8 +143,136 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Cards Container with VariableSizedWrapGrid for responsive layout -->
-            <ItemsControl x:Name="CardsContainer">
+            <!-- Skeleton Cards Container (shown during loading) -->
+            <ItemsControl x:Name="SkeletonContainer" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel x:Name="SkeletonPanel" Orientation="Vertical" Spacing="16" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- Skeleton Card 1: Operating System -->
+                <Border Style="{StaticResource InfoCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource SkeletonHeaderStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="100" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Skeleton Card 2: Device & Hardware -->
+                <Border Style="{StaticResource InfoCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource SkeletonHeaderStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="280" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="40" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="150" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="80" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="80" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="60" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="60" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="40" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="40" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Skeleton Card 3: BIOS & Security -->
+                <Border Style="{StaticResource InfoCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource SkeletonHeaderStyle}" Width="140" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="180" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="100" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="120" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="60" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="80" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Skeleton Card 4: TPM Information -->
+                <Border Style="{StaticResource InfoCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource SkeletonHeaderStyle}" Width="150" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="160" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="100" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Skeleton Card 5: Network Information -->
+                <Border Style="{StaticResource InfoCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource SkeletonHeaderStyle}" Width="170" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="130" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="130" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="130" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="130" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="160" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="80" />
+                    </StackPanel>
+                </Border>
+            </ItemsControl>
+
+            <!-- Cards Container with VariableSizedWrapGrid for responsive layout (hidden during loading) -->
+            <ItemsControl x:Name="CardsContainer" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel x:Name="CardsPanel" Orientation="Vertical" Spacing="16" />

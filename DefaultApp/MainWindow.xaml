@@ -52,7 +52,7 @@
             <!-- Drag Region (spacer) -->
             <Border Grid.Column="1" x:Name="DragRegion" Background="Transparent" />
 
-            <!-- Theme Selector and Info Button -->
+            <!-- Theme Selector, Refresh Button, and Info Button -->
             <StackPanel
                 Grid.Column="2"
                 Orientation="Horizontal"
@@ -68,6 +68,30 @@
                     <ComboBoxItem x:Uid="ThemeSystemDefault" Content="System Default" />
                     <ComboBoxItem x:Uid="ThemeInverted" Content="Inverted" />
                 </ComboBox>
+                <Button
+                    x:Name="RefreshButton"
+                    Click="RefreshButton_Click"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="8"
+                    ToolTipService.ToolTip="Refresh system information"
+                    AutomationProperties.Name="Refresh system information">
+                    <Grid>
+                        <!-- Refresh icon (shown when not refreshing) -->
+                        <FontIcon
+                            x:Name="RefreshIcon"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE72C;"
+                            FontSize="16" />
+                        <!-- Progress ring (shown during refresh) -->
+                        <ProgressRing
+                            x:Name="RefreshProgressRing"
+                            IsActive="False"
+                            Visibility="Collapsed"
+                            Width="16"
+                            Height="16" />
+                    </Grid>
+                </Button>
                 <Button
                     x:Name="InfoButton"
                     Click="InfoButton_Click"

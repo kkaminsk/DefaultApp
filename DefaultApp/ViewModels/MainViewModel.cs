@@ -186,6 +186,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     #endregion
 
+    #region Loading State
+
+    [ObservableProperty]
+    private bool _isLoading = true;
+
+    #endregion
+
     #region Copy Feedback State
 
     [ObservableProperty]
@@ -199,6 +206,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     public async Task LoadDataAsync()
     {
         _logger?.LogInformation("Loading system information data");
+        IsLoading = true;
 
         try
         {
@@ -256,6 +264,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Error loading system information data");
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 
