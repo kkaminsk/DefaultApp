@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="188" />
+                <ColumnDefinition Width="138" />
             </Grid.ColumnDefinitions>
 
             <!-- App Icon and Title -->
@@ -62,7 +62,7 @@
                 <ComboBox
                     x:Name="ThemeSelector"
                     x:Uid="ThemeSelector"
-                    MinWidth="160"
+                    MinWidth="130"
                     TabIndex="0"
                     AutomationProperties.Name="Theme selector">
                     <ComboBoxItem x:Uid="ThemeSystemDefault" Content="System Default" />
@@ -71,9 +71,7 @@
                 <Button
                     x:Name="RefreshButton"
                     Click="RefreshButton_Click"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Padding="8"
+                    Style="{StaticResource TitleBarIconButtonStyle}"
                     ToolTipService.ToolTip="Refresh system information"
                     AutomationProperties.Name="Refresh system information">
                     <Grid>
@@ -95,9 +93,7 @@
                 <Button
                     x:Name="InfoButton"
                     Click="InfoButton_Click"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Padding="8"
+                    Style="{StaticResource TitleBarIconButtonStyle}"
                     ToolTipService.ToolTip="About"
                     AutomationProperties.Name="About this application">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE946;" FontSize="16" />
