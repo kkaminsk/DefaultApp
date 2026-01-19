@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using DefaultApp.ViewModels;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,7 @@ public sealed partial class MainPage : Page
 {
     public MainViewModel ViewModel { get; }
     private ScalarKeyFrameAnimation? _shimmerAnimation;
+    private ScalarKeyFrameAnimation? _audioPulseAnimation;
 
     public MainPage()
     {
@@ -27,6 +29,24 @@ public sealed partial class MainPage : Page
 
         // Dispose ViewModel when page is unloaded
         this.Unloaded += OnUnloaded;
+
+        // Subscribe to ViewModel property changes for audio pulse animation
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModel.IsPlayingAudio))
+        {
+            if (ViewModel.IsPlayingAudio)
+            {
+                StartAudioPulseAnimation();
+            }
+            else
+            {
+                StopAudioPulseAnimation();
+            }
+        }
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -75,8 +95,45 @@ public sealed partial class MainPage : Page
         }
     }
 
+    private void StartAudioPulseAnimation()
+    {
+        // Check if Windows reduced motion setting is enabled
+        var uiSettings = new Windows.UI.ViewManagement.UISettings();
+        if (!uiSettings.AnimationsEnabled)
+        {
+            return;
+        }
+
+        var compositor = ElementCompositionPreview.GetElementVisual(TestAudioButton).Compositor;
+
+        // Create opacity pulsing animation for audio playback feedback
+        _audioPulseAnimation = compositor.CreateScalarKeyFrameAnimation();
+        _audioPulseAnimation.InsertKeyFrame(0f, 1f);
+        _audioPulseAnimation.InsertKeyFrame(0.5f, 0.5f);
+        _audioPulseAnimation.InsertKeyFrame(1f, 1f);
+        _audioPulseAnimation.Duration = TimeSpan.FromMilliseconds(800);
+        _audioPulseAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+        var visual = ElementCompositionPreview.GetElementVisual(TestAudioButton);
+        visual.StartAnimation("Opacity", _audioPulseAnimation);
+    }
+
+    private void StopAudioPulseAnimation()
+    {
+        if (_audioPulseAnimation != null)
+        {
+            var visual = ElementCompositionPreview.GetElementVisual(TestAudioButton);
+            visual.StopAnimation("Opacity");
+            visual.Opacity = 1f;
+            _audioPulseAnimation = null;
+        }
+    }
+
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        // Unsubscribe from ViewModel property changes
+        ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+
         // Dispose ViewModel to release resources (e.g., MediaPlayer)
         ViewModel.Dispose();
     }

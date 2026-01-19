@@ -46,6 +46,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _mediaPlayer = new MediaPlayer();
         _pingSoundPlayer = new MediaPlayer();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+        // Subscribe to media playback events
+        _mediaPlayer.MediaEnded += OnMediaEnded;
+        _mediaPlayer.MediaFailed += OnMediaFailed;
+    }
+
+    private void OnMediaEnded(MediaPlayer sender, object args)
+    {
+        _dispatcherQueue.TryEnqueue(() => IsPlayingAudio = false);
+    }
+
+    private void OnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+    {
+        _logger?.LogWarning("Media playback failed: {Error}", args.ErrorMessage);
+        _dispatcherQueue.TryEnqueue(() => IsPlayingAudio = false);
     }
 
     #region OS Information Properties
@@ -197,6 +212,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string? _copiedFieldName;
+
+    #endregion
+
+    #region Audio Playback State
+
+    [ObservableProperty]
+    private bool _isPlayingAudio;
 
     #endregion
 
@@ -382,6 +404,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void PlayAudio()
     {
+        // If already playing, don't restart
+        if (IsPlayingAudio)
+        {
+            return;
+        }
+
         try
         {
             _logger?.LogInformation("Playing audio file");
@@ -398,6 +426,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 return;
             }
 
+            IsPlayingAudio = true;
             var uri = new Uri(audioPath);
             _mediaPlayer.Source = MediaSource.CreateFromUri(uri);
             _mediaPlayer.Play();
@@ -405,6 +434,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to play audio");
+            IsPlayingAudio = false;
         }
     }
 
@@ -629,6 +659,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         }
 
         _copyFeedbackTimer?.Stop();
+        _mediaPlayer.MediaEnded -= OnMediaEnded;
+        _mediaPlayer.MediaFailed -= OnMediaFailed;
         _mediaPlayer.Dispose();
         _pingSoundPlayer.Dispose();
         _isDisposed = true;

@@ -444,6 +444,7 @@
 
                         <!-- Test Audio Button -->
                         <Button
+                            x:Name="TestAudioButton"
                             x:Uid="TestAudioButton"
                             Content="Test Audio"
                             Command="{x:Bind ViewModel.PlayAudioCommand}"
