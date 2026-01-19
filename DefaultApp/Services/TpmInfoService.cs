@@ -36,23 +36,36 @@ public sealed class TpmInfoService
                 return tpmInfo;
             }
 
+            // Get SpecVersion - stored as string
+            var specVersion = tpmKey.GetValue("SpecVersion") as string;
+            if (!string.IsNullOrWhiteSpace(specVersion))
+            {
+                tpmInfo.SpecVersion = specVersion;
+            }
+
             // Get ManufacturerId - stored as DWORD, convert to manufacturer name
-            var manufacturerIdValue = tpmKey.GetValue("TaskManufacturerId");
+            var manufacturerIdValue = tpmKey.GetValue("ManufacturerId");
             if (manufacturerIdValue is int manufacturerId)
             {
                 tpmInfo.ManufacturerId = ConvertManufacturerIdToName(manufacturerId);
             }
 
-            // Get ManufacturerVersion - stored as FirmwareVersionAtLastProvision or TaskFirmwareVersion
-            var firmwareVersion = tpmKey.GetValue("FirmwareVersionAtLastProvision") as string
-                ?? tpmKey.GetValue("TaskFirmwareVersion") as string;
-            if (!string.IsNullOrWhiteSpace(firmwareVersion))
+            // Get ManufacturerVersion - stored as string
+            var manufacturerVersion = tpmKey.GetValue("ManufacturerVersion") as string;
+            if (!string.IsNullOrWhiteSpace(manufacturerVersion))
             {
-                tpmInfo.ManufacturerVersion = firmwareVersion;
+                tpmInfo.ManufacturerVersion = manufacturerVersion;
             }
 
-            _logger?.LogInformation("TPM info retrieved: Manufacturer {ManufacturerId}, Version {ManufacturerVersion}",
-                tpmInfo.ManufacturerId, tpmInfo.ManufacturerVersion);
+            // Get PhysicalPresenceVersionInfo - stored as string
+            var physicalPresenceVersion = tpmKey.GetValue("PhysicalPresenceVersionInfo") as string;
+            if (!string.IsNullOrWhiteSpace(physicalPresenceVersion))
+            {
+                tpmInfo.PhysicalPresenceVersionInfo = physicalPresenceVersion;
+            }
+
+            _logger?.LogInformation("TPM info retrieved: SpecVersion {SpecVersion}, Manufacturer {ManufacturerId}, Version {ManufacturerVersion}, PhysicalPresence {PhysicalPresenceVersionInfo}",
+                tpmInfo.SpecVersion, tpmInfo.ManufacturerId, tpmInfo.ManufacturerVersion, tpmInfo.PhysicalPresenceVersionInfo);
         }
         catch (Exception ex)
         {

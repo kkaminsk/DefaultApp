@@ -147,10 +147,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
     #region TPM Information Properties
 
     [ObservableProperty]
+    private string _tpmSpecVersion = "Loading...";
+
+    [ObservableProperty]
     private string _tpmManufacturerId = "Loading...";
 
     [ObservableProperty]
     private string _tpmManufacturerVersion = "Loading...";
+
+    [ObservableProperty]
+    private string _tpmPhysicalPresenceVersionInfo = "Loading...";
 
     #endregion
 
@@ -266,8 +272,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
             // Load TPM information
             var tpmInfo = _tpmInfoService.GetTpmInfo();
+            TpmSpecVersion = tpmInfo.SpecVersion;
             TpmManufacturerId = tpmInfo.ManufacturerId;
             TpmManufacturerVersion = tpmInfo.ManufacturerVersion;
+            TpmPhysicalPresenceVersionInfo = tpmInfo.PhysicalPresenceVersionInfo;
 
             // Load network information
             var networkInfo = _networkInfoService.GetNetworkInfo();
@@ -343,8 +351,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "BiosVersion" => BiosVersion,
             "BiosReleaseDate" => BiosReleaseDate,
             "SmbiosVersion" => SmbiosVersion,
+            "TpmSpecVersion" => TpmSpecVersion,
             "TpmManufacturerId" => TpmManufacturerId,
             "TpmManufacturerVersion" => TpmManufacturerVersion,
+            "TpmPhysicalPresenceVersionInfo" => TpmPhysicalPresenceVersionInfo,
             "IpAddress" => IpAddress,
             "SubnetMask" => SubnetMask,
             "DefaultGateway" => DefaultGateway,

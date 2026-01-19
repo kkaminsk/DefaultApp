@@ -239,10 +239,16 @@
                     <StackPanel>
                         <Border Style="{StaticResource SkeletonHeaderStyle}" Width="150" />
                         <Border Style="{StaticResource SkeletonLabelStyle}" />
-                        <Border Style="{StaticResource SkeletonValueStyle}" Width="160" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="80" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="120" />
                         <Border Style="{StaticResource PropertySeparatorStyle}" />
                         <Border Style="{StaticResource SkeletonLabelStyle}" />
                         <Border Style="{StaticResource SkeletonValueStyle}" Width="100" />
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+                        <Border Style="{StaticResource SkeletonLabelStyle}" />
+                        <Border Style="{StaticResource SkeletonValueStyle}" Width="60" />
                     </StackPanel>
                 </Border>
 
@@ -822,6 +828,33 @@
                             Style="{StaticResource CardHeaderStyle}"
                             AutomationProperties.HeadingLevel="Level2" />
 
+                        <!-- TPM Spec Version -->
+                        <TextBlock x:Uid="TpmSpecVersionLabel" Text="Spec Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmSpecVersion, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Spec Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmSpecVersionButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmSpecVersion"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Spec Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TpmSpecVersion}" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
                         <!-- TPM Manufacturer ID -->
                         <TextBlock x:Uid="TpmManufacturerIdLabel" Text="Manufacturer" Style="{StaticResource PropertyLabelStyle}" />
                         <Grid Margin="0,0,0,12">
@@ -851,7 +884,7 @@
 
                         <!-- TPM Firmware Version -->
                         <TextBlock x:Uid="TpmManufacturerVersionLabel" Text="Firmware Version" Style="{StaticResource PropertyLabelStyle}" />
-                        <Grid Margin="0,0,0,0">
+                        <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -872,6 +905,33 @@
                                 ToolTipService.ToolTip="Copy to clipboard"
                                 AutomationProperties.Name="Copy TPM Firmware Version to clipboard">
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TpmManufacturerVersion}" FontSize="14" />
+                            </Button>
+                        </Grid>
+                        <Border Style="{StaticResource PropertySeparatorStyle}" />
+
+                        <!-- TPM Physical Presence Version Info -->
+                        <TextBlock x:Uid="TpmPhysicalPresenceVersionInfoLabel" Text="Physical Presence Version" Style="{StaticResource PropertyLabelStyle}" />
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{x:Bind ViewModel.TpmPhysicalPresenceVersionInfo, Mode=OneWay}"
+                                FontSize="14"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="TPM Physical Presence Version value" />
+                            <Button
+                                Grid.Column="1"
+                                x:Uid="CopyTpmPhysicalPresenceVersionInfoButton"
+                                Style="{StaticResource CopyButtonStyle}"
+                                Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                CommandParameter="TpmPhysicalPresenceVersionInfo"
+                                ToolTipService.ToolTip="Copy to clipboard"
+                                AutomationProperties.Name="Copy TPM Physical Presence Version to clipboard">
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.CopiedFieldName, Mode=OneWay, Converter={StaticResource CopyIconConverter}, ConverterParameter=TpmPhysicalPresenceVersionInfo}" FontSize="14" />
                             </Button>
                         </Grid>
                     </StackPanel>
