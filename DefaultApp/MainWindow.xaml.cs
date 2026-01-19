@@ -1,3 +1,4 @@
+using System.IO;
 using DefaultApp.Services;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -99,6 +100,13 @@ public sealed partial class MainWindow : Window
 
         if (_appWindow is not null)
         {
+            // Set window icon for taskbar
+            var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "app.ico");
+            if (File.Exists(iconPath))
+            {
+                _appWindow.SetIcon(iconPath);
+            }
+
             // Set initial size to 800x600
             _appWindow.Resize(new Windows.Graphics.SizeInt32(MinWidth, MinHeight));
 
