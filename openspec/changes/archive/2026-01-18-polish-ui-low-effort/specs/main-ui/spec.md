@@ -17,6 +17,8 @@ The application SHALL provide copy to clipboard buttons with visual feedback for
 - **THEN** a subtle background highlight appears
 - **AND** the highlight uses theme-appropriate colors
 
+## ADDED Requirements
+
 ### Requirement: Consistent Empty State Display
 
 The UI SHALL display "N/A" consistently when data is unavailable.

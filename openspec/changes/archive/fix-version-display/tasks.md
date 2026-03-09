@@ -10,5 +10,5 @@
 ## Validation Tasks
 
 - [x] Build the application successfully
-- [ ] Open About window and verify "Version 1.3" is displayed
-- [ ] Verify file properties show version 1.3.0.0
+- [x] Open About window and verify "Version 1.3" is displayed
+- [x] Verify file properties show version 1.3.0.0

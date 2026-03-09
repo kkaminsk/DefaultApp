@@ -5,32 +5,18 @@ TBD - created by archiving change add-copy-buttons. Update Purpose after archive
 ## Requirements
 ### Requirement: Copy to Clipboard Buttons
 
-The application SHALL provide copy to clipboard buttons for commonly-copied system information fields.
+The application SHALL provide copy to clipboard buttons with visual feedback for commonly-copied system information fields.
 
-#### Scenario: OS Name has copy button
-- **WHEN** viewing the Operating System card
-- **THEN** the OS Name field has a copy to clipboard button
-- **AND** clicking it copies the OS name value to the clipboard
+#### Scenario: Copy button shows success feedback
+- **WHEN** a copy button is clicked
+- **THEN** the button icon changes to a checkmark
+- **AND** the checkmark displays for approximately 1 second
+- **AND** the icon reverts to the copy icon automatically
 
-#### Scenario: Build has copy button
-- **WHEN** viewing the Operating System card
-- **THEN** the Build field has a copy to clipboard button
-- **AND** clicking it copies the build number to the clipboard
-
-#### Scenario: Edition has copy button
-- **WHEN** viewing the Operating System card
-- **THEN** the Edition field has a copy to clipboard button
-- **AND** clicking it copies the Windows edition to the clipboard
-
-#### Scenario: System Locale has copy button
-- **WHEN** viewing the Operating System card
-- **THEN** the System Locale field has a copy to clipboard button
-- **AND** clicking it copies the system locale to the clipboard
-
-#### Scenario: CPU Model has copy button
-- **WHEN** viewing the Device & Hardware card
-- **THEN** the CPU Model field has a copy to clipboard button
-- **AND** clicking it copies the CPU model name to the clipboard
+#### Scenario: Copy button has hover state
+- **WHEN** hovering over a copy button
+- **THEN** a subtle background highlight appears
+- **AND** the highlight uses theme-appropriate colors
 
 ### Requirement: Three-Card Layout
 
@@ -138,4 +124,84 @@ The Packaged Service card SHALL contain controls for service management.
 #### Scenario: Uptime shows N/A when stopped
 - **WHEN** no service is running
 - **THEN** uptime displays "N/A"
+
+### Requirement: BIOS & Security Card
+
+The main page SHALL display a third card for BIOS and security information.
+
+#### Scenario: BIOS & Security card is visible
+- **WHEN** the application launches
+- **THEN** a "BIOS & Security" card is displayed after the Device & Hardware card
+- **AND** the card has a header and content area
+
+#### Scenario: BIOS Manufacturer is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the BIOS Manufacturer field is displayed with value from Registry
+- **AND** a copy to clipboard button is available
+
+#### Scenario: BIOS Name is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the BIOS Name field is displayed
+- **AND** a copy to clipboard button is available
+
+#### Scenario: BIOS Version is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the BIOS Version field is displayed
+- **AND** a copy to clipboard button is available
+
+#### Scenario: BIOS Release Date is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the BIOS Release Date field is displayed
+- **AND** a copy to clipboard button is available
+
+#### Scenario: SMBIOS Version is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the SMBIOS Version field is displayed (format: Major.Minor)
+- **AND** a copy to clipboard button is available
+
+#### Scenario: Secure Boot Status is displayed
+- **WHEN** viewing the BIOS & Security card
+- **THEN** the Secure Boot Status field shows "Enabled" or "Disabled"
+- **AND** no copy button is displayed for this field
+
+### Requirement: BIOS Data Source
+
+BIOS information SHALL be retrieved from the Windows Registry without using WMI.
+
+#### Scenario: BIOS Registry retrieval
+- **WHEN** retrieving BIOS information
+- **THEN** values are read from `HKLM\HARDWARE\DESCRIPTION\System\BIOS`
+- **AND** Secure Boot status is read from `HKLM\SYSTEM\CurrentControlSet\Control\SecureBoot\State`
+- **AND** WMI is not used
+
+### Requirement: Consistent Empty State Display
+
+The UI SHALL display "N/A" consistently when data is unavailable.
+
+#### Scenario: Missing OS data shows N/A
+- **WHEN** any OS information cannot be retrieved
+- **THEN** the property value displays "N/A"
+- **AND** no other fallback text is used
+
+#### Scenario: Missing hardware data shows N/A
+- **WHEN** any hardware information cannot be retrieved
+- **THEN** the property value displays "N/A"
+- **AND** no other fallback text is used
+
+#### Scenario: Missing network data shows N/A
+- **WHEN** any network information cannot be retrieved
+- **THEN** the property value displays "N/A"
+- **AND** no other fallback text is used
+
+### Requirement: Card Visual Structure
+
+Cards SHALL have clean visual structure without trailing decorative elements.
+
+#### Scenario: No trailing separators before actions
+- **WHEN** a card contains an action button (e.g., Test Audio)
+- **THEN** no separator line appears immediately before the button
+
+#### Scenario: No trailing separators at card end
+- **WHEN** viewing the last property in a card
+- **THEN** no separator line appears after the final property value
 

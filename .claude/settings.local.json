@@ -110,7 +110,13 @@
       "Bash(Where-Object { $_FullName -notmatch '\\\\\\\\\\(bin|obj\\)\\\\\\\\' })",
       "Bash(Format-Table -AutoSize)",
       "Bash(dotnet --list-sdks:*)",
-      "Bash(dir \"%LocalAppData%\\\\DefaultApp\\\\Logs\")"
+      "Bash(dir \"%LocalAppData%\\\\DefaultApp\\\\Logs\")",
+      "Bash($env:DOTNET_MODIFIABLE_ASSEMBLIES = \"debug\")",
+      "Bash(Start-Job { dotnet run -f net8.0-windows10.0.22000.0 --project \"C:\\\\Temp\\\\tsscat\\\\DefaultApp\\\\DefaultApp\\\\DefaultApp.csproj\" -p:Platform=x64 2)",
+      "Bash(1 })",
+      "Bash(npx openspec:*)",
+      "Bash(Start-Job { dotnet run -f net8.0-windows10.0.22000.0 --project C:TemptsscatDefaultAppDefaultAppDefaultApp.csproj })",
+      "Bash(start \"\" \"bin\\\\x64\\\\Debug\\\\net8.0-windows10.0.22000.0\\\\DefaultApp.exe\")"
     ]
   }
 }
